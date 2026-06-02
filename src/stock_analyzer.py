@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-趋势交易分析器 - 基于用户交易理念
+趨勢交易分析器 - 基于使用者交易理念
 ===================================
 
 交易理念核心原则：
 1. 严进策略 - 不追高，追求每笔交易成功率
-2. 趋势交易 - MA5>MA10>MA20 多头排列，顺势而为
+2. 趨勢交易 - MA5>MA10>MA20 多头排列，顺势而为
 3. 效率优先 - 关注筹码结构好的股票
-4. 买点偏好 - 在 MA5/MA10 附近回踩买入
+4. 买点偏好 - 在 MA5/MA10 附近回踩買入
 
 技术标准：
 - 多头排列：MA5 > MA10 > MA20
@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 class TrendStatus(Enum):
-    """趋势状态枚举"""
+    """趨勢狀態枚举"""
     STRONG_BULL = "强势多头"      # MA5 > MA10 > MA20，且间距扩大
     BULL = "多头排列"             # MA5 > MA10 > MA20
     WEAK_BULL = "弱势多头"        # MA5 > MA10，但 MA10 < MA20
@@ -41,7 +41,7 @@ class TrendStatus(Enum):
 
 
 class VolumeStatus(Enum):
-    """量能状态枚举"""
+    """量能狀態枚举"""
     HEAVY_VOLUME_UP = "放量上涨"       # 量价齐升
     HEAVY_VOLUME_DOWN = "放量下跌"     # 放量杀跌
     SHRINK_VOLUME_UP = "缩量上涨"      # 无量上涨
@@ -50,17 +50,17 @@ class VolumeStatus(Enum):
 
 
 class BuySignal(Enum):
-    """买入信号枚举"""
-    STRONG_BUY = "强烈买入"       # 多条件满足
-    BUY = "买入"                  # 基本条件满足
-    HOLD = "持有"                 # 已持有可继续
+    """買入信号枚举"""
+    STRONG_BUY = "强烈買入"       # 多条件满足
+    BUY = "買入"                  # 基本条件满足
+    HOLD = "持有"                 # 已持有可繼續
     WAIT = "观望"                 # 等待更好时机
-    SELL = "卖出"                 # 趋势转弱
-    STRONG_SELL = "强烈卖出"      # 趋势破坏
+    SELL = "賣出"                 # 趨勢转弱
+    STRONG_SELL = "强烈賣出"      # 趨勢破坏
 
 
 class MACDStatus(Enum):
-    """MACD状态枚举"""
+    """MACD狀態枚举"""
     GOLDEN_CROSS_ZERO = "零轴上金叉"      # DIF上穿DEA，且在零轴上方
     GOLDEN_CROSS = "金叉"                # DIF上穿DEA
     BULLISH = "多头"                    # DIF>DEA>0
@@ -71,9 +71,9 @@ class MACDStatus(Enum):
 
 
 class RSIStatus(Enum):
-    """RSI状态枚举"""
+    """RSI狀態枚举"""
     OVERBOUGHT = "超买"        # RSI > 70
-    STRONG_BUY = "强势买入"    # 50 < RSI < 70
+    STRONG_BUY = "强势買入"    # 50 < RSI < 70
     NEUTRAL = "中性"          # 40 <= RSI <= 60
     WEAK = "弱势"             # 30 < RSI < 40
     OVERSOLD = "超卖"         # RSI < 30
@@ -81,15 +81,15 @@ class RSIStatus(Enum):
 
 @dataclass
 class TrendAnalysisResult:
-    """趋势分析结果"""
+    """趨勢分析结果"""
     code: str
     
-    # 趋势判断
+    # 趨勢判断
     trend_status: TrendStatus = TrendStatus.CONSOLIDATION
     ma_alignment: str = ""           # 均线排列描述
-    trend_strength: float = 0.0      # 趋势强度 0-100
+    trend_strength: float = 0.0      # 趨勢强度 0-100
     
-    # 均线数据
+    # 均线數據
     ma5: float = 0.0
     ma10: float = 0.0
     ma20: float = 0.0
@@ -104,7 +104,7 @@ class TrendAnalysisResult:
     # 量能分析
     volume_status: VolumeStatus = VolumeStatus.NORMAL
     volume_ratio_5d: float = 0.0     # 当日成交量/5日均量
-    volume_trend: str = ""           # 量能趋势描述
+    volume_trend: str = ""           # 量能趨勢描述
     
     # 支撑压力
     support_ma5: bool = False        # MA5 是否构成支撑
@@ -126,9 +126,9 @@ class TrendAnalysisResult:
     rsi_status: RSIStatus = RSIStatus.NEUTRAL
     rsi_signal: str = ""              # RSI 信号描述
 
-    # 买入信号
+    # 買入信号
     buy_signal: BuySignal = BuySignal.WAIT
-    signal_score: int = 0            # 综合评分 0-100
+    signal_score: int = 0            # 综合評分 0-100
     signal_reasons: List[str] = field(default_factory=list)
     risk_factors: List[str] = field(default_factory=list)
     
@@ -170,28 +170,28 @@ class TrendAnalysisResult:
 
 class StockTrendAnalyzer:
     """
-    股票趋势分析器
+    股票趨勢分析器
 
-    基于用户交易理念实现：
-    1. 趋势判断 - MA5>MA10>MA20 多头排列
+    基于使用者交易理念实现：
+    1. 趨勢判断 - MA5>MA10>MA20 多头排列
     2. 乖离率检测 - 不追高，偏离 MA5 超过 5% 不买
     3. 量能分析 - 偏好缩量回调
     4. 买点识别 - 回踩 MA5/MA10 支撑
-    5. MACD 指标 - 趋势确认和金叉死叉信号
+    5. MACD 指标 - 趨勢确认和金叉死叉信号
     6. RSI 指标 - 超买超卖判断
     """
     
-    # 交易参数配置（BIAS_THRESHOLD 从 Config 读取，见 _generate_signal）
+    # 交易參數配置（BIAS_THRESHOLD 从 Config 读取，见 _generate_signal）
     VOLUME_SHRINK_RATIO = 0.7   # 缩量判断阈值（当日量/5日均量）
     VOLUME_HEAVY_RATIO = 1.5    # 放量判断阈值
     MA_SUPPORT_TOLERANCE = 0.02  # MA 支撑判断容忍度（2%）
 
-    # MACD 参数（标准12/26/9）
+    # MACD 參數（标准12/26/9）
     MACD_FAST = 12              # 快线周期
     MACD_SLOW = 26             # 慢线周期
     MACD_SIGNAL = 9             # 信号线周期
 
-    # RSI 参数
+    # RSI 參數
     RSI_SHORT = 6               # 短期RSI周期
     RSI_MID = 12               # 中期RSI周期
     RSI_LONG = 24              # 长期RSI周期
@@ -204,11 +204,11 @@ class StockTrendAnalyzer:
     
     def analyze(self, df: pd.DataFrame, code: str) -> TrendAnalysisResult:
         """
-        分析股票趋势
+        分析股票趨勢
         
         Args:
-            df: 包含 OHLCV 数据的 DataFrame
-            code: 股票代码
+            df: 包含 OHLCV 數據的 DataFrame
+            code: 股票代碼
             
         Returns:
             TrendAnalysisResult 分析结果
@@ -216,11 +216,11 @@ class StockTrendAnalyzer:
         result = TrendAnalysisResult(code=code)
         
         if df is None or df.empty or len(df) < 20:
-            logger.warning(f"{code} 数据不足，无法进行趋势分析")
-            result.risk_factors.append("数据不足，无法完成分析")
+            logger.warning(f"{code} 數據不足，无法进行趨勢分析")
+            result.risk_factors.append("數據不足，无法完成分析")
             return result
         
-        # 确保数据按日期排序
+        # 确保數據按日期排序
         df = df.sort_values('date').reset_index(drop=True)
         
         # 计算均线
@@ -230,7 +230,7 @@ class StockTrendAnalyzer:
         df = self._calculate_macd(df)
         df = self._calculate_rsi(df)
 
-        # 获取最新数据
+        # 获取最新數據
         latest = df.iloc[-1]
         result.current_price = float(latest['close'])
         result.ma5 = float(latest['MA5'])
@@ -238,7 +238,7 @@ class StockTrendAnalyzer:
         result.ma20 = float(latest['MA20'])
         result.ma60 = float(latest.get('MA60', 0))
 
-        # 1. 趋势判断
+        # 1. 趨勢判断
         self._analyze_trend(df, result)
 
         # 2. 乖离率计算
@@ -256,7 +256,7 @@ class StockTrendAnalyzer:
         # 6. RSI 分析
         self._analyze_rsi(df, result)
 
-        # 7. 生成买入信号
+        # 7. 生成買入信号
         self._generate_signal(result)
 
         return result
@@ -270,7 +270,7 @@ class StockTrendAnalyzer:
         if len(df) >= 60:
             df['MA60'] = df['close'].rolling(window=60).mean()
         else:
-            df['MA60'] = df['MA20']  # 数据不足时使用 MA20 替代
+            df['MA60'] = df['MA20']  # 數據不足时使用 MA20 替代
         return df
 
     def _calculate_macd(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -278,8 +278,8 @@ class StockTrendAnalyzer:
         计算 MACD 指标
 
         公式：
-        - EMA(12)：12日指数移动平均
-        - EMA(26)：26日指数移动平均
+        - EMA(12)：12日指數移动平均
+        - EMA(26)：26日指數移动平均
         - DIF = EMA(12) - EMA(26)
         - DEA = EMA(DIF, 9)
         - MACD = (DIF - DEA) * 2
@@ -319,7 +319,7 @@ class StockTrendAnalyzer:
             gain = delta.where(delta > 0, 0)
             loss = -delta.where(delta < 0, 0)
 
-            # 计算平均涨跌幅
+            # 计算平均漲跌幅
             avg_gain = gain.rolling(window=period).mean()
             avg_loss = loss.rolling(window=period).mean()
 
@@ -338,9 +338,9 @@ class StockTrendAnalyzer:
     
     def _analyze_trend(self, df: pd.DataFrame, result: TrendAnalysisResult) -> None:
         """
-        分析趋势状态
+        分析趨勢狀態
         
-        核心逻辑：判断均线排列和趋势强度
+        核心逻辑：判断均线排列和趨勢强度
         """
         ma5, ma10, ma20 = result.ma5, result.ma10, result.ma20
         
@@ -386,7 +386,7 @@ class StockTrendAnalyzer:
             
         else:
             result.trend_status = TrendStatus.CONSOLIDATION
-            result.ma_alignment = "均线缠绕，趋势不明"
+            result.ma_alignment = "均线缠绕，趨勢不明"
             result.trend_strength = 50
     
     def _calculate_bias(self, result: TrendAnalysisResult) -> None:
@@ -425,14 +425,14 @@ class StockTrendAnalyzer:
         prev_close = df.iloc[-2]['close']
         price_change = (latest['close'] - prev_close) / prev_close * 100
         
-        # 量能状态判断
+        # 量能狀態判断
         if result.volume_ratio_5d >= self.VOLUME_HEAVY_RATIO:
             if price_change > 0:
                 result.volume_status = VolumeStatus.HEAVY_VOLUME_UP
                 result.volume_trend = "放量上涨，多头力量强劲"
             else:
                 result.volume_status = VolumeStatus.HEAVY_VOLUME_DOWN
-                result.volume_trend = "放量下跌，注意风险"
+                result.volume_trend = "放量下跌，注意風險"
         elif result.volume_ratio_5d <= self.VOLUME_SHRINK_RATIO:
             if price_change > 0:
                 result.volume_status = VolumeStatus.SHRINK_VOLUME_UP
@@ -482,18 +482,18 @@ class StockTrendAnalyzer:
         分析 MACD 指标
 
         核心信号：
-        - 零轴上金叉：最强买入信号
+        - 零轴上金叉：最强買入信号
         - 金叉：DIF 上穿 DEA
         - 死叉：DIF 下穿 DEA
         """
         if len(df) < self.MACD_SLOW:
-            result.macd_signal = "数据不足"
+            result.macd_signal = "數據不足"
             return
 
         latest = df.iloc[-1]
         prev = df.iloc[-2]
 
-        # 获取 MACD 数据
+        # 获取 MACD 數據
         result.macd_dif = float(latest['MACD_DIF'])
         result.macd_dea = float(latest['MACD_DEA'])
         result.macd_bar = float(latest['MACD_BAR'])
@@ -514,22 +514,22 @@ class StockTrendAnalyzer:
         is_crossing_up = prev_zero <= 0 and curr_zero > 0
         is_crossing_down = prev_zero >= 0 and curr_zero < 0
 
-        # 判断 MACD 状态
+        # 判断 MACD 狀態
         if is_golden_cross and curr_zero > 0:
             result.macd_status = MACDStatus.GOLDEN_CROSS_ZERO
-            result.macd_signal = "⭐ 零轴上金叉，强烈买入信号！"
+            result.macd_signal = "⭐ 零轴上金叉，强烈買入信号！"
         elif is_crossing_up:
             result.macd_status = MACDStatus.CROSSING_UP
-            result.macd_signal = "⚡ DIF上穿零轴，趋势转强"
+            result.macd_signal = "⚡ DIF上穿零轴，趨勢转强"
         elif is_golden_cross:
             result.macd_status = MACDStatus.GOLDEN_CROSS
-            result.macd_signal = "✅ 金叉，趋势向上"
+            result.macd_signal = "✅ 金叉，趨勢向上"
         elif is_death_cross:
             result.macd_status = MACDStatus.DEATH_CROSS
-            result.macd_signal = "❌ 死叉，趋势向下"
+            result.macd_signal = "❌ 死叉，趨勢向下"
         elif is_crossing_down:
             result.macd_status = MACDStatus.CROSSING_DOWN
-            result.macd_signal = "⚠️ DIF下穿零轴，趋势转弱"
+            result.macd_signal = "⚠️ DIF下穿零轴，趨勢转弱"
         elif result.macd_dif > 0 and result.macd_dea > 0:
             result.macd_status = MACDStatus.BULLISH
             result.macd_signal = "✓ 多头排列，持续上涨"
@@ -550,12 +550,12 @@ class StockTrendAnalyzer:
         - 40-60：中性区域
         """
         if len(df) < self.RSI_LONG:
-            result.rsi_signal = "数据不足"
+            result.rsi_signal = "數據不足"
             return
 
         latest = df.iloc[-1]
 
-        # 获取 RSI 数据
+        # 获取 RSI 數據
         result.rsi_6 = float(latest[f'RSI_{self.RSI_SHORT}'])
         result.rsi_12 = float(latest[f'RSI_{self.RSI_MID}'])
         result.rsi_24 = float(latest[f'RSI_{self.RSI_LONG}'])
@@ -563,10 +563,10 @@ class StockTrendAnalyzer:
         # 以中期 RSI(12) 为主进行判断
         rsi_mid = result.rsi_12
 
-        # 判断 RSI 状态
+        # 判断 RSI 狀態
         if rsi_mid > self.RSI_OVERBOUGHT:
             result.rsi_status = RSIStatus.OVERBOUGHT
-            result.rsi_signal = f"⚠️ RSI超买({rsi_mid:.1f}>70)，短期回调风险高"
+            result.rsi_signal = f"⚠️ RSI超买({rsi_mid:.1f}>70)，短期回调風險高"
         elif rsi_mid > 60:
             result.rsi_status = RSIStatus.STRONG_BUY
             result.rsi_signal = f"✅ RSI强势({rsi_mid:.1f})，多头力量充足"
@@ -582,10 +582,10 @@ class StockTrendAnalyzer:
 
     def _generate_signal(self, result: TrendAnalysisResult) -> None:
         """
-        生成买入信号
+        生成買入信号
 
-        综合评分系统：
-        - 趋势（30分）：多头排列得分高
+        综合評分系統：
+        - 趨勢（30分）：多头排列得分高
         - 乖离率（20分）：接近 MA5 得分高
         - 量能（15分）：缩量回调得分高
         - 支撑（10分）：获得均线支撑得分高
@@ -596,7 +596,7 @@ class StockTrendAnalyzer:
         reasons = []
         risks = []
 
-        # === 趋势评分（30分）===
+        # === 趨勢評分（30分）===
         trend_scores = {
             TrendStatus.STRONG_BULL: 30,
             TrendStatus.BULL: 26,
@@ -614,7 +614,7 @@ class StockTrendAnalyzer:
         elif result.trend_status in [TrendStatus.BEAR, TrendStatus.STRONG_BEAR]:
             risks.append(f"⚠️ {result.trend_status.value}，不宜做多")
 
-        # === 乖离率评分（20分，强势趋势补偿）===
+        # === 乖离率評分（20分，强势趨勢补偿）===
         bias = result.bias_ma5
         if bias != bias or bias is None:  # NaN or None defense
             bias = 0.0
@@ -654,7 +654,7 @@ class StockTrendAnalyzer:
         elif bias > base_threshold and is_strong_trend:
             score += 10
             reasons.append(
-                f"⚡ 强势趋势中乖离率偏高({bias:.1f}%)，可轻仓追踪"
+                f"⚡ 强势趨勢中乖离率偏高({bias:.1f}%)，可轻仓追踪"
             )
         else:
             score += 4
@@ -662,7 +662,7 @@ class StockTrendAnalyzer:
                 f"❌ 乖离率过高({bias:.1f}%>{base_threshold:.1f}%)，严禁追高！"
             )
 
-        # === 量能评分（15分）===
+        # === 量能評分（15分）===
         volume_scores = {
             VolumeStatus.SHRINK_VOLUME_DOWN: 15,  # 缩量回调最佳
             VolumeStatus.HEAVY_VOLUME_UP: 12,     # 放量上涨次之
@@ -676,9 +676,9 @@ class StockTrendAnalyzer:
         if result.volume_status == VolumeStatus.SHRINK_VOLUME_DOWN:
             reasons.append("✅ 缩量回调，主力洗盘")
         elif result.volume_status == VolumeStatus.HEAVY_VOLUME_DOWN:
-            risks.append("⚠️ 放量下跌，注意风险")
+            risks.append("⚠️ 放量下跌，注意風險")
 
-        # === 支撑评分（10分）===
+        # === 支撑評分（10分）===
         if result.support_ma5:
             score += 5
             reasons.append("✅ MA5支撑有效")
@@ -686,7 +686,7 @@ class StockTrendAnalyzer:
             score += 5
             reasons.append("✅ MA10支撑有效")
 
-        # === MACD 评分（15分）===
+        # === MACD 評分（15分）===
         macd_scores = {
             MACDStatus.GOLDEN_CROSS_ZERO: 15,  # 零轴上金叉最强
             MACDStatus.GOLDEN_CROSS: 12,      # 金叉
@@ -706,7 +706,7 @@ class StockTrendAnalyzer:
         else:
             reasons.append(result.macd_signal)
 
-        # === RSI 评分（10分）===
+        # === RSI 評分（10分）===
         rsi_scores = {
             RSIStatus.OVERSOLD: 10,       # 超卖最佳
             RSIStatus.STRONG_BUY: 8,     # 强势
@@ -729,7 +729,7 @@ class StockTrendAnalyzer:
         result.signal_reasons = reasons
         result.risk_factors = risks
 
-        # 生成买入信号（调整阈值以适应新的100分制）
+        # 生成買入信号（调整阈值以适应新的100分制）
         if score >= 75 and result.trend_status in [TrendStatus.STRONG_BULL, TrendStatus.BULL]:
             result.buy_signal = BuySignal.STRONG_BUY
         elif score >= 60 and result.trend_status in [TrendStatus.STRONG_BULL, TrendStatus.BULL, TrendStatus.WEAK_BULL]:
@@ -754,13 +754,13 @@ class StockTrendAnalyzer:
             格式化的分析文本
         """
         lines = [
-            f"=== {result.code} 趋势分析 ===",
+            f"=== {result.code} 趨勢分析 ===",
             f"",
-            f"📊 趋势判断: {result.trend_status.value}",
+            f"📊 趨勢判断: {result.trend_status.value}",
             f"   均线排列: {result.ma_alignment}",
-            f"   趋势强度: {result.trend_strength}/100",
+            f"   趨勢强度: {result.trend_strength}/100",
             f"",
-            f"📈 均线数据:",
+            f"📈 均线數據:",
             f"   现价: {result.current_price:.2f}",
             f"   MA5:  {result.ma5:.2f} (乖离 {result.bias_ma5:+.2f}%)",
             f"   MA10: {result.ma10:.2f} (乖离 {result.bias_ma10:+.2f}%)",
@@ -768,7 +768,7 @@ class StockTrendAnalyzer:
             f"",
             f"📊 量能分析: {result.volume_status.value}",
             f"   量比(vs5日): {result.volume_ratio_5d:.2f}",
-            f"   量能趋势: {result.volume_trend}",
+            f"   量能趨勢: {result.volume_trend}",
             f"",
             f"📈 MACD指标: {result.macd_status.value}",
             f"   DIF: {result.macd_dif:.4f}",
@@ -783,18 +783,18 @@ class StockTrendAnalyzer:
             f"   信号: {result.rsi_signal}",
             f"",
             f"🎯 操作建议: {result.buy_signal.value}",
-            f"   综合评分: {result.signal_score}/100",
+            f"   综合評分: {result.signal_score}/100",
         ]
 
         if result.signal_reasons:
             lines.append(f"")
-            lines.append(f"✅ 买入理由:")
+            lines.append(f"✅ 買入理由:")
             for reason in result.signal_reasons:
                 lines.append(f"   {reason}")
 
         if result.risk_factors:
             lines.append(f"")
-            lines.append(f"⚠️ 风险因素:")
+            lines.append(f"⚠️ 風險因素:")
             for risk in result.risk_factors:
                 lines.append(f"   {risk}")
 
@@ -803,11 +803,11 @@ class StockTrendAnalyzer:
 
 def analyze_stock(df: pd.DataFrame, code: str) -> TrendAnalysisResult:
     """
-    便捷函数：分析单只股票
+    便捷函數：分析单只股票
     
     Args:
-        df: 包含 OHLCV 数据的 DataFrame
-        code: 股票代码
+        df: 包含 OHLCV 數據的 DataFrame
+        code: 股票代碼
         
     Returns:
         TrendAnalysisResult 分析结果
@@ -817,20 +817,20 @@ def analyze_stock(df: pd.DataFrame, code: str) -> TrendAnalysisResult:
 
 
 if __name__ == "__main__":
-    # 测试代码
+    # 測試代碼
     logging.basicConfig(level=logging.INFO)
     
-    # 模拟数据测试
+    # 模拟數據測試
     import numpy as np
     
     dates = pd.date_range(start='2025-01-01', periods=60, freq='D')
     np.random.seed(42)
     
-    # 模拟多头排列的数据
+    # 模拟多头排列的數據
     base_price = 10.0
     prices = [base_price]
     for i in range(59):
-        change = np.random.randn() * 0.02 + 0.003  # 轻微上涨趋势
+        change = np.random.randn() * 0.02 + 0.003  # 轻微上涨趨勢
         prices.append(prices[-1] * (1 + change))
     
     df = pd.DataFrame({

@@ -513,7 +513,7 @@ class TestAgentResultConversion(unittest.TestCase):
         self.assertTrue(result.success)
         self.assertEqual(result.sentiment_score, 64)
         self.assertEqual(result.trend_prediction, "多头排列")
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.operation_advice, "買入")
         self.assertEqual(result.decision_type, "buy")
         self.assertIn("trend:fallback", result.data_sources)
 
@@ -553,7 +553,7 @@ class TestAgentResultConversion(unittest.TestCase):
         ok, missing = check_content_integrity(result)
         self.assertTrue(ok, missing)
         self.assertEqual(result.sentiment_score, 68)
-        self.assertEqual(result.analysis_summary, "趋势结论：多头排列；操作建议：买入。")
+        self.assertEqual(result.analysis_summary, "趨勢结论：多头排列；操作建议：買入。")
         self.assertEqual(result.dashboard["sentiment_score"], 68)
         self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], result.analysis_summary)
         self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["跌破 MA20 需止损"])
@@ -571,7 +571,7 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "operation_advice": {
-                    "has_position": "买入",
+                    "has_position": "買入",
                     "no_position": "观望",
                 },
                 "trend_prediction": "看多",
@@ -588,7 +588,7 @@ class TestAgentResultConversion(unittest.TestCase):
             "q-dict-advice",
         )
 
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.operation_advice, "買入")
         self.assertEqual(result.decision_type, "buy")
 
     def test_convert_missing_decision_type_preserves_conditional_hold_advice(self):
@@ -603,7 +603,7 @@ class TestAgentResultConversion(unittest.TestCase):
             success=True,
             content="{}",
             dashboard={
-                "operation_advice": "不跌破支撑位继续持有",
+                "operation_advice": "不跌破支撑位繼續持有",
                 "sentiment_score": 72,
             },
             provider="gemini",
@@ -624,7 +624,7 @@ class TestAgentResultConversion(unittest.TestCase):
             trend_result=trend_result,
         )
 
-        self.assertEqual(result.operation_advice, "不跌破支撑位继续持有")
+        self.assertEqual(result.operation_advice, "不跌破支撑位繼續持有")
         self.assertEqual(result.decision_type, "hold")
 
     def test_convert_empty_top_level_advice_uses_nested_dashboard_advice(self):
@@ -800,11 +800,11 @@ class TestAgentResultConversion(unittest.TestCase):
 
         self.assertEqual(result.sentiment_score, 66)
         self.assertEqual(result.trend_prediction, "多头排列")
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.operation_advice, "買入")
         self.assertEqual(result.decision_type, "buy")
         self.assertEqual(result.dashboard["sentiment_score"], 66)
         self.assertEqual(result.dashboard["trend_prediction"], "多头排列")
-        self.assertEqual(result.dashboard["operation_advice"], "买入")
+        self.assertEqual(result.dashboard["operation_advice"], "買入")
     def test_convert_empty_dashboard_backfills_localized_trend_fallback_for_en(self):
         """English reports should keep trend/advice fallback values localized."""
         pipeline = self._make_pipeline()
@@ -902,7 +902,7 @@ class TestAgentResultConversion(unittest.TestCase):
                 "stock_name": "贵州茅台",
                 "dashboard": {
                     "core_conclusion": {"one_sentence": "AI 已给出的核心结论"},
-                    "intelligence": {"risk_alerts": ["AI 风险"]},
+                    "intelligence": {"risk_alerts": ["AI 風險"]},
                     "battle_plan": {"sniper_points": {"take_profit": "120元"}},
                 },
             },
@@ -928,12 +928,12 @@ class TestAgentResultConversion(unittest.TestCase):
 
         self.assertEqual(result.sentiment_score, 66)
         self.assertEqual(result.trend_prediction, "多头排列")
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.operation_advice, "買入")
         self.assertEqual(result.decision_type, "buy")
         self.assertEqual(result.dashboard["sentiment_score"], 66)
-        self.assertEqual(result.dashboard["operation_advice"], "买入")
+        self.assertEqual(result.dashboard["operation_advice"], "買入")
         self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], "AI 已给出的核心结论")
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["AI 风险"])
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["AI 風險"])
         self.assertEqual(result.dashboard["battle_plan"]["sniper_points"]["stop_loss"], 108.5)
         self.assertIn("trend:fallback", result.data_sources)
 
@@ -1006,7 +1006,7 @@ class TestAgentResultConversion(unittest.TestCase):
             trend_status=TrendStatus.BULL,
             buy_signal=BuySignal.BUY,
             signal_score=62,
-            risk_factors=["趋势跌破支撑需减仓"],
+            risk_factors=["趨勢跌破支撑需减仓"],
         )
 
         result = pipeline._agent_result_to_analysis_result(
@@ -1023,7 +1023,7 @@ class TestAgentResultConversion(unittest.TestCase):
         self.assertEqual(result.sentiment_score, 62)
         self.assertEqual(result.dashboard["sentiment_score"], 62)
         self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], result.analysis_summary)
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["趋势跌破支撑需减仓"])
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["趨勢跌破支撑需减仓"])
         self.assertEqual(result.dashboard["battle_plan"]["sniper_points"]["stop_loss"], "待补充")
 
     def test_convert_invalid_dashboard_normalizes_strong_trend_decision_type(self):
@@ -1035,8 +1035,8 @@ class TestAgentResultConversion(unittest.TestCase):
         from src.stock_analyzer import BuySignal, TrendAnalysisResult, TrendStatus
 
         cases = [
-            (BuySignal.STRONG_BUY, "buy", "强烈买入"),
-            (BuySignal.STRONG_SELL, "sell", "强烈卖出"),
+            (BuySignal.STRONG_BUY, "buy", "强烈買入"),
+            (BuySignal.STRONG_SELL, "sell", "强烈賣出"),
         ]
 
         for buy_signal, expected_decision, expected_advice in cases:
@@ -1102,7 +1102,7 @@ class TestAgentResultConversion(unittest.TestCase):
             success=True,
             content="{}",
             dashboard={
-                "stock_name": "错误名称",
+                "stock_name": "錯誤名称",
                 "sentiment_score": 70,
                 "trend_prediction": "看多",
                 "operation_advice": "持有",
@@ -1412,7 +1412,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 dashboard={
                     "sentiment_score": 30,
                     "trend_prediction": "震荡",
-                    "operation_advice": "卖出",
+                    "operation_advice": "賣出",
                     "decision_type": "sell",
                     "analysis_summary": "原始建议",
                     "dashboard": {
@@ -1524,7 +1524,7 @@ class TestAgentConstructionChain(unittest.TestCase):
         skill_manager = SkillManager()
         test_skill = Skill(
             name="test_skill",
-            display_name="测试策略",
+            display_name="測試策略",
             description="A test skill",
             instructions="Test instructions for analysis.",
             category="trend",
@@ -1533,7 +1533,7 @@ class TestAgentConstructionChain(unittest.TestCase):
         skill_manager.register(test_skill)
         skill_manager.activate(["test_skill"])
         instructions = skill_manager.get_skill_instructions()
-        self.assertIn("测试策略", instructions)
+        self.assertIn("測試策略", instructions)
 
         # Build LLM adapter with mocked config (no real API keys)
         mock_cfg = MagicMock()
@@ -2343,7 +2343,7 @@ class TestSkillActivation(unittest.TestCase):
                     "stock_name": "TestCo",
                     "sentiment_score": "80分",
                     "trend_prediction": "看多",
-                    "operation_advice": "买入",
+                    "operation_advice": "買入",
                     "decision_type": "buy",
                 },
                 provider="gemini",

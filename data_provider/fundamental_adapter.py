@@ -144,7 +144,7 @@ def _extract_cash_dividend_per_share(row: pd.Series) -> Optional[float]:
 def _filter_rows_by_code(df: pd.DataFrame, stock_code: str) -> pd.DataFrame:
     if df is None or df.empty:
         return pd.DataFrame()
-    code_cols = [c for c in df.columns if any(k in str(c) for k in ("代码", "股票代码", "证券代码", "symbol", "ts_code"))]
+    code_cols = [c for c in df.columns if any(k in str(c) for k in ("代碼", "股票代碼", "证券代碼", "symbol", "ts_code"))]
     if not code_cols:
         return df
 
@@ -244,7 +244,7 @@ def _extract_latest_row(df: pd.DataFrame, stock_code: str) -> Optional[pd.Series
     if df is None or df.empty:
         return None
 
-    code_cols = [c for c in df.columns if any(k in str(c) for k in ("代码", "股票代码", "证券代码", "ts_code", "symbol"))]
+    code_cols = [c for c in df.columns if any(k in str(c) for k in ("代碼", "股票代碼", "证券代碼", "ts_code", "symbol"))]
     target = _normalize_code(stock_code)
     if code_cols:
         for col in code_cols:
@@ -313,12 +313,12 @@ class AkshareFundamentalAdapter:
             row = _extract_latest_row(fin_df, stock_code)
             if row is not None:
                 revenue_yoy = _safe_float(_pick_by_keywords(row, ["营业收入同比", "营收同比", "收入同比", "同比增长"]))
-                profit_yoy = _safe_float(_pick_by_keywords(row, ["净利润同比", "净利同比", "归母净利润同比"]))
+                profit_yoy = _safe_float(_pick_by_keywords(row, ["净利潤同比", "净利同比", "归母净利潤同比"]))
                 roe = _safe_float(_pick_by_keywords(row, ["净资产收益率", "ROE", "净资产收益"]))
                 gross_margin = _safe_float(_pick_by_keywords(row, ["毛利率"]))
                 report_date = _normalize_report_date(_pick_by_keywords(row, _DIVIDEND_KEYWORD_MAP["report_date"]))
                 revenue = _safe_float(_pick_by_keywords(row, ["营业总收入", "营业收入", "营收"]))
-                net_profit_parent = _safe_float(_pick_by_keywords(row, ["归母净利润", "母公司股东净利润", "净利润"]))
+                net_profit_parent = _safe_float(_pick_by_keywords(row, ["归母净利潤", "母公司股东净利潤", "净利潤"]))
                 operating_cash_flow = _safe_float(
                     _pick_by_keywords(row, ["经营活动产生的现金流量净额", "经营现金流", "经营活动现金流"])
                 )
@@ -452,7 +452,7 @@ class AkshareFundamentalAdapter:
         ])
         result["errors"].extend(sector_errors)
         if sector_df is not None:
-            name_col = next((c for c in sector_df.columns if any(k in str(c) for k in ("板块", "行业", "名称", "name"))), None)
+            name_col = next((c for c in sector_df.columns if any(k in str(c) for k in ("板塊", "行业", "名称", "name"))), None)
             flow_col = next((c for c in sector_df.columns if any(k in str(c) for k in ("净流入", "主力", "flow", "净额"))), None)
             if name_col and flow_col:
                 work_df = sector_df[[name_col, flow_col]].copy()
@@ -493,7 +493,7 @@ class AkshareFundamentalAdapter:
             return result
 
         # Try code filter
-        code_cols = [c for c in df.columns if any(k in str(c) for k in ("代码", "股票代码", "证券代码"))]
+        code_cols = [c for c in df.columns if any(k in str(c) for k in ("代碼", "股票代碼", "证券代碼"))]
         target = _normalize_code(stock_code)
         matched = pd.DataFrame()
         for col in code_cols:

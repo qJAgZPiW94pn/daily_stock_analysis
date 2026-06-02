@@ -4,7 +4,7 @@
 枚举类型定义
 ===================================
 
-集中管理系统中使用的枚举类型，提供类型安全和代码可读性。
+集中管理系統中使用的枚举类型，提供类型安全和代碼可读性。
 """
 
 from enum import Enum
@@ -30,7 +30,7 @@ class ReportType(str, Enum):
             value: 字符串值
             
         Returns:
-            对应的枚举值，无效输入返回默认值 SIMPLE
+            对应的枚举值，无效输入傳回默认值 SIMPLE
         """
         try:
             normalized = value.lower().strip()

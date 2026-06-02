@@ -460,10 +460,10 @@ def _indicator_unavailable(
 def _find_column(df: pd.DataFrame, canonical: str) -> Optional[Any]:
     candidates = {
         "date": ("date", "trade_date", "datetime", "time", "日期", "交易日期"),
-        "open": ("open", "open_price", "开盘", "开盘价"),
+        "open": ("open", "open_price", "開盤", "開盤价"),
         "high": ("high", "high_price", "最高", "最高价"),
         "low": ("low", "low_price", "最低", "最低价"),
-        "close": ("close", "close_price", "收盘", "收盘价"),
+        "close": ("close", "close_price", "收盤", "收盤价"),
         "volume": ("volume", "vol", "成交量"),
     }
     by_normalized = {str(column).strip().lower(): column for column in df.columns}

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-统一导入解析管道
+统一匯入解析管道
 ===================================
 
 Parse CSV/Excel/clipboard text into stock items (code, name, confidence).
@@ -22,7 +22,7 @@ from src.services.stock_code_utils import is_code_like, normalize_code
 logger = logging.getLogger(__name__)
 
 # Column name mappings (case-insensitive)
-_CODE_ALIASES = frozenset({"code", "股票代码", "代码", "stock_code", "symbol"})
+_CODE_ALIASES = frozenset({"code", "股票代碼", "代碼", "stock_code", "symbol"})
 _NAME_ALIASES = frozenset({"name", "股票名称", "名称", "stock_name"})
 
 MAX_FILE_BYTES = 2 * 1024 * 1024  # 2MB
@@ -167,7 +167,7 @@ def parse_import_from_bytes(data: bytes, filename: Optional[str] = None) -> List
             # If bytes strongly indicate xlsx container, treat as real Excel parse failure.
             if looks_like_zip:
                 hint = (
-                    "请确认：(1) 文件为 .xlsx 格式；(2) 工作表不为空；(3) 文件未损坏。"
+                    "請確認：(1) 文件为 .xlsx 格式；(2) 工作表不为空；(3) 文件未损坏。"
                     "若为 .xls 格式，请另存为 .xlsx 后重试。"
                 )
                 raise ValueError(f"Excel 解析失败: {e}。{hint}") from e
@@ -176,7 +176,7 @@ def parse_import_from_bytes(data: bytes, filename: Optional[str] = None) -> List
 
     # .xls not supported
     if ext == ".xls":
-        raise ValueError("仅支持 .xlsx 格式，请将 .xls 另存为 .xlsx 后重试")
+        raise ValueError("仅支援 .xlsx 格式，请将 .xls 另存为 .xlsx 后重试")
 
     # CSV / text
     for encoding in ("utf-8", "gbk"):
@@ -213,7 +213,7 @@ def parse_import_from_bytes(data: bytes, filename: Optional[str] = None) -> List
     except pd.errors.ParserError as e:
         raise ValueError(
             f"CSV 解析失败：请检查分隔符是否一致、列数是否匹配。"
-            f"常见原因：引号未闭合、某行列数与其他行不一致。原始错误: {e}"
+            f"常见原因：引号未闭合、某行列数与其他行不一致。原始錯誤: {e}"
         ) from e
     except Exception:
         pass

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-分析历史数据访问层
+分析历史數據访问层
 ===================================
 
 职责：
-1. 封装分析历史数据的数据库操作
+1. 封装分析历史數據的資料庫操作
 2. 提供 CRUD 接口
 """
 
@@ -20,17 +20,17 @@ logger = logging.getLogger(__name__)
 
 class AnalysisRepository:
     """
-    分析历史数据访问层
+    分析历史數據访问层
     
-    封装 AnalysisHistory 表的数据库操作
+    封装 AnalysisHistory 表的資料庫操作
     """
     
     def __init__(self, db_manager: Optional[DatabaseManager] = None):
         """
-        初始化数据访问层
+        初始化數據访问层
         
         Args:
-            db_manager: 数据库管理器（可选，默认使用单例）
+            db_manager: 資料庫管理器（可選，默认使用单例）
         """
         self.db = db_manager or DatabaseManager.get_instance()
     
@@ -39,16 +39,16 @@ class AnalysisRepository:
         根据 query_id 获取分析记录
         
         Args:
-            query_id: 查询 ID
+            query_id: 查詢 ID
             
         Returns:
-            AnalysisHistory 对象，不存在返回 None
+            AnalysisHistory 对象，不存在傳回 None
         """
         try:
             records = self.db.get_analysis_history(query_id=query_id, limit=1)
             return records[0] if records else None
         except Exception as e:
-            logger.error(f"查询分析记录失败: {e}")
+            logger.error(f"查詢分析记录失败: {e}")
             return None
     
     def get_list(
@@ -61,9 +61,9 @@ class AnalysisRepository:
         获取分析记录列表
         
         Args:
-            code: 股票代码筛选
+            code: 股票代碼筛选
             days: 时间范围（天）
-            limit: 返回数量限制
+            limit: 傳回数量限制
             
         Returns:
             AnalysisHistory 对象列表
@@ -91,7 +91,7 @@ class AnalysisRepository:
         
         Args:
             result: 分析结果对象
-            query_id: 查询 ID
+            query_id: 查詢 ID
             report_type: 报告类型
             news_content: 新闻内容
             context_snapshot: 上下文快照
@@ -116,7 +116,7 @@ class AnalysisRepository:
         统计指定股票的分析记录数
         
         Args:
-            code: 股票代码
+            code: 股票代碼
             days: 时间范围（天）
             
         Returns:

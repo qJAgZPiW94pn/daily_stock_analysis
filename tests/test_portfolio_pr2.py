@@ -106,13 +106,13 @@ class PortfolioPr2TestCase(unittest.TestCase):
     def _csv_bytes(with_trade_uid: bool = True) -> bytes:
         if with_trade_uid:
             csv_text = (
-                "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号,手续费,印花税\n"
-                "2026-01-02,600519,买入,10,100,HT-001,1,0\n"
+                "成交日期,证券代碼,买卖标志,成交数量,成交均价,成交编号,手续费,印花税\n"
+                "2026-01-02,600519,買入,10,100,HT-001,1,0\n"
             )
         else:
             csv_text = (
-                "成交日期,证券代码,买卖标志,成交数量,成交均价,手续费,印花税\n"
-                "2026-01-02,600519,买入,10,100,1,0\n"
+                "成交日期,证券代碼,买卖标志,成交数量,成交均价,手续费,印花税\n"
+                "2026-01-02,600519,買入,10,100,1,0\n"
             )
         return csv_text.encode("utf-8")
 
@@ -154,7 +154,7 @@ class PortfolioPr2TestCase(unittest.TestCase):
 
     def test_import_side_parser_avoids_false_sell_match(self) -> None:
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号\n"
+            "成交日期,证券代碼,买卖标志,成交数量,成交均价,成交编号\n"
             "2026-01-02,600519,Asset Transfer,10,100,HT-002\n"
         )
         parsed = self.import_service.parse_trade_csv(
@@ -174,8 +174,8 @@ class PortfolioPr2TestCase(unittest.TestCase):
 
     def test_import_preserves_leading_zero_symbol(self) -> None:
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号\n"
-            "2026-01-02,000001,买入,10,100,HT-003\n"
+            "成交日期,证券代碼,买卖标志,成交数量,成交均价,成交编号\n"
+            "2026-01-02,000001,買入,10,100,HT-003\n"
         )
         parsed = self.import_service.parse_trade_csv(
             broker="huatai",
@@ -188,9 +188,9 @@ class PortfolioPr2TestCase(unittest.TestCase):
         account = self.service.create_account(name="Main", broker="Demo", market="cn", base_currency="CNY")
         aid = account["id"]
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号,手续费,印花税\n"
-            "2026-01-02,600519,买入,10,100,HT-004,1,0\n"
-            "2026-01-02,600519,买入,10,100,HT-004,1,0\n"
+            "成交日期,证券代碼,买卖标志,成交数量,成交均价,成交编号,手续费,印花税\n"
+            "2026-01-02,600519,買入,10,100,HT-004,1,0\n"
+            "2026-01-02,600519,買入,10,100,HT-004,1,0\n"
         )
         parsed = self.import_service.parse_trade_csv(
             broker="huatai",
@@ -210,9 +210,9 @@ class PortfolioPr2TestCase(unittest.TestCase):
         account = self.service.create_account(name="Main", broker="Demo", market="cn", base_currency="CNY")
         aid = account["id"]
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,手续费,印花税\n"
-            "2026-01-02,600519,买入,10,100,1,0\n"
-            "2026-01-02,600519,买入,10,100,1,0\n"
+            "成交日期,证券代碼,买卖标志,成交数量,成交均价,手续费,印花税\n"
+            "2026-01-02,600519,買入,10,100,1,0\n"
+            "2026-01-02,600519,買入,10,100,1,0\n"
         )
         parsed = self.import_service.parse_trade_csv(
             broker="huatai",

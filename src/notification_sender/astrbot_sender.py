@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-AstrBot 发送提醒服务
+AstrBot 发送提醒服務
 
 职责：
-1. 通过 Astrbot API 发送 AstrBot 消息
+1. 通过 Astrbot API 发送 AstrBot 訊息
 """
 import logging
 import json
@@ -36,17 +36,17 @@ class AstrbotSender:
         self._webhook_verify_ssl = getattr(config, 'webhook_verify_ssl', True)
         
     def _is_astrbot_configured(self) -> bool:
-        """检查 AstrBot 配置是否完整（支持 Bot 或 Webhook）"""
+        """检查 AstrBot 配置是否完整（支援 Bot 或 Webhook）"""
         # 只要配置了 URL，即视为可用
         url_ok = bool(self._astrbot_config['astrbot_url'])
         return url_ok
 
     def send_to_astrbot(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
         """
-        推送消息到 AstrBot（通过适配器支持）
+        推送訊息到 AstrBot（通过适配器支援）
 
         Args:
-            content: Markdown 格式的消息内容
+            content: Markdown 格式的訊息内容
 
         Returns:
             是否发送成功
@@ -54,17 +54,17 @@ class AstrbotSender:
         if self._astrbot_config['astrbot_url']:
             return self._send_astrbot(content, timeout_seconds=timeout_seconds)
 
-        logger.warning("AstrBot 配置不完整，跳过推送")
+        logger.warning("AstrBot 配置不完整，略過推送")
         return False
 
 
     def _send_astrbot(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
         import time
         """
-        使用 Bot API 发送消息到 AstrBot
+        使用 Bot API 发送訊息到 AstrBot
 
         Args:
-            content: Markdown 格式的消息内容
+            content: Markdown 格式的訊息内容
 
         Returns:
             是否发送成功
@@ -79,7 +79,7 @@ class AstrbotSender:
             signature =  ""
             timestamp = str(int(time.time()))
             if self._astrbot_config['astrbot_token']:
-                """计算请求签名"""
+                """计算請求签名"""
                 payload_json = json.dumps(payload, sort_keys=True)
                 sign_data = f"{timestamp}.{payload_json}".encode('utf-8')
                 key = self._astrbot_config['astrbot_token']
@@ -100,7 +100,7 @@ class AstrbotSender:
             )
 
             if response.status_code == 200:
-                logger.info("AstrBot 消息发送成功")
+                logger.info("AstrBot 訊息发送成功")
                 return True
             else:
                 logger.error(f"AstrBot 发送失败: {response.status_code} {response.text}")

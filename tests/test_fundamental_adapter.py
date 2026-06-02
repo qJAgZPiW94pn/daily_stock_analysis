@@ -31,7 +31,7 @@ class TestFundamentalAdapter(unittest.TestCase):
     def test_extract_latest_row_returns_none_when_code_mismatch(self) -> None:
         df = pd.DataFrame(
             {
-                "股票代码": ["600000", "000001"],
+                "股票代碼": ["600000", "000001"],
                 "值": [1, 2],
             }
         )
@@ -48,7 +48,7 @@ class TestFundamentalAdapter(unittest.TestCase):
         adapter = AkshareFundamentalAdapter()
         df = pd.DataFrame(
             {
-                "股票代码": ["600000"],
+                "股票代碼": ["600000"],
                 "日期": ["2026-01-01"],
             }
         )
@@ -63,7 +63,7 @@ class TestFundamentalAdapter(unittest.TestCase):
         today = pd.Timestamp.now().strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["600519"],
+                "股票代碼": ["600519"],
                 "日期": [today],
             }
         )
@@ -81,21 +81,21 @@ class TestFundamentalAdapter(unittest.TestCase):
         old_day = (now - timedelta(days=500)).strftime("%Y-%m-%d")
         fin_df = pd.DataFrame(
             {
-                "股票代码": ["600519"],
+                "股票代碼": ["600519"],
                 "报告期": [within_ttm],
                 "营业总收入": [1000.0],
-                "归母净利润": [300.0],
+                "归母净利潤": [300.0],
                 "经营活动产生的现金流量净额": [500.0],
                 "净资产收益率": [18.2],
                 "营业收入同比": [12.0],
-                "净利润同比": [9.5],
+                "净利潤同比": [9.5],
             }
         )
-        forecast_df = pd.DataFrame({"股票代码": ["600519"], "预告": ["预增"]})
-        quick_df = pd.DataFrame({"股票代码": ["600519"], "快报": ["快报摘要"]})
+        forecast_df = pd.DataFrame({"股票代碼": ["600519"], "预告": ["预增"]})
+        quick_df = pd.DataFrame({"股票代碼": ["600519"], "快报": ["快报摘要"]})
         dividend_df = pd.DataFrame(
             {
-                "股票代码": ["600519", "600519", "600519", "600519"],
+                "股票代碼": ["600519", "600519", "600519", "600519"],
                 "除息日": [within_ttm, within_ttm, future_day, old_day],
                 "分配方案": ["10派3元(含税)", "10派3元(含税)", "10派5元", "10派1元"],
             }
@@ -132,7 +132,7 @@ class TestFundamentalAdapter(unittest.TestCase):
         now = datetime.now().strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["000001"],
+                "股票代碼": ["000001"],
                 "除息日": [now],
                 "分配方案": ["10派3元(含税)"],
             }
@@ -145,7 +145,7 @@ class TestFundamentalAdapter(unittest.TestCase):
         now = datetime.now().strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["600519"],
+                "股票代碼": ["600519"],
                 "除息日": [now],
                 "分配方案": ["10派3元(税后)"],
             }
@@ -160,7 +160,7 @@ class TestFundamentalAdapter(unittest.TestCase):
         day_366 = (now - timedelta(days=366)).strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["600519", "600519"],
+                "股票代碼": ["600519", "600519"],
                 "除息日": [day_365, day_366],
                 "分配方案": ["10派3元(含税)", "10派5元(含税)"],
             }

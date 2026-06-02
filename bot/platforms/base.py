@@ -18,9 +18,9 @@ class BotPlatform(ABC):
     平台适配器抽象基类
     
     负责：
-    1. 验证 Webhook 请求签名
-    2. 解析平台消息为统一格式
-    3. 将响应转换为平台格式
+    1. 验证 Webhook 請求签名
+    2. 解析平台訊息为统一格式
+    3. 将回應转换为平台格式
     
     使用示例：
         class MyPlatform(BotPlatform):
@@ -33,11 +33,11 @@ class BotPlatform(ABC):
                 return True
             
             def parse_message(self, data) -> Optional[BotMessage]:
-                # 解析消息逻辑
+                # 解析訊息逻辑
                 return BotMessage(...)
             
             def format_response(self, response, message) -> WebhookResponse:
-                # 格式化响应逻辑
+                # 格式化回應逻辑
                 return WebhookResponse.success({"text": response.text})
     """
     
@@ -47,20 +47,20 @@ class BotPlatform(ABC):
         """
         平台标识名称
         
-        用于路由匹配和日志标识，如 "feishu", "dingtalk"
+        用于路由匹配和日誌标识，如 "feishu", "dingtalk"
         """
         pass
     
     @abstractmethod
     def verify_request(self, headers: Dict[str, str], body: bytes) -> bool:
         """
-        验证请求签名
+        验证請求签名
         
         各平台有不同的签名验证机制，需要单独实现。
         
         Args:
-            headers: HTTP 请求头
-            body: 请求体原始字节
+            headers: HTTP 請求头
+            body: 請求体原始字节
             
         Returns:
             签名是否有效
@@ -70,16 +70,16 @@ class BotPlatform(ABC):
     @abstractmethod
     def parse_message(self, data: Dict[str, Any]) -> Optional[BotMessage]:
         """
-        解析平台消息为统一格式
+        解析平台訊息为统一格式
         
-        将平台特定的消息格式转换为 BotMessage。
-        如果不是需要处理的消息类型（如事件回调），返回 None。
+        将平台特定的訊息格式转换为 BotMessage。
+        如果不是需要處理的訊息类型（如事件回调），傳回 None。
         
         Args:
-            data: 解析后的 JSON 数据
+            data: 解析后的 JSON 數據
             
         Returns:
-            BotMessage 对象，或 None（不需要处理）
+            BotMessage 对象，或 None（不需要處理）
         """
         pass
     
@@ -90,11 +90,11 @@ class BotPlatform(ABC):
         message: BotMessage
     ) -> WebhookResponse:
         """
-        将统一响应转换为平台格式
+        将统一回應转换为平台格式
         
         Args:
-            response: 统一响应对象
-            message: 原始消息对象（用于获取回复目标等信息）
+            response: 统一回應对象
+            message: 原始訊息对象（用于获取回复目标等資訊）
             
         Returns:
             WebhookResponse 对象
@@ -119,16 +119,16 @@ class BotPlatform(ABC):
 
     def handle_challenge(self, data: Dict[str, Any]) -> Optional[WebhookResponse]:
         """
-        处理平台验证请求
+        處理平台验证請求
         
-        部分平台在配置 Webhook 时会发送验证请求，需要返回特定响应。
+        部分平台在配置 Webhook 时会发送验证請求，需要傳回特定回應。
         子类可重写此方法。
         
         Args:
-            data: 请求数据
+            data: 請求數據
             
         Returns:
-            验证响应，或 None（不是验证请求）
+            验证回應，或 None（不是验证請求）
         """
         return None
     
@@ -139,31 +139,31 @@ class BotPlatform(ABC):
         data: Dict[str, Any]
     ) -> Tuple[Optional[BotMessage], Optional[WebhookResponse]]:
         """
-        处理 Webhook 请求
+        處理 Webhook 請求
         
         这是主入口方法，协调验证、解析等流程。
         
         Args:
-            headers: HTTP 请求头
-            body: 请求体原始字节
-            data: 解析后的 JSON 数据
+            headers: HTTP 請求头
+            body: 請求体原始字节
+            data: 解析后的 JSON 數據
             
         Returns:
             (BotMessage, WebhookResponse) 元组
-            - 如果是验证请求：(None, challenge_response)
-            - 如果是普通消息：(message, None) - 响应将在命令处理后生成
-            - 如果验证失败或无需处理：(None, error_response 或 None)
+            - 如果是验证請求：(None, challenge_response)
+            - 如果是普通訊息：(message, None) - 回應将在命令處理后生成
+            - 如果验证失败或無需處理：(None, error_response 或 None)
         """
-        # 1. 检查是否是验证请求
+        # 1. 检查是否是验证請求
         challenge_response = self.handle_challenge(data)
         if challenge_response:
             return None, challenge_response
         
-        # 2. 验证请求签名
+        # 2. 验证請求签名
         if not self.verify_request(headers, body):
             return None, WebhookResponse.error("Invalid signature", 403)
         
-        # 3. 解析消息
+        # 3. 解析訊息
         message = self.parse_message(data)
         
         return message, None

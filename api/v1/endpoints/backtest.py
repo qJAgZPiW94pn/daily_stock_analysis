@@ -45,7 +45,7 @@ def _validate_analysis_date_range(
     response_model=BacktestRunResponse,
     responses={
         200: {"description": "回测执行完成"},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
     summary="触发回测",
     description="对历史分析记录进行回测评估，并写入 backtest_results/backtest_summaries",
@@ -77,13 +77,13 @@ def run_backtest(
     response_model=BacktestResultsResponse,
     responses={
         200: {"description": "回测结果列表"},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
     summary="获取回测结果",
-    description="分页获取回测结果，支持按股票代码过滤",
+    description="分页获取回测结果，支援按股票代碼过滤",
 )
 def get_backtest_results(
-    code: Optional[str] = Query(None, description="股票代码筛选"),
+    code: Optional[str] = Query(None, description="股票代碼筛选"),
     eval_window_days: Optional[int] = Query(None, ge=1, le=120, description="评估窗口过滤"),
     analysis_date_from: Optional[date] = Query(None, description="分析日期起始（含）"),
     analysis_date_to: Optional[date] = Query(None, description="分析日期结束（含）"),
@@ -112,10 +112,10 @@ def get_backtest_results(
     except HTTPException:
         raise
     except Exception as exc:
-        logger.error(f"查询回测结果失败: {exc}", exc_info=True)
+        logger.error(f"查詢回测结果失败: {exc}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail={"error": "internal_error", "message": f"查询回测结果失败: {str(exc)}"},
+            detail={"error": "internal_error", "message": f"查詢回测结果失败: {str(exc)}"},
         )
 
 
@@ -125,7 +125,7 @@ def get_backtest_results(
     responses={
         200: {"description": "整体回测表现"},
         404: {"description": "无回测汇总", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
     summary="获取整体回测表现",
 )
@@ -159,10 +159,10 @@ def get_overall_performance(
     except HTTPException:
         raise
     except Exception as exc:
-        logger.error(f"查询整体表现失败: {exc}", exc_info=True)
+        logger.error(f"查詢整体表现失败: {exc}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail={"error": "internal_error", "message": f"查询整体表现失败: {str(exc)}"},
+            detail={"error": "internal_error", "message": f"查詢整体表现失败: {str(exc)}"},
         )
 
 
@@ -172,7 +172,7 @@ def get_overall_performance(
     responses={
         200: {"description": "单股回测表现"},
         404: {"description": "无回测汇总", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
     summary="获取单股回测表现",
 )
@@ -207,8 +207,8 @@ def get_stock_performance(
     except HTTPException:
         raise
     except Exception as exc:
-        logger.error(f"查询单股表现失败: {exc}", exc_info=True)
+        logger.error(f"查詢单股表现失败: {exc}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail={"error": "internal_error", "message": f"查询单股表现失败: {str(exc)}"},
+            detail={"error": "internal_error", "message": f"查詢单股表现失败: {str(exc)}"},
         )

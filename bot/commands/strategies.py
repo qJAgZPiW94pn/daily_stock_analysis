@@ -57,7 +57,7 @@ class StrategiesCommand(BotCommand):
 
             all_skills = sm.list_skills()
             if not all_skills:
-                return BotResponse.text_response("📋 暂无可用策略。请检查 strategies/ 目录。")
+                return BotResponse.text_response("📋 暂无可用策略。请检查 strategies/ 目錄。")
 
             skills = all_skills
             if show_active_only:
@@ -66,7 +66,7 @@ class StrategiesCommand(BotCommand):
                     return BotResponse.text_response("📋 当前没有激活的策略。")
 
             # Group by category
-            categories = {"trend": "📈 趋势类", "pattern": "📊 形态类", "reversal": "🔄 反转类", "framework": "🧩 框架类"}
+            categories = {"trend": "📈 趨勢类", "pattern": "📊 形态类", "reversal": "🔄 反转类", "framework": "🧩 框架类"}
             grouped = {}
             for skill in skills:
                 cat = skill.category or "trend"
@@ -93,7 +93,7 @@ class StrategiesCommand(BotCommand):
             active_count = sum(1 for s in all_skills if s.name in configured_active)
             total_count = len(all_skills)
             lines.append(f"共 {total_count} 个策略，已激活 {active_count} 个")
-            lines.append(f"\n💡 使用 `/ask <股票代码> <策略名>` 指定策略分析")
+            lines.append(f"\n💡 使用 `/ask <股票代碼> <策略名>` 指定策略分析")
 
             return BotResponse.markdown_response("\n".join(lines))
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-飞书 发送提醒服务
+飞书 发送提醒服務
 
 职责：
-1. 通过 webhook 发送飞书消息
+1. 通过 webhook 发送飞书訊息
 """
 import base64
 import hashlib
@@ -75,9 +75,9 @@ class FeishuSender:
           
     def send_to_feishu(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
         """
-        推送消息到飞书机器人
+        推送訊息到飞书机器人
         
-        飞书自定义机器人 Webhook 消息格式：
+        飞书自定义机器人 Webhook 訊息格式：
         {
             "msg_type": "interactive",
             "card": {
@@ -100,22 +100,22 @@ class FeishuSender:
             }
         }
         
-        说明：飞书文本消息不会渲染 Markdown，需使用交互卡片（lark_md）格式
+        说明：飞书文本訊息不会渲染 Markdown，需使用交互卡片（lark_md）格式
         
-        注意：飞书文本消息限制约 20KB，超长内容会自动分批发送
-        可通过环境变量 FEISHU_MAX_BYTES 调整限制值
+        注意：飞书文本訊息限制约 20KB，超长内容会自动分批发送
+        可通过环境變數 FEISHU_MAX_BYTES 调整限制值
         
         Args:
-            content: 消息内容（Markdown 会转为纯文本）
+            content: 訊息内容（Markdown 会转为纯文本）
             
         Returns:
             是否发送成功
         """
         if not self._feishu_url:
-            logger.warning("飞书 Webhook 未配置，跳过推送")
+            logger.warning("飞书 Webhook 未配置，略過推送")
             return False
         
-        # 飞书 lark_md 支持有限，先做格式转换
+        # 飞书 lark_md 支援有限，先做格式转换
         formatted_content = format_feishu_markdown(content)
 
         max_bytes = self._feishu_max_bytes  # 从配置读取，默认 20000 字节
@@ -123,7 +123,7 @@ class FeishuSender:
         effective_max_bytes = max_bytes - keyword_overhead
 
         if effective_max_bytes <= 0:
-            logger.error("飞书关键词过长，超过单条消息允许的最大字节数，无法发送")
+            logger.error("飞书关键词过长，超过单条訊息允许的最大字节数，无法发送")
             return False
         
         # 检查字节长度，超长则分批发送
@@ -137,24 +137,24 @@ class FeishuSender:
                     min_chunk_bytes,
                 )
                 return False
-            logger.info(f"飞书消息内容超长({content_bytes}字节/{len(content)}字符)，将分批发送")
+            logger.info(f"飞书訊息内容超长({content_bytes}字节/{len(content)}字符)，将分批发送")
             return self._send_feishu_chunked(formatted_content, effective_max_bytes)
         
         try:
             return self._send_feishu_message(formatted_content, timeout_seconds=timeout_seconds)
         except Exception as e:
-            logger.error(f"发送飞书消息失败: {e}")
+            logger.error(f"发送飞书訊息失败: {e}")
             return False
    
     def _send_feishu_chunked(self, content: str, max_bytes: int) -> bool:
         """
-        分批发送长消息到飞书
+        分批发送长訊息到飞书
         
         按股票分析块（以 --- 或 ### 分隔）智能分割，确保每批不超过限制
         
         Args:
-            content: 完整消息内容
-            max_bytes: 单条消息最大字节数
+            content: 完整訊息内容
+            max_bytes: 单条訊息最大字节数
             
         Returns:
             是否全部发送成功
@@ -162,7 +162,7 @@ class FeishuSender:
         try:
             chunks = chunk_content_by_max_bytes(content, max_bytes, add_page_marker=True)
         except ValueError as e:
-            logger.error("飞书消息分片失败，单片预算不足以安全分页（关键词过长或 max_bytes 过小）: %s", e)
+            logger.error("飞书訊息分片失败，单片预算不足以安全分页（关键词过长或 max_bytes 过小）: %s", e)
             return False
         
         # 分批发送
@@ -188,15 +188,15 @@ class FeishuSender:
         return success_count == total_chunks
     
     def _send_feishu_message(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
-        """发送单条飞书消息（优先使用 Markdown 卡片）"""
+        """发送单条飞书訊息（优先使用 Markdown 卡片）"""
         prepared_content = self._apply_keyword_prefix(content)
         security_fields = self._build_security_fields()
 
         def _post_payload(payload: Dict[str, Any]) -> bool:
             request_payload = dict(payload)
             request_payload.update(security_fields)
-            logger.debug(f"飞书请求 URL: {self._feishu_url}")
-            logger.debug(f"飞书请求 payload 长度: {len(prepared_content)} 字符")
+            logger.debug(f"飞书請求 URL: {self._feishu_url}")
+            logger.debug(f"飞书請求 payload 长度: {len(prepared_content)} 字符")
 
             response = requests.post(
                 self._feishu_url,
@@ -205,27 +205,27 @@ class FeishuSender:
                 verify=self._webhook_verify_ssl
             )
 
-            logger.debug(f"飞书响应状态码: {response.status_code}")
-            logger.debug(f"飞书响应内容: {response.text}")
+            logger.debug(f"飞书回應狀態码: {response.status_code}")
+            logger.debug(f"飞书回應内容: {response.text}")
 
             if response.status_code == 200:
                 result = response.json()
                 code = result.get('code') if 'code' in result else result.get('StatusCode')
                 if code == 0:
-                    logger.info("飞书消息发送成功")
+                    logger.info("飞书訊息发送成功")
                     return True
                 else:
-                    error_msg = result.get('msg') or result.get('StatusMessage', '未知错误')
+                    error_msg = result.get('msg') or result.get('StatusMessage', '未知錯誤')
                     error_code = result.get('code') or result.get('StatusCode', 'N/A')
-                    logger.error(f"飞书返回错误 [code={error_code}]: {error_msg}")
-                    logger.error(f"完整响应: {result}")
+                    logger.error(f"飞书傳回錯誤 [code={error_code}]: {error_msg}")
+                    logger.error(f"完整回應: {result}")
                     return False
             else:
-                logger.error(f"飞书请求失败: HTTP {response.status_code}")
-                logger.error(f"响应内容: {response.text}")
+                logger.error(f"飞书請求失败: HTTP {response.status_code}")
+                logger.error(f"回應内容: {response.text}")
                 return False
 
-        # 1) 优先使用交互卡片（支持 Markdown 渲染）
+        # 1) 优先使用交互卡片（支援 Markdown 渲染）
         card_payload = {
             "msg_type": "interactive",
             "card": {
@@ -251,7 +251,7 @@ class FeishuSender:
         if _post_payload(card_payload):
             return True
 
-        # 2) 回退为普通文本消息
+        # 2) 回退为普通文本訊息
         text_payload = {
             "msg_type": "text",
             "content": {

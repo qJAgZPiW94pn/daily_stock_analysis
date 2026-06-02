@@ -47,7 +47,7 @@ class BatchCommand(BotCommand):
     
     @property
     def admin_only(self) -> bool:
-        """批量分析需要管理员权限（防止滥用）"""
+        """批量分析需要管理员權限（防止滥用）"""
         return False  # 可以根据需要设为 True
     
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
@@ -64,7 +64,7 @@ class BatchCommand(BotCommand):
                 "自选股列表为空，请先配置 STOCK_LIST"
             )
         
-        # 解析数量参数
+        # 解析数量參數
         limit = None
         if args:
             try:
@@ -80,7 +80,7 @@ class BatchCommand(BotCommand):
         
         logger.info(f"[BatchCommand] 开始批量分析 {len(stock_list)} 只股票")
         
-        # 在后台线程中执行分析
+        # 在后台執行緒中执行分析
         thread = threading.Thread(
             target=self._run_batch_analysis,
             args=(stock_list, message),
@@ -89,7 +89,7 @@ class BatchCommand(BotCommand):
         thread.start()
         
         return BotResponse.markdown_response(
-            f"✅ **批量分析任务已启动**\n\n"
+            f"✅ **批量分析工作已啟動**\n\n"
             f"• 分析数量: {len(stock_list)} 只\n"
             f"• 股票列表: {', '.join(stock_list[:5])}"
             f"{'...' if len(stock_list) > 5 else ''}\n\n"
@@ -104,7 +104,7 @@ class BatchCommand(BotCommand):
             
             config = get_config()
             
-            # 创建分析管道
+            # 建立分析管道
             pipeline = StockAnalysisPipeline(
                 config=config,
                 source_message=message,

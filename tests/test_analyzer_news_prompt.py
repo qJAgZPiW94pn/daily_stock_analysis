@@ -23,12 +23,12 @@ from src.analyzer import (
 
 class AnalyzerNewsPromptTestCase(unittest.TestCase):
     def test_contains_trend_hint_treats_non_adjacent_negation_as_negated(self) -> None:
-        self.assertFalse(_contains_trend_hint("尚未形成上升趋势，继续观察。", _BULLISH_TREND_HINTS))
-        self.assertFalse(_contains_trend_hint("未形成上升趋势，继续观察。", _BULLISH_TREND_HINTS))
-        self.assertFalse(_contains_trend_hint("并未形成上升趋势，继续观察。", _BULLISH_TREND_HINTS))
-        self.assertFalse(_contains_trend_hint("没有形成多头排列，继续观察。", _BULLISH_TREND_HINTS))
+        self.assertFalse(_contains_trend_hint("尚未形成上升趨勢，繼續观察。", _BULLISH_TREND_HINTS))
+        self.assertFalse(_contains_trend_hint("未形成上升趨勢，繼續观察。", _BULLISH_TREND_HINTS))
+        self.assertFalse(_contains_trend_hint("并未形成上升趨勢，繼續观察。", _BULLISH_TREND_HINTS))
+        self.assertFalse(_contains_trend_hint("没有形成多头排列，繼續观察。", _BULLISH_TREND_HINTS))
         self.assertFalse(_contains_trend_hint("当前无多头排列，仍需观察。", _BULLISH_TREND_HINTS))
-        self.assertFalse(_contains_trend_hint("尚不属于上升趋势，反弹仍待确认。", _BULLISH_TREND_HINTS))
+        self.assertFalse(_contains_trend_hint("尚不属于上升趨勢，反弹仍待确认。", _BULLISH_TREND_HINTS))
         self.assertFalse(_contains_trend_hint("当前非多头排列，仍需观察。", _BULLISH_TREND_HINTS))
         self.assertFalse(_contains_trend_hint("This is not a bullish trend yet.", _BULLISH_TREND_HINTS))
 
@@ -41,14 +41,14 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
         )
 
     def test_contains_trend_hint_keeps_contrast_clause_target_hint(self) -> None:
-        self.assertTrue(_contains_trend_hint("不是空头而是多头排列，趋势修复。", _BULLISH_TREND_HINTS))
-        self.assertFalse(_contains_trend_hint("未转为上升趋势，反弹仍待确认。", _BULLISH_TREND_HINTS))
+        self.assertTrue(_contains_trend_hint("不是空头而是多头排列，趨勢修复。", _BULLISH_TREND_HINTS))
+        self.assertFalse(_contains_trend_hint("未转为上升趨勢，反弹仍待确认。", _BULLISH_TREND_HINTS))
 
     def test_contains_trend_hint_ignores_single_character_prefixes_in_common_words(self) -> None:
-        self.assertTrue(_contains_trend_hint("非常明显的多头排列，趋势仍在延续。", _BULLISH_TREND_HINTS))
-        self.assertTrue(_contains_trend_hint("未来上升趋势若放量将进一步确认。", _BULLISH_TREND_HINTS))
+        self.assertTrue(_contains_trend_hint("非常明显的多头排列，趨勢仍在延续。", _BULLISH_TREND_HINTS))
+        self.assertTrue(_contains_trend_hint("未来上升趨勢若放量将进一步确认。", _BULLISH_TREND_HINTS))
         self.assertEqual(
-            _infer_trend_direction({"trend_status": "非常明显的多头排列", "ma_alignment": "未来上升趋势逐步明确"}),
+            _infer_trend_direction({"trend_status": "非常明显的多头排列", "ma_alignment": "未来上升趨勢逐步明确"}),
             "bullish",
         )
 
@@ -64,11 +64,11 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
 
     def test_infer_trend_direction_ignores_negated_bullish_hints(self) -> None:
         self.assertEqual(
-            _infer_trend_direction({"trend_status": "未形成上升趋势", "ma_alignment": "当前非多头排列"}),
+            _infer_trend_direction({"trend_status": "未形成上升趨勢", "ma_alignment": "当前非多头排列"}),
             "neutral",
         )
         self.assertEqual(
-            _infer_trend_direction({"trend_status": "没有形成多头排列", "ma_alignment": "当前无上升趋势"}),
+            _infer_trend_direction({"trend_status": "没有形成多头排列", "ma_alignment": "当前无上升趨勢"}),
             "neutral",
         )
 
@@ -90,7 +90,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
             prompt = analyzer._get_analysis_system_prompt("zh", stock_code="600519")
 
         self.assertIn("### 技能 1: 波段低吸", prompt)
-        self.assertNotIn("专注于趋势交易", prompt)
+        self.assertNotIn("专注于趨勢交易", prompt)
 
     def test_analysis_prompt_uses_injected_skill_sections_instead_of_hardcoded_trend_baseline(self) -> None:
         with patch.object(GeminiAnalyzer, "_init_litellm", return_value=None):
@@ -102,20 +102,20 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
         prompt = analyzer._get_analysis_system_prompt("zh", stock_code="600519")
 
         self.assertIn("### 技能 1: 缠论", prompt)
-        self.assertNotIn("专注于趋势交易", prompt)
+        self.assertNotIn("专注于趨勢交易", prompt)
         self.assertNotIn("多头排列：MA5 > MA10 > MA20", prompt)
 
     def test_analysis_prompt_keeps_injected_default_policy_for_implicit_default_run(self) -> None:
         with patch.object(GeminiAnalyzer, "_init_litellm", return_value=None):
             analyzer = GeminiAnalyzer(
-                skill_instructions="### 技能 1: 默认多头趋势",
+                skill_instructions="### 技能 1: 默认多头趨勢",
                 default_skill_policy="## 默认技能基线（必须严格遵守）\n- **多头排列必须条件**：MA5 > MA10 > MA20",
                 use_legacy_default_prompt=True,
             )
 
         prompt = analyzer._get_analysis_system_prompt("zh", stock_code="600519")
 
-        self.assertIn("专注于趋势交易", prompt)
+        self.assertIn("专注于趨勢交易", prompt)
         self.assertIn("多头排列必须条件", prompt)
         self.assertIn("多头排列：MA5 > MA10 > MA20", prompt)
 
@@ -126,7 +126,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
         prompt = analyzer._get_analysis_system_prompt("zh", stock_code="002812")
 
         self.assertIn("可操作性与稳定性约束", prompt)
-        self.assertIn("不得仅因为单日涨跌", prompt)
+        self.assertIn("不得仅因为单日漲跌", prompt)
         self.assertIn("支撑/压力位", prompt)
         self.assertIn("洗盘观察", prompt)
 
@@ -158,7 +158,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
         self.assertIn("近7日的新闻搜索结果", prompt)
         self.assertIn("每一条都必须带具体日期（YYYY-MM-DD）", prompt)
         self.assertIn("超出近7日窗口的新闻一律忽略", prompt)
-        self.assertIn("时间未知、无法确定发布日期的新闻一律忽略", prompt)
+        self.assertIn("时间未知、无法確定發佈日期的新闻一律忽略", prompt)
         self.assertIn("财报与分红（价值投资口径）", prompt)
         self.assertIn("禁止编造", prompt)
 
@@ -191,7 +191,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
 
         prompt = analyzer._format_prompt(context, "恩捷股份", news_context=None)
 
-        self.assertIn("主力资金流向（操作建议过滤器）", prompt)
+        self.assertIn("主力資金流向（操作建议过滤器）", prompt)
         self.assertIn("主力净流入", prompt)
         self.assertIn("-1200000", prompt)
         self.assertIn("接近压力且主力流出时不得追买", prompt)
@@ -278,7 +278,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
                 "buy_signal": "观察",
                 "signal_score": 41,
                 "signal_reasons": ["多头排列，持续上涨", "事件催化存在但技术待确认"],
-                "risk_factors": ["跌破MA20，趋势承压"],
+                "risk_factors": ["跌破MA20，趨勢承压"],
             },
         }
 
@@ -330,7 +330,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
         self.assertNotIn("空头排列，持续下跌\n", prompt)
         self.assertNotIn("空头排列，持续下跌", prompt)
         self.assertIn("已剔除与多头主判断直接冲突的空头结构理由", prompt)
-        self.assertIn("已剔除与多头主判断直接冲突的空头结构风险表述", prompt)
+        self.assertIn("已剔除与多头主判断直接冲突的空头结构風險表述", prompt)
 
     def test_format_prompt_removes_bullish_reasons_when_final_trend_is_weak_bearish(self) -> None:
         with patch.object(GeminiAnalyzer, "_init_litellm", return_value=None):
@@ -363,7 +363,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
         prompt = analyzer._format_prompt(
             context,
             "宁德时代",
-            news_context="2026-04-27 新产品发布，市场情绪回暖。",
+            news_context="2026-04-27 新产品發佈，市场情绪回暖。",
         )
 
         self.assertIn("弱势空头，MA5<MA10 但 MA10≥MA20", prompt)
@@ -377,7 +377,7 @@ class AnalyzerNewsPromptTestCase(unittest.TestCase):
             "trend_status": "空头排列",
             "ma_alignment": "空头排列 MA5<MA10<MA20",
             "signal_reasons": ["多头排列，持续上涨", "事件催化存在但技术待确认"],
-            "risk_factors": ["跌破MA20，趋势承压"],
+            "risk_factors": ["跌破MA20，趨勢承压"],
         }
 
         sanitized = _sanitize_trend_analysis_for_prompt(original, volume_change_ratio=12.4)

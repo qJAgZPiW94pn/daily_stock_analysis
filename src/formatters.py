@@ -4,7 +4,7 @@
 格式化工具模块
 ===================================
 
-提供各种内容格式化工具函数，用于将通用格式转换为平台特定格式。
+提供各种内容格式化工具函數，用于将通用格式转换为平台特定格式。
 """
 
 import re
@@ -290,11 +290,11 @@ def _chunk_by_max_bytes(content: str, max_bytes: int) -> List[str]:
 
 def chunk_content_by_max_bytes(content: str, max_bytes: int, add_page_marker: bool = False) -> List[str]:
     """
-    按字节数智能分割消息内容
+    按字节数智能分割訊息内容
     
     Args:
-        content: 完整消息内容
-        max_bytes: 单条消息最大字节数
+        content: 完整訊息内容
+        max_bytes: 单条訊息最大字节数
         add_page_marker: 是否添加分页标记
         
     Returns:
@@ -403,7 +403,7 @@ def format_feishu_markdown(content: str) -> str:
     将通用 Markdown 转换为飞书 lark_md 更友好的格式
     
     转换规则：
-    - 飞书不支持 Markdown 标题（# / ## / ###），用加粗代替
+    - 飞书不支援 Markdown 标题（# / ## / ###），用加粗代替
     - 引用块使用前缀替代
     - 分隔线统一为细线
     - 表格转换为条目列表
@@ -434,7 +434,7 @@ def format_feishu_markdown(content: str) -> str:
 
         rows = []
         for raw in buffer:
-            # 跳过分隔行（如 |---|---|）
+            # 略過分隔行（如 |---|---|）
             if re.match(r'^\s*\|?\s*[:-]+\s*(\|\s*[:-]+\s*)+\|?\s*$', raw):
                 continue
             parsed = _parse_row(raw)
@@ -459,7 +459,7 @@ def format_feishu_markdown(content: str) -> str:
     for raw_line in content.splitlines():
         line = raw_line.rstrip()
 
-        # 处理表格行
+        # 處理表格行
         if line.strip().startswith('|'):
             table_buffer.append(line)
             continue
@@ -486,7 +486,7 @@ def format_feishu_markdown(content: str) -> str:
 
         lines.append(line)
 
-    # 处理末尾的表格
+    # 處理末尾的表格
     if table_buffer:
         _flush_table_rows(table_buffer, lines)
 
@@ -495,10 +495,10 @@ def format_feishu_markdown(content: str) -> str:
 
 def _chunk_by_separators(content: str) -> tuple[list[str], str]:
     """
-    通过分割线等特殊字符将消息内容分割为多个区块
+    通过分割线等特殊字符将訊息内容分割为多个区块
     
     Args:
-        content: 完整消息内容
+        content: 完整訊息内容
         
     Returns:
         sections: 分割后的区块列表
@@ -540,11 +540,11 @@ def _chunk_by_separators(content: str) -> tuple[list[str], str]:
 
 def _chunk_by_max_words(content: str, max_words: int, special_char_len: int = 2) -> list[str]:
     """
-    按字数分割消息内容
+    按字数分割訊息内容
     
     Args:
-        content: 完整消息内容
-        max_words: 单条消息最大字数
+        content: 完整訊息内容
+        max_words: 单条訊息最大字数
         special_char_len: 每个特殊字符的长度，默认为 2
         
     Returns:
@@ -582,11 +582,11 @@ def chunk_content_by_max_words(
     add_page_marker: bool = False
     ) -> list[str]:
     """
-    按字数智能分割消息内容
+    按字数智能分割訊息内容
     
     Args:
-        content: 完整消息内容
-        max_words: 单条消息最大字数
+        content: 完整訊息内容
+        max_words: 单条訊息最大字数
         special_char_len: 每个特殊字符的长度，默认为 2
         add_page_marker: 是否添加分页标记
         
@@ -597,7 +597,7 @@ def chunk_content_by_max_words(
         if max_words < MIN_MAX_WORDS:
             # Safe guard，避免无限递归
             # 理论上，max_words在每次递归中可以减小到无限小，但实际中不太可能发生，
-            # 除非每次_chunk_by_separators都能成功返回分隔符，且max_words初始值太小。
+            # 除非每次_chunk_by_separators都能成功傳回分隔符，且max_words初始值太小。
             raise ValueError(f"max_words={max_words} < {MIN_MAX_WORDS}, 可能陷入无限递归。")
         
         if _effective_len(content, special_char_len) <= max_words:

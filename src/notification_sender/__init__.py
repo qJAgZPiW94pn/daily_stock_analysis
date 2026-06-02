@@ -4,7 +4,7 @@
 通知发送层模块
 ===================================
 
-提供各种通知发送服务
+提供各种通知发送服務
 """
 
 from .astrbot_sender import AstrbotSender

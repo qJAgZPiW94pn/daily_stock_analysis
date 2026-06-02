@@ -25,7 +25,7 @@ class _DummyFetcher:
 
     @staticmethod
     def get_stock_name(_stock_code):
-        return "测试股票"
+        return "測試股票"
 
 
 class _FallbackNameFetcher:
@@ -86,14 +86,14 @@ class TestPrefetchStockNames(unittest.TestCase):
 
         name = DataFetcherManager.get_stock_name(manager, "123456", allow_realtime=False)
 
-        self.assertEqual(name, "测试股票")
+        self.assertEqual(name, "測試股票")
         manager.get_realtime_quote.assert_not_called()
 
     def test_get_stock_name_prefers_static_mapping_before_remote_fetchers(self):
         manager = DataFetcherManager.__new__(DataFetcherManager)
         remote_fetcher = MagicMock()
         remote_fetcher.name = "RemoteFetcher"
-        remote_fetcher.get_stock_name.return_value = "远程名称"
+        remote_fetcher.get_stock_name.return_value = "遠端名称"
         manager._fetchers = [remote_fetcher]
         manager.get_realtime_quote = MagicMock()
 
@@ -109,7 +109,7 @@ class TestPrefetchStockNames(unittest.TestCase):
         manager = DataFetcherManager.__new__(DataFetcherManager)
         remote_fetcher = MagicMock()
         remote_fetcher.name = "RemoteFetcher"
-        remote_fetcher.get_stock_name.return_value = "远程名称"
+        remote_fetcher.get_stock_name.return_value = "遠端名称"
         manager._fetchers = [remote_fetcher]
         manager.get_realtime_quote = MagicMock()
 

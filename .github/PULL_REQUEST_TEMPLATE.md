@@ -14,7 +14,7 @@ For English contributors: please fill in English. All fields marked (EN) accept 
 
 ## Background And Problem
 
-请描述当前问题、影响范围与触发场景。  
+请描述当前議題、影响范围与触发场景。  
 *(EN) Describe the problem, its impact, and what triggers it.*
 
 ## Scope Of Change
@@ -31,7 +31,7 @@ For English contributors: please fill in English. All fields marked (EN) accept 
 
 ## Verification Commands And Results
 
-请填写你实际执行过的命令和关键结果（不要只写"已测试"）。  
+请填写你实际执行过的命令和关键结果（不要只写"已測試"）。  
 *(EN) Paste the commands you actually ran and their key output (don't just write "tested"):*
 
 ```bash
@@ -44,14 +44,14 @@ python -m pytest -m "not network"
 
 ## Compatibility And Risk
 
-请说明兼容性影响、潜在风险（如无请写 `None`）。  
+请说明兼容性影响、潜在風險（如无请写 `None`）。  
 *(EN) Describe compatibility impact and potential risks (write `None` if not applicable).*
 
-- 若本 PR 修改第三方模型 / API 的兼容语义、请求参数、路由前缀或 provider fallback，请提供**官方来源链接或公告**，并说明这是长期约束、当前运行时约束还是临时兼容处理。  
+- 若本 PR 修改第三方模型 / API 的兼容语义、請求參數、路由前缀或 provider fallback，请提供**官方来源链接或公告**，并说明这是长期约束、当前執行时约束还是临时兼容處理。  
   *(EN) If this PR changes third-party model/API compatibility, request parameters, routing prefixes, or provider fallback behavior, include an **official source link or announcement** and clarify whether the rule is permanent, runtime-specific, or a temporary compatibility workaround.)*
-- 若本 PR 依赖特定运行时 / 锁定依赖窗口（例如 LiteLLM 版本范围、OpenAI-compatible 路由、YAML alias 行为），请写明当前验证过的兼容范围与覆盖路径。  
+- 若本 PR 依賴特定執行时 / 锁定依賴窗口（例如 LiteLLM 版本范围、OpenAI-compatible 路由、YAML alias 行为），请写明当前验证过的兼容范围与覆盖路徑。  
   *(EN) If this PR depends on a specific runtime or pinned dependency window (for example a LiteLLM version range, OpenAI-compatible routing, or YAML alias behavior), state the compatibility window you verified and which code paths were covered.)*
-- 若本 PR 触及运行时配置保存、清理、迁移或回填逻辑，请明确说明旧配置是否会被自动改写、清空、迁移或保持不变，以及用户如何恢复原行为。  
+- 若本 PR 触及執行时配置保存、清理、迁移或回填逻辑，请明确说明旧配置是否会被自动改写、清空、迁移或保持不变，以及使用者如何恢復原行为。  
   *(EN) If this PR touches runtime config save/cleanup/migration/backfill logic, explicitly describe whether existing config is rewritten, cleared, migrated, or left intact, and how users can restore the previous behavior.)*
 
 ## Rollback Plan
@@ -59,7 +59,7 @@ python -m pytest -m "not network"
 请至少写一句可执行的回滚方案（必填）。  
 *(EN) Provide at least one actionable rollback step (required).*
 
-- 如果是兼容性修复，默认应写出**最小回滚方式**（例如 `revert this PR`），并说明是否需要额外回滚配置或数据迁移。  
+- 如果是兼容性修复，默认应写出**最小回滚方式**（例如 `revert this PR`），并说明是否需要额外回滚配置或數據迁移。  
   *(EN) For compatibility fixes, include the **minimal rollback path** (for example `revert this PR`) and whether any additional config or data rollback is required.)*
 
 ## EXTRACT_PROMPT Change (if applicable)
@@ -80,6 +80,6 @@ python -m pytest -m "not network"
 
 - [ ] 本 PR 有明确动机和业务价值 / This PR has a clear motivation and value
 - [ ] 已提供可复现的验证命令与结果 / Reproducible verification commands and results are included
-- [ ] 已评估兼容性与风险 / Compatibility and risk have been assessed
+- [ ] 已评估兼容性与風險 / Compatibility and risk have been assessed
 - [ ] 已提供回滚方案 / A rollback plan is provided
-- [ ] 若涉及用户可见变更，已同步更新相关文档与 `docs/CHANGELOG.md`；`README.md` 仅在首页级信息变化时更新，细节优先写入 `docs/*.md` / If user-visible changes are included, relevant docs and `docs/CHANGELOG.md` are updated; `README.md` is updated only for homepage-level changes, with details kept in `docs/*.md`
+- [ ] 若涉及使用者可见变更，已同步更新相关文档与 `docs/CHANGELOG.md`；`README.md` 仅在首页级資訊变化时更新，细节优先写入 `docs/*.md` / If user-visible changes are included, relevant docs and `docs/CHANGELOG.md` are updated; `README.md` is updated only for homepage-level changes, with details kept in `docs/*.md`

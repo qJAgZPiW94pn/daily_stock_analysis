@@ -168,7 +168,7 @@ def resolve_name_to_code(name: str) -> Optional[str]:
     if s in local_reverse:
         return local_reverse[s]
     if s in _LOCAL_AMBIGUOUS_NAMES:
-        logger.debug(f"[NameResolver] 命中本地歧义名称，快速返回 None: {s}")
+        logger.debug(f"[NameResolver] 命中本機歧义名称，快速傳回 None: {s}")
         return None
 
     # 3. Pinyin match (exact)
@@ -202,7 +202,7 @@ def resolve_name_to_code(name: str) -> Optional[str]:
     if akshare_map:
         all_name_to_code.update(akshare_map)
     # Skip fuzzy matching for very short inputs (<=2 chars) to avoid false positives,
-    # e.g. '中国' matching arbitrary company names in a pool of 5000+ stocks.
+    # e.g. '中國' matching arbitrary company names in a pool of 5000+ stocks.
     # Use a higher cutoff (0.8) to reduce mis-hits on longer inputs as well.
     if len(s) > 2:
         names = list(all_name_to_code.keys())

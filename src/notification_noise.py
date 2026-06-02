@@ -233,7 +233,7 @@ def evaluate_notification_noise(
             now=now,
         )
     except Exception as exc:  # pragma: no cover - defensive behavior is tested via monkeypatch.
-        logger.warning("通知降噪判断失败，将继续发送静态通知渠道: %s", exc)
+        logger.warning("通知降噪判断失败，将繼續发送静态通知渠道: %s", exc)
         return NotificationNoiseDecision(
             should_send=True,
             reason_code="noise_check_failed_open",
@@ -280,7 +280,7 @@ def _evaluate_notification_noise(
                 reason_code="min_severity",
                 message=(
                     f"通知级别 {resolved_severity} 低于最低级别 {min_severity_raw}，"
-                    "已跳过静态通知渠道。"
+                    "已略過静态通知渠道。"
                 ),
                 **decision_base,
             )
@@ -290,7 +290,7 @@ def _evaluate_notification_noise(
         return NotificationNoiseDecision(
             should_send=False,
             reason_code="quiet_hours",
-            message=f"当前时间处于静默时段 {quiet_hours_raw}，已跳过静态通知渠道。",
+            message=f"当前时间处于静默时段 {quiet_hours_raw}，已略過静态通知渠道。",
             **decision_base,
         )
 
@@ -307,7 +307,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="dedup",
-                message="通知内容在去重 TTL 内已发送，已跳过静态通知渠道。",
+                message="通知内容在去重 TTL 内已发送，已略過静态通知渠道。",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -317,7 +317,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="dedup_inflight",
-                message="同一通知正在发送中，已跳过静态通知渠道。",
+                message="同一通知正在发送中，已略過静态通知渠道。",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -326,7 +326,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="cooldown",
-                message="通知冷却时间尚未结束，已跳过静态通知渠道。",
+                message="通知冷却时间尚未结束，已略過静态通知渠道。",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -336,7 +336,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="cooldown_inflight",
-                message="同一通知正在发送中，已跳过静态通知渠道。",
+                message="同一通知正在发送中，已略過静态通知渠道。",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -382,7 +382,7 @@ def release_notification_noise(decision: NotificationNoiseDecision) -> None:
         with _state_lock:
             _release_reserved_locked(decision)
     except Exception as exc:  # pragma: no cover - defensive branch.
-        logger.warning("通知降噪发送中状态释放失败，忽略该错误: %s", exc)
+        logger.warning("通知降噪发送中狀態释放失败，忽略该錯誤: %s", exc)
 
 
 def record_notification_noise(decision: NotificationNoiseDecision, now: Optional[datetime] = None) -> None:
@@ -403,4 +403,4 @@ def record_notification_noise(decision: NotificationNoiseDecision, now: Optional
             if decision.cooldown_seconds > 0 and decision.cooldown_key:
                 _cooldown_expires_at[decision.cooldown_key] = now_ts + decision.cooldown_seconds
     except Exception as exc:  # pragma: no cover - defensive branch.
-        logger.warning("通知降噪状态记录失败，忽略该错误: %s", exc)
+        logger.warning("通知降噪狀態记录失败，忽略该錯誤: %s", exc)

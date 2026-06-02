@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-数据源基类与管理器
+數據源基类与管理器
 ===================================
 
 设计模式：策略模式 (Strategy Pattern)
@@ -10,8 +10,8 @@
 
 防封禁策略：
 1. 每个 Fetcher 内置流控逻辑
-2. 失败自动切换到下一个数据源
-3. 指数退避重试机制
+2. 失败自动切换到下一个數據源
+3. 指數退避重试机制
 """
 
 import logging
@@ -28,7 +28,7 @@ from src.data.stock_index_loader import get_index_stock_name
 from src.data.stock_mapping import STOCK_NAME_MAP, is_meaningful_stock_name
 from .fundamental_adapter import AkshareFundamentalAdapter
 
-# 配置日志
+# 配置日誌
 logger = logging.getLogger(__name__)
 
 
@@ -120,7 +120,7 @@ ETF_PREFIXES = ("51", "52", "56", "58", "15", "16", "18")
 
 
 def _is_us_market(code: str) -> bool:
-    """判断是否为美股/美股指数代码（不含中文前后缀）。"""
+    """判断是否为美股/美股指數代碼（不含中文前后缀）。"""
     from .us_index_mapping import is_us_stock_code, is_us_index_code
 
     normalized = (code or "").strip().upper()
@@ -129,9 +129,9 @@ def _is_us_market(code: str) -> bool:
 
 def _is_hk_market(code: str) -> bool:
     """
-    判定是否为港股代码。
+    判定是否为港股代碼。
 
-    支持 `HK00700` 及纯 5 位数字形式（A 股 ETF/股票常见为 6 位）。
+    支援 `HK00700` 及纯 5 位数字形式（A 股 ETF/股票常见为 6 位）。
     """
     normalized = (code or "").strip().upper()
     if normalized.endswith(".HK"):
@@ -146,7 +146,7 @@ def _is_hk_market(code: str) -> bool:
 
 
 def _is_etf_code(code: str) -> bool:
-    """判定 A 股 ETF 基金代码（保守规则）。"""
+    """判定 A 股 ETF 基金代碼（保守规则）。"""
     normalized = normalize_stock_code(code)
     return (
         normalized.isdigit()
@@ -156,7 +156,7 @@ def _is_etf_code(code: str) -> bool:
 
 
 def _market_tag(code: str) -> str:
-    """返回市场标签: cn/us/hk."""
+    """傳回市场標籤: cn/us/hk."""
     if _is_us_market(code):
         return "us"
     if _is_hk_market(code):
@@ -223,7 +223,7 @@ def canonical_stock_code(code: str) -> str:
 
 
 class DataFetchError(Exception):
-    """数据获取异常基类"""
+    """數據获取异常基类"""
     pass
 
 
@@ -233,22 +233,22 @@ class RateLimitError(DataFetchError):
 
 
 class DataSourceUnavailableError(DataFetchError):
-    """数据源不可用异常"""
+    """數據源不可用异常"""
     pass
 
 
 class BaseFetcher(ABC):
     """
-    数据源抽象基类
+    數據源抽象基类
     
     职责：
-    1. 定义统一的数据获取接口
-    2. 提供数据标准化方法
+    1. 定义统一的數據获取接口
+    2. 提供數據标准化方法
     3. 实现通用的技术指标计算
     
     子类实现：
-    - _fetch_raw_data(): 从具体数据源获取原始数据
-    - _normalize_data(): 将原始数据转换为标准格式
+    - _fetch_raw_data(): 从具体數據源获取原始數據
+    - _normalize_data(): 将原始數據转换为标准格式
     """
     
     name: str = "BaseFetcher"
@@ -257,42 +257,42 @@ class BaseFetcher(ABC):
     @abstractmethod
     def _fetch_raw_data(self, stock_code: str, start_date: str, end_date: str) -> pd.DataFrame:
         """
-        从数据源获取原始数据（子类必须实现）
+        从數據源获取原始數據（子类必须实现）
         
         Args:
-            stock_code: 股票代码，如 '600519', '000001'
+            stock_code: 股票代碼，如 '600519', '000001'
             start_date: 开始日期，格式 'YYYY-MM-DD'
             end_date: 结束日期，格式 'YYYY-MM-DD'
             
         Returns:
-            原始数据 DataFrame（列名因数据源而异）
+            原始數據 DataFrame（列名因數據源而异）
         """
         pass
     
     @abstractmethod
     def _normalize_data(self, df: pd.DataFrame, stock_code: str) -> pd.DataFrame:
         """
-        标准化数据列名（子类必须实现）
+        标准化數據列名（子类必须实现）
 
-        将不同数据源的列名统一为：
+        将不同數據源的列名统一为：
         ['date', 'open', 'high', 'low', 'close', 'volume', 'amount', 'pct_chg']
         """
         pass
 
     def get_main_indices(self, region: str = "cn") -> Optional[List[Dict[str, Any]]]:
         """
-        获取主要指数实时行情
+        获取主要指數实时行情
 
         Args:
             region: 市场区域，cn=A股 us=美股
 
         Returns:
-            List[Dict]: 指数列表，每个元素为字典，包含:
-                - code: 指数代码
-                - name: 指数名称
+            List[Dict]: 指數列表，每个元素为字典，包含:
+                - code: 指數代碼
+                - name: 指數名称
                 - current: 当前点位
-                - change: 涨跌点数
-                - change_pct: 涨跌幅(%)
+                - change: 漲跌点数
+                - change_pct: 漲跌幅(%)
                 - volume: 成交量
                 - amount: 成交额
         """
@@ -300,14 +300,14 @@ class BaseFetcher(ABC):
 
     def get_market_stats(self) -> Optional[Dict[str, Any]]:
         """
-        获取市场涨跌统计
+        获取市场漲跌统计
 
         Returns:
             Dict: 包含:
                 - up_count: 上涨家数
                 - down_count: 下跌家数
                 - flat_count: 平盘家数
-                - limit_up_count: 涨停家数
+                - limit_up_count: 漲停家数
                 - limit_down_count: 跌停家数
                 - total_amount: 两市成交额
         """
@@ -315,19 +315,19 @@ class BaseFetcher(ABC):
 
     def get_sector_rankings(self, n: int = 5) -> Optional[Tuple[List[Dict], List[Dict]]]:
         """
-        获取板块涨跌榜
+        获取板塊漲跌榜
 
         Args:
-            n: 返回前n个
+            n: 傳回前n个
 
         Returns:
-            Tuple: (领涨板块列表, 领跌板块列表)
+            Tuple: (领涨板塊列表, 领跌板塊列表)
         """
         return None
 
     def get_concept_rankings(self, n: int = 5) -> Optional[Tuple[List[Dict], List[Dict]]]:
         """
-        获取概念/题材涨跌榜。
+        获取概念/题材漲跌榜。
 
         Returns:
             Tuple: (领涨概念列表, 领跌概念列表)
@@ -349,11 +349,11 @@ class BaseFetcher(ABC):
         n: int = 20,
     ) -> Optional[List[Dict[str, Any]]]:
         """
-        获取涨停池/连板梯队。
+        获取漲停池/连板梯队。
 
         Args:
-            date: YYYYMMDD，默认由具体数据源决定
-            n: 返回条数
+            date: YYYYMMDD，默认由具体數據源决定
+            n: 傳回条数
         """
         return None
 
@@ -365,18 +365,18 @@ class BaseFetcher(ABC):
         days: int = 30
     ) -> pd.DataFrame:
         """
-        获取日线数据（统一入口）
+        获取日线數據（统一入口）
         
         流程：
         1. 计算日期范围
-        2. 调用子类获取原始数据
+        2. 调用子类获取原始數據
         3. 标准化列名
         4. 计算技术指标
         
         Args:
-            stock_code: 股票代码
-            start_date: 开始日期（可选）
-            end_date: 结束日期（可选，默认今天）
+            stock_code: 股票代碼
+            start_date: 开始日期（可選）
+            end_date: 结束日期（可選，默认今天）
             days: 获取天数（当 start_date 未指定时使用）
             
         Returns:
@@ -393,19 +393,19 @@ class BaseFetcher(ABC):
             start_date = start_dt.strftime('%Y-%m-%d')
 
         request_start = time.time()
-        logger.info(f"[{self.name}] 开始获取 {stock_code} 日线数据: 范围={start_date} ~ {end_date}")
+        logger.info(f"[{self.name}] 开始获取 {stock_code} 日线數據: 范围={start_date} ~ {end_date}")
         
         try:
-            # Step 1: 获取原始数据
+            # Step 1: 获取原始數據
             raw_df = self._fetch_raw_data(stock_code, start_date, end_date)
             
             if raw_df is None or raw_df.empty:
-                raise DataFetchError(f"[{self.name}] 未获取到 {stock_code} 的数据")
+                raise DataFetchError(f"[{self.name}] 未获取到 {stock_code} 的數據")
             
             # Step 2: 标准化列名
             df = self._normalize_data(raw_df, stock_code)
             
-            # Step 3: 数据清洗
+            # Step 3: 數據清洗
             df = self._clean_data(df)
             
             # Step 4: 计算技术指标
@@ -429,9 +429,9 @@ class BaseFetcher(ABC):
     
     def _clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        数据清洗
+        數據清洗
         
-        处理：
+        處理：
         1. 确保日期列格式正确
         2. 数值类型转换
         3. 去除空值行
@@ -492,8 +492,8 @@ class BaseFetcher(ABC):
         """
         智能随机休眠（Jitter）
         
-        防封禁策略：模拟人类行为的随机延迟
-        在请求之间加入不规则的等待时间
+        防封禁策略：模拟人类行为的随机延遲
+        在請求之间加入不规则的等待时间
         """
         sleep_time = random.uniform(min_seconds, max_seconds)
         logger.debug(f"随机休眠 {sleep_time:.2f} 秒...")
@@ -502,17 +502,17 @@ class BaseFetcher(ABC):
 
 class DataFetcherManager:
     """
-    数据源策略管理器
+    數據源策略管理器
     
     职责：
-    1. 管理多个数据源（按优先级排序）
+    1. 管理多个數據源（按优先级排序）
     2. 自动故障切换（Failover）
-    3. 提供统一的数据获取接口
+    3. 提供统一的數據获取接口
     
     切换策略：
-    - 优先使用高优先级数据源
+    - 优先使用高优先级數據源
     - 失败后自动切换到下一个
-    - 所有数据源都失败时抛出异常
+    - 所有數據源都失败时抛出异常
     """
 
     _DAILY_MARKET_FETCHER_SUPPORT = {
@@ -532,7 +532,7 @@ class DataFetcherManager:
         初始化管理器
         
         Args:
-            fetchers: 数据源列表（可选，默认按优先级自动创建）
+            fetchers: 數據源列表（可選，默认按优先级自动建立）
         """
         self._fetchers: List[BaseFetcher] = []
         self._fetchers_lock = RLock()
@@ -547,7 +547,7 @@ class DataFetcherManager:
             self._fetchers = sorted(fetchers, key=lambda f: f.priority)
             self._refresh_fetcher_indexes_locked()
         else:
-            # 默认数据源将在首次使用时延迟加载
+            # 默认數據源将在首次使用时延遲加载
             self._init_default_fetchers()
         self._fundamental_adapter = AkshareFundamentalAdapter()
         self._tickflow_fetcher = None
@@ -607,7 +607,7 @@ class DataFetcherManager:
             return bool(probe())
         except Exception as exc:
             logger.debug(
-                "[数据源可用性] %s.%s 检查失败(capability=%s): %s",
+                "[數據源可用性] %s.%s 检查失败(capability=%s): %s",
                 fetcher.name,
                 probe_name,
                 capability or "default",
@@ -660,7 +660,7 @@ class DataFetcherManager:
 
         if skipped:
             logger.info(
-                "[数据源路由] %s 日线跳过不支持的数据源: %s",
+                "[數據源路由] %s 日线略過不支援的數據源: %s",
                 market,
                 ", ".join(skipped),
             )
@@ -684,7 +684,7 @@ class DataFetcherManager:
 
         if skipped:
             logger.info(
-                "[数据源路由] %s 跳过暂不可用的数据源: %s",
+                "[數據源路由] %s 略過暂不可用的數據源: %s",
                 capability or "request",
                 ", ".join(skipped),
             )
@@ -723,7 +723,7 @@ class DataFetcherManager:
                     try:
                         current_fetcher.close()
                     except Exception as exc:
-                        logger.debug("[TickFlowFetcher] 关闭旧实例失败: %s", exc)
+                        logger.debug("[TickFlowFetcher] 關閉旧实例失败: %s", exc)
                 self._tickflow_fetcher = None
                 self._tickflow_api_key = None
                 return None
@@ -735,7 +735,7 @@ class DataFetcherManager:
                 try:
                     current_fetcher.close()
                 except Exception as exc:
-                    logger.debug("[TickFlowFetcher] 切换实例时关闭失败: %s", exc)
+                    logger.debug("[TickFlowFetcher] 切换实例时關閉失败: %s", exc)
 
             try:
                 from .tickflow_fetcher import TickFlowFetcher
@@ -764,7 +764,7 @@ class DataFetcherManager:
             try:
                 current_fetcher.close()
             except Exception as exc:
-                logger.debug("[TickFlowFetcher] 关闭管理器资源失败: %s", exc)
+                logger.debug("[TickFlowFetcher] 關閉管理器资源失败: %s", exc)
 
     def __del__(self) -> None:
         try:
@@ -774,7 +774,7 @@ class DataFetcherManager:
             pass
 
     def _get_fundamental_cache_key(self, stock_code: str, budget_seconds: Optional[float] = None) -> str:
-        """生成基本面缓存 key（包含预算分桶以避免低预算结果污染高预算请求）。"""
+        """生成基本面快取 key（包含预算分桶以避免低预算结果污染高预算請求）。"""
         normalized_code = normalize_stock_code(stock_code)
         if budget_seconds is None:
             return f"{normalized_code}|budget=default"
@@ -891,7 +891,7 @@ class DataFetcherManager:
                 (
                     col
                     for col in raw_data.columns
-                    if str(col) in {"板块名称", "板块", "所属板块", "板块名", "name", "industry"}
+                    if str(col) in {"板塊名称", "板塊", "所属板塊", "板塊名", "name", "industry"}
                 ),
                 None,
             )
@@ -899,7 +899,7 @@ class DataFetcherManager:
                 (
                     col
                     for col in raw_data.columns
-                    if str(col) in {"板块代码", "代码", "code"}
+                    if str(col) in {"板塊代碼", "代碼", "code"}
                 ),
                 None,
             )
@@ -907,7 +907,7 @@ class DataFetcherManager:
                 (
                     col
                     for col in raw_data.columns
-                    if str(col) in {"板块类型", "类别", "type"}
+                    if str(col) in {"板塊类型", "类别", "type"}
                 ),
                 None,
             )
@@ -942,10 +942,10 @@ class DataFetcherManager:
                     board_name_raw = (
                         item.get("name")
                         or item.get("board_name")
-                        or item.get("板块名称")
-                        or item.get("板块")
-                        or item.get("所属板块")
-                        or item.get("板块名")
+                        or item.get("板塊名称")
+                        or item.get("板塊")
+                        or item.get("所属板塊")
+                        or item.get("板塊名")
                         or item.get("industry")
                         or item.get("行业")
                     )
@@ -958,14 +958,14 @@ class DataFetcherManager:
                     normalized_item: Dict[str, Any] = {"name": board_name}
                     code_raw = (
                         item.get("code")
-                        or item.get("板块代码")
-                        or item.get("代码")
+                        or item.get("板塊代碼")
+                        or item.get("代碼")
                     )
                     if not DataFetcherManager._is_missing_board_value(code_raw):
                         normalized_item["code"] = str(code_raw).strip()
                     type_raw = (
                         item.get("type")
-                        or item.get("板块类型")
+                        or item.get("板塊类型")
                         or item.get("类别")
                     )
                     if not DataFetcherManager._is_missing_board_value(type_raw):
@@ -988,12 +988,12 @@ class DataFetcherManager:
     
     def _init_default_fetchers(self) -> None:
         """
-        初始化默认数据源列表
+        初始化默认數據源列表
 
         优先级动态调整逻辑：
         - 如果配置了 TUSHARE_TOKEN：实例化 TushareFetcher，并按其内部逻辑提升优先级
         - 如果配置了 Longbridge 凭据：实例化 LongbridgeFetcher 作为美股/港股兜底
-        - 未配置的可选数据源不实例化，避免在批量拉取时反复探测无效源
+        - 未配置的可選數據源不实例化，避免在批量拉取时反复探测无效源
         - 默认优先级：
           0. EfinanceFetcher (Priority 0) - 最高优先级
           1. AkshareFetcher (Priority 1)
@@ -1010,10 +1010,10 @@ class DataFetcherManager:
         from .yfinance_fetcher import YfinanceFetcher
         from .longbridge_fetcher import LongbridgeFetcher
         config = get_config()
-        # 创建所有数据源实例（优先级在各 Fetcher 的 __init__ 中确定）
+        # 建立所有數據源实例（优先级在各 Fetcher 的 __init__ 中確定）
         efinance = EfinanceFetcher()
         akshare = AkshareFetcher()
-        pytdx = PytdxFetcher()      # 通达信数据源（可配 PYTDX_HOST/PYTDX_PORT）
+        pytdx = PytdxFetcher()      # 通达信數據源（可配 PYTDX_HOST/PYTDX_PORT）
         baostock = BaostockFetcher()
         yfinance = YfinanceFetcher()
         optional_fetchers: List[BaseFetcher] = []
@@ -1022,7 +1022,7 @@ class DataFetcherManager:
         if tushare_token:
             optional_fetchers.append(TushareFetcher())  # 会根据 Token 配置自动调整优先级
         else:
-            logger.debug("[数据源初始化] 跳过未配置的 TushareFetcher")
+            logger.debug("[數據源初始化] 略過未配置的 TushareFetcher")
 
         has_longbridge_creds = bool(
             (getattr(config, "longbridge_app_key", None) or "").strip()
@@ -1032,23 +1032,23 @@ class DataFetcherManager:
         if has_longbridge_creds:
             optional_fetchers.append(LongbridgeFetcher())  # 长桥（美股/港股兜底，懒加载）
         else:
-            logger.debug("[数据源初始化] 跳过未配置的 LongbridgeFetcher")
+            logger.debug("[數據源初始化] 略過未配置的 LongbridgeFetcher")
 
         finnhub_api_key = (getattr(config, "finnhub_api_key", None) or "").strip()
         if finnhub_api_key:
             from .finnhub_fetcher import FinnhubFetcher
             optional_fetchers.append(FinnhubFetcher())
         else:
-            logger.debug("[数据源初始化] 跳过未配置的 FinnhubFetcher")
+            logger.debug("[數據源初始化] 略過未配置的 FinnhubFetcher")
 
         alphavantage_api_key = (getattr(config, "alphavantage_api_key", None) or "").strip()
         if alphavantage_api_key:
             from .alphavantage_fetcher import AlphaVantageFetcher
             optional_fetchers.append(AlphaVantageFetcher())
         else:
-            logger.debug("[数据源初始化] 跳过未配置的 AlphaVantageFetcher")
+            logger.debug("[數據源初始化] 略過未配置的 AlphaVantageFetcher")
 
-        # 初始化数据源列表
+        # 初始化數據源列表
         self._ensure_concurrency_guards()
         with self._fetchers_lock:
             self._fetchers = [
@@ -1066,10 +1066,10 @@ class DataFetcherManager:
 
         # 构建优先级说明
         priority_info = ", ".join([f"{f.name}(P{f.priority})" for f in self._get_fetchers_snapshot()])
-        logger.info(f"已初始化 {len(self._fetchers)} 个数据源（按优先级）: {priority_info}")
+        logger.info(f"已初始化 {len(self._fetchers)} 个數據源（按优先级）: {priority_info}")
     
     def add_fetcher(self, fetcher: BaseFetcher) -> None:
-        """添加数据源并重新排序"""
+        """添加數據源并重新排序"""
         self._ensure_concurrency_guards()
         with self._fetchers_lock:
             self._fetchers.append(fetcher)
@@ -1084,26 +1084,26 @@ class DataFetcherManager:
         days: int = 30
     ) -> Tuple[pd.DataFrame, str]:
         """
-        获取日线数据（自动切换数据源）
+        获取日线數據（自动切换數據源）
         
         故障切换策略：
-        1. 美股指数/美股股票直接路由到 YfinanceFetcher
-        2. 其他代码从最高优先级数据源开始尝试
+        1. 美股指數/美股股票直接路由到 YfinanceFetcher
+        2. 其他代碼从最高优先级數據源开始尝试
         3. 捕获异常后自动切换到下一个
-        4. 记录每个数据源的失败原因
-        5. 所有数据源失败后抛出详细异常
+        4. 记录每个數據源的失败原因
+        5. 所有數據源失败后抛出详细异常
         
         Args:
-            stock_code: 股票代码
+            stock_code: 股票代碼
             start_date: 开始日期
             end_date: 结束日期
             days: 获取天数
             
         Returns:
-            Tuple[DataFrame, str]: (数据, 成功的数据源名称)
+            Tuple[DataFrame, str]: (數據, 成功的數據源名称)
             
         Raises:
-            DataFetchError: 所有数据源都失败时抛出
+            DataFetchError: 所有數據源都失败时抛出
         """
         from .us_index_mapping import is_us_index_code, is_us_stock_code
 
@@ -1114,10 +1114,10 @@ class DataFetcherManager:
         errors = []
         request_start = time.time()
 
-        # 快速路径：美股使用专用数据源路由；港股先过滤不支持港股日线的数据源
+        # 快速路徑：美股使用专用數據源路由；港股先过滤不支援港股日线的數據源
         #   - 配置长桥凭据后: Longbridge 为首选, YFinance/AkShare 兜底
         #   - 未配置长桥:     YFinance 为首选（美股）, 通用 fetcher 循环（港股）
-        #   - 美股指数:       始终 YFinance 为首选（Longbridge 不提供指数K线）
+        #   - 美股指數:       始终 YFinance 为首选（Longbridge 不提供指數K线）
         is_us_index = is_us_index_code(stock_code)
         is_us = is_us_index or is_us_stock_code(stock_code)
         is_hk = (not is_us) and _is_hk_market(stock_code)
@@ -1127,24 +1127,24 @@ class DataFetcherManager:
         total_fetchers = len(fetchers)
 
         if total_fetchers == 0:
-            market_label = "美股指数" if is_us_index else "美股" if is_us else "港股" if is_hk else "A股"
-            error_summary = f"{market_label} {stock_code} 获取失败:\n暂无可用数据源"
-            logger.error(f"[数据源终止] {stock_code} 获取失败: {error_summary}")
+            market_label = "美股指數" if is_us_index else "美股" if is_us else "港股" if is_hk else "A股"
+            error_summary = f"{market_label} {stock_code} 获取失败:\n暂无可用數據源"
+            logger.error(f"[數據源终止] {stock_code} 获取失败: {error_summary}")
             raise DataFetchError(error_summary)
 
-        # 美股（含美股指数）使用专用路由；港股走下方通用数据源循环
+        # 美股（含美股指數）使用专用路由；港股走下方通用數據源循环
         # Failover chain: Finnhub(P2) -> AlphaVantage(P3) -> Yfinance(P4) -> Longbridge(P5)
         # When Longbridge preferred: Longbridge -> Finnhub -> AlphaVantage -> Yfinance
         if is_us:
             prefer_lb = self._longbridge_preferred(capability="daily_data") and not is_us_index
             if is_us_index:
-                # 指数始终 YFinance 首选（Longbridge 不提供指数K线）
+                # 指數始终 YFinance 首选（Longbridge 不提供指數K线）
                 source_order = ["YfinanceFetcher", "FinnhubFetcher"]
             elif prefer_lb:
                 source_order = ["LongbridgeFetcher", "FinnhubFetcher", "AlphaVantageFetcher", "YfinanceFetcher"]
             else:
                 source_order = ["FinnhubFetcher", "AlphaVantageFetcher", "YfinanceFetcher", "LongbridgeFetcher"]
-            market_label = "美股指数" if is_us_index else "美股"
+            market_label = "美股指數" if is_us_index else "美股"
 
             for src_name in source_order:
                 for attempt, fetcher in enumerate(fetchers, start=1):
@@ -1153,7 +1153,7 @@ class DataFetcherManager:
                     try:
                         role = "首选" if src_name == source_order[0] else "兜底"
                         logger.info(
-                            f"[数据源尝试 {attempt}/{total_fetchers}] [{fetcher.name}] "
+                            f"[數據源尝试 {attempt}/{total_fetchers}] [{fetcher.name}] "
                             f"{market_label} {stock_code} {role}路由..."
                         )
                         df = self._call_fetcher_method(
@@ -1167,7 +1167,7 @@ class DataFetcherManager:
                         if df is not None and not df.empty:
                             elapsed = time.time() - request_start
                             logger.info(
-                                f"[数据源完成] {stock_code} 使用 [{fetcher.name}] 获取成功: "
+                                f"[數據源完成] {stock_code} 使用 [{fetcher.name}] 获取成功: "
                                 f"rows={len(df)}, elapsed={elapsed:.2f}s"
                             )
                             return df, fetcher.name
@@ -1175,7 +1175,7 @@ class DataFetcherManager:
                         error_type, error_reason = summarize_exception(e)
                         error_msg = f"[{fetcher.name}] ({error_type}) {error_reason}"
                         logger.warning(
-                            f"[数据源失败 {attempt}/{total_fetchers}] [{fetcher.name}] {stock_code}: "
+                            f"[數據源失败 {attempt}/{total_fetchers}] [{fetcher.name}] {stock_code}: "
                             f"error_type={error_type}, reason={error_reason}"
                         )
                         errors.append(error_msg)
@@ -1183,12 +1183,12 @@ class DataFetcherManager:
 
             error_summary = f"{market_label} {stock_code} 获取失败:\n" + "\n".join(errors)
             elapsed = time.time() - request_start
-            logger.error(f"[数据源终止] {stock_code} 获取失败: elapsed={elapsed:.2f}s\n{error_summary}")
+            logger.error(f"[數據源终止] {stock_code} 获取失败: elapsed={elapsed:.2f}s\n{error_summary}")
             raise DataFetchError(error_summary)
 
         for attempt, fetcher in enumerate(fetchers, start=1):
             try:
-                logger.info(f"[数据源尝试 {attempt}/{total_fetchers}] [{fetcher.name}] 获取 {stock_code}...")
+                logger.info(f"[數據源尝试 {attempt}/{total_fetchers}] [{fetcher.name}] 获取 {stock_code}...")
                 df = self._call_fetcher_method(
                     fetcher,
                     "get_daily_data",
@@ -1201,7 +1201,7 @@ class DataFetcherManager:
                 if df is not None and not df.empty:
                     elapsed = time.time() - request_start
                     logger.info(
-                        f"[数据源完成] {stock_code} 使用 [{fetcher.name}] 获取成功: "
+                        f"[數據源完成] {stock_code} 使用 [{fetcher.name}] 获取成功: "
                         f"rows={len(df)}, elapsed={elapsed:.2f}s"
                     )
                     return df, fetcher.name
@@ -1210,45 +1210,45 @@ class DataFetcherManager:
                 error_type, error_reason = summarize_exception(e)
                 error_msg = f"[{fetcher.name}] ({error_type}) {error_reason}"
                 logger.warning(
-                    f"[数据源失败 {attempt}/{total_fetchers}] [{fetcher.name}] {stock_code}: "
+                    f"[數據源失败 {attempt}/{total_fetchers}] [{fetcher.name}] {stock_code}: "
                     f"error_type={error_type}, reason={error_reason}"
                 )
                 errors.append(error_msg)
                 if attempt < total_fetchers:
                     next_fetcher = fetchers[attempt]
-                    logger.info(f"[数据源切换] {stock_code}: [{fetcher.name}] -> [{next_fetcher.name}]")
-                # 继续尝试下一个数据源
+                    logger.info(f"[數據源切换] {stock_code}: [{fetcher.name}] -> [{next_fetcher.name}]")
+                # 繼續尝试下一个數據源
                 continue
         
-        # 所有数据源都失败
-        error_summary = f"所有数据源获取 {stock_code} 失败:\n" + "\n".join(errors)
+        # 所有數據源都失败
+        error_summary = f"所有數據源获取 {stock_code} 失败:\n" + "\n".join(errors)
         elapsed = time.time() - request_start
-        logger.error(f"[数据源终止] {stock_code} 获取失败: elapsed={elapsed:.2f}s\n{error_summary}")
+        logger.error(f"[數據源终止] {stock_code} 获取失败: elapsed={elapsed:.2f}s\n{error_summary}")
         raise DataFetchError(error_summary)
     
     @property
     def available_fetchers(self) -> List[str]:
-        """返回可用数据源名称列表"""
+        """傳回可用數據源名称列表"""
         return [f.name for f in self._get_fetchers_snapshot()]
     
     def prefetch_realtime_quotes(self, stock_codes: List[str]) -> int:
         """
-        批量预取实时行情数据（在分析开始前调用）
+        批量预取实时行情數據（在分析开始前调用）
         
         策略：
-        1. 检查优先级中是否包含全量拉取数据源（efinance/akshare_em）
-        2. 如果不包含，跳过预取（新浪/腾讯是单股票查询，无需预取）
-        3. 如果自选股数量 >= 5 且使用全量数据源，则预取填充缓存
+        1. 检查优先级中是否包含全量拉取數據源（efinance/akshare_em）
+        2. 如果不包含，略過预取（新浪/腾讯是单股票查詢，無需预取）
+        3. 如果自选股数量 >= 5 且使用全量數據源，则预取填充快取
         
         这样做的好处：
-        - 使用新浪/腾讯时：每只股票独立查询，无全量拉取问题
-        - 使用 efinance/东财时：预取一次，后续缓存命中
+        - 使用新浪/腾讯时：每只股票独立查詢，无全量拉取議題
+        - 使用 efinance/东财时：预取一次，后续快取命中
         
         Args:
-            stock_codes: 待分析的股票代码列表
+            stock_codes: 待分析的股票代碼列表
             
         Returns:
-            预取的股票数量（0 表示跳过预取）
+            预取的股票数量（0 表示略過预取）
         """
         # Normalize all codes
         stock_codes = [normalize_stock_code(c) for c in stock_codes]
@@ -1259,22 +1259,22 @@ class DataFetcherManager:
 
         # Issue #455: PREFETCH_REALTIME_QUOTES=false 可禁用预取，避免全市场拉取
         if not getattr(config, "prefetch_realtime_quotes", True):
-            logger.debug("[预取] PREFETCH_REALTIME_QUOTES=false，跳过批量预取")
+            logger.debug("[预取] PREFETCH_REALTIME_QUOTES=false，略過批量预取")
             return 0
 
-        # 如果实时行情被禁用，跳过预取
+        # 如果实时行情被禁用，略過预取
         if not config.enable_realtime_quote:
-            logger.debug("[预取] 实时行情功能已禁用，跳过预取")
+            logger.debug("[预取] 实时行情功能已禁用，略過预取")
             return 0
         
-        # 检查优先级中是否包含全量拉取数据源
+        # 检查优先级中是否包含全量拉取數據源
         # 注意：新增全量接口（如 tushare_realtime）时需同步更新此列表
-        # 全量接口特征：一次 API 调用拉取全市场 5000+ 股票数据
+        # 全量接口特征：一次 API 调用拉取全市场 5000+ 股票數據
         priority = config.realtime_source_priority.lower()
         bulk_sources = ['efinance', 'akshare_em', 'tushare']  # 全量接口列表
         
-        # 如果优先级中前两个都不是全量数据源，跳过预取
-        # 因为新浪/腾讯是单股票查询，不需要预取
+        # 如果优先级中前两个都不是全量數據源，略過预取
+        # 因为新浪/腾讯是单股票查詢，不需要预取
         priority_list = [s.strip() for s in priority.split(',')]
         first_bulk_source_index = None
         for i, source in enumerate(priority_list):
@@ -1282,30 +1282,30 @@ class DataFetcherManager:
                 first_bulk_source_index = i
                 break
         
-        # 如果没有全量数据源，或者全量数据源排在第 3 位之后，跳过预取
+        # 如果没有全量數據源，或者全量數據源排在第 3 位之后，略過预取
         if first_bulk_source_index is None or first_bulk_source_index >= 2:
-            logger.info(f"[预取] 当前优先级使用轻量级数据源(sina/tencent)，无需预取")
+            logger.info(f"[预取] 当前优先级使用轻量级數據源(sina/tencent)，無需预取")
             return 0
         
-        # 如果股票数量少于 5 个，不进行批量预取（逐个查询更高效）
+        # 如果股票数量少于 5 个，不进行批量预取（逐个查詢更高效）
         if len(stock_codes) < 5:
-            logger.info(f"[预取] 股票数量 {len(stock_codes)} < 5，跳过批量预取")
+            logger.info(f"[预取] 股票数量 {len(stock_codes)} < 5，略過批量预取")
             return 0
         
         logger.info(f"[预取] 开始批量预取实时行情，共 {len(stock_codes)} 只股票...")
         
         # 尝试通过 efinance 或 akshare 预取
-        # 只需要调用一次 get_realtime_quote，缓存机制会自动拉取全市场数据
+        # 只需要调用一次 get_realtime_quote，快取机制会自动拉取全市场數據
         try:
             # 用第一只股票触发全量拉取
             first_code = stock_codes[0]
             quote = self.get_realtime_quote(first_code)
             
             if quote:
-                logger.info(f"[预取] 批量预取完成，缓存已填充")
+                logger.info(f"[预取] 批量预取完成，快取已填充")
                 return len(stock_codes)
             else:
-                logger.warning(f"[预取] 批量预取失败，将使用逐个查询模式")
+                logger.warning(f"[预取] 批量预取失败，将使用逐个查詢模式")
                 return 0
                 
         except Exception as e:
@@ -1314,7 +1314,7 @@ class DataFetcherManager:
     
     def get_realtime_quote(self, stock_code: str, *, log_final_failure: bool = True):
         """
-        获取实时行情数据（自动故障切换）
+        获取实时行情數據（自动故障切换）
         
         故障切换策略（按配置的优先级）：
         1. 美股：使用 YfinanceFetcher.get_realtime_quote()
@@ -1322,15 +1322,15 @@ class DataFetcherManager:
         3. AkshareFetcher.get_realtime_quote(source="em")  - 东财
         4. AkshareFetcher.get_realtime_quote(source="sina") - 新浪
         5. AkshareFetcher.get_realtime_quote(source="tencent") - 腾讯
-        6. 返回 None（降级兜底）
+        6. 傳回 None（降级兜底）
         
         Args:
-            stock_code: 股票代码
+            stock_code: 股票代碼
             log_final_failure: Whether to emit the final "all sources failed"
                 summary log when no realtime quote is available.
             
         Returns:
-            UnifiedRealtimeQuote 对象，所有数据源都失败则返回 None
+            UnifiedRealtimeQuote 对象，所有數據源都失败则傳回 None
         """
         raw_stock_code = (stock_code or "").strip()
         # Normalize code (strip SH/SZ prefix etc.)
@@ -1342,16 +1342,16 @@ class DataFetcherManager:
 
         config = get_config()
 
-        # 如果实时行情功能被禁用，直接返回 None
+        # 如果实时行情功能被禁用，直接傳回 None
         if not config.enable_realtime_quote:
-            logger.debug(f"[实时行情] 功能已禁用，跳过 {stock_code}")
+            logger.debug(f"[实时行情] 功能已禁用，略過 {stock_code}")
             return None
 
         # ----------------------------------------------------------
-        # 美股 (指数 + 个股) / 港股 — 专用双源路由
+        # 美股 (指數 + 個股) / 港股 — 专用双源路由
         #   配置长桥后: Longbridge 首选, YFinance/AkShare 补充
         #   未配置长桥: YFinance/AkShare 首选, Longbridge 补充
-        #   美股指数:   始终 YFinance 首选（Longbridge 不提供指数行情）
+        #   美股指數:   始终 YFinance 首选（Longbridge 不提供指數行情）
         # ----------------------------------------------------------
         is_us_index = is_us_index_code(stock_code)
         is_us = is_us_index or _is_us_code(stock_code)
@@ -1362,7 +1362,7 @@ class DataFetcherManager:
             if is_us:
                 primary_src = "LongbridgeFetcher" if prefer_lb else "YfinanceFetcher"
                 secondary_src = "YfinanceFetcher" if prefer_lb else "LongbridgeFetcher"
-                market_label = "美股指数" if is_us_index else "美股"
+                market_label = "美股指數" if is_us_index else "美股"
                 primary_kw: dict = {}
                 secondary_kw: dict = {}
             else:
@@ -1378,7 +1378,7 @@ class DataFetcherManager:
             primary_quote = self._supplement_quote(
                 stock_code, primary_quote, secondary_src, **secondary_kw,
             )
-            # 美股个股（非指数）尝试从 Finnhub/AlphaVantage 补充缺失字段
+            # 美股個股（非指數）尝试从 Finnhub/AlphaVantage 补充缺失欄位
             if is_us and not is_us_index and primary_quote is not None:
                 for extra_src in ["FinnhubFetcher", "AlphaVantageFetcher"]:
                     primary_quote = self._supplement_quote(
@@ -1387,10 +1387,10 @@ class DataFetcherManager:
             if primary_quote is not None:
                 return primary_quote
             if log_final_failure:
-                logger.info(f"[实时行情] {market_label} {stock_code} 无可用数据源")
+                logger.info(f"[实时行情] {market_label} {stock_code} 无可用數據源")
             return None
         
-        # 获取配置的数据源优先级
+        # 获取配置的數據源优先级
         source_priority = config.realtime_source_priority.split(',')
         
         errors = []
@@ -1438,24 +1438,24 @@ class DataFetcherManager:
                         if not self._quote_needs_supplement(primary_quote):
                             return primary_quote
                         # Otherwise, continue to try later sources for missing fields
-                        logger.debug(f"[实时行情] {stock_code} 部分字段缺失，尝试从后续数据源补充")
+                        logger.debug(f"[实时行情] {stock_code} 部分欄位缺失，尝试从后续數據源补充")
                         supplement_attempts = 0
                     else:
                         # Supplement missing fields from this source (limit attempts)
                         supplement_attempts += 1
                         if supplement_attempts > 1:
-                            logger.debug(f"[实时行情] {stock_code} 补充尝试已达上限，停止继续")
+                            logger.debug(f"[实时行情] {stock_code} 补充尝试已达上限，停止繼續")
                             break
                         merged = self._merge_quote_fields(primary_quote, quote)
                         if merged:
-                            logger.info(f"[实时行情] {stock_code} 从 {source} 补充了缺失字段: {merged}")
+                            logger.info(f"[实时行情] {stock_code} 从 {source} 补充了缺失欄位: {merged}")
                         # Stop supplementing once all key fields are filled
                         if not self._quote_needs_supplement(primary_quote):
                             break
                     
             except Exception as e:
                 error_msg = f"[{source}] 失败: {str(e)}"
-                logger.info(f"[实时行情] {stock_code} {error_msg}，继续尝试下一个数据源")
+                logger.info(f"[实时行情] {stock_code} {error_msg}，繼續尝试下一个數據源")
                 errors.append(error_msg)
                 continue
         
@@ -1463,12 +1463,12 @@ class DataFetcherManager:
         if primary_quote is not None:
             return primary_quote
 
-        # 所有数据源都失败，返回 None（降级兜底）
+        # 所有數據源都失败，傳回 None（降级兜底）
         if log_final_failure:
             if errors:
-                logger.info(f"[实时行情] {stock_code} 所有数据源均失败: {'; '.join(errors)}")
+                logger.info(f"[实时行情] {stock_code} 所有數據源均失败: {'; '.join(errors)}")
             else:
-                logger.info(f"[实时行情] {stock_code} 无可用数据源")
+                logger.info(f"[实时行情] {stock_code} 无可用數據源")
 
         return None
 
@@ -1548,7 +1548,7 @@ class DataFetcherManager:
 
         q = self._try_fetcher_quote(stock_code, fetcher_name, **kw)
         if q is not None:
-            logger.info(f"[实时行情] {stock_code} 从 {fetcher_name} 获取成功 (独立数据源)")
+            logger.info(f"[实时行情] {stock_code} 从 {fetcher_name} 获取成功 (独立數據源)")
         return q
 
     def _supplement_from_longbridge(self, stock_code: str, primary_quote):
@@ -1557,19 +1557,19 @@ class DataFetcherManager:
 
     def get_chip_distribution(self, stock_code: str):
         """
-        获取筹码分布数据（带熔断和多数据源降级）
+        获取筹码分布數據（带熔断和多數據源降级）
 
         策略：
         1. 检查配置开关
-        2. 检查熔断器状态
-        3. 依次尝试多个数据源：数据源优先级与获取daily的数据优先级一致
-        4. 所有数据源失败则返回 None（降级兜底）
+        2. 检查熔断器狀態
+        3. 依次尝试多个數據源：數據源优先级与获取daily的數據优先级一致
+        4. 所有數據源失败则傳回 None（降级兜底）
 
         Args:
-            stock_code: 股票代码
+            stock_code: 股票代碼
 
         Returns:
-            ChipDistribution 对象，失败则返回 None
+            ChipDistribution 对象，失败则傳回 None
         """
         # Normalize code (strip SH/SZ prefix etc.)
         stock_code = normalize_stock_code(stock_code)
@@ -1579,16 +1579,16 @@ class DataFetcherManager:
 
         config = get_config()
 
-        # 如果筹码分布功能被禁用，直接返回 None
+        # 如果筹码分布功能被禁用，直接傳回 None
         if not config.enable_chip_distribution:
-            logger.debug(f"[筹码分布] 功能已禁用，跳过 {stock_code}")
+            logger.debug(f"[筹码分布] 功能已禁用，略過 {stock_code}")
             return None
 
         circuit_breaker = get_chip_circuit_breaker()
 
-        # 直接遍历管理器已经按 priority 排好序的数据源列表
+        # 直接遍历管理器已经按 priority 排好序的數據源列表
         for fetcher in self._get_fetchers_snapshot():
-            # 只处理实现了筹码分布逻辑的数据源
+            # 只處理实现了筹码分布逻辑的數據源
             if not hasattr(fetcher, 'get_chip_distribution'):
                 continue
             
@@ -1596,9 +1596,9 @@ class DataFetcherManager:
             # 动态生成熔断器的 key，例如 "TushareFetcher" -> "tushare_chip"
             source_key = f"{fetcher_name.replace('Fetcher', '').lower()}_chip"
 
-            # 检查熔断器状态
+            # 检查熔断器狀態
             if not circuit_breaker.is_available(source_key):
-                logger.debug(f"[熔断] {fetcher_name} 筹码接口处于熔断状态，尝试下一个")
+                logger.debug(f"[熔断] {fetcher_name} 筹码接口处于熔断狀態，尝试下一个")
                 continue
 
             try:
@@ -1615,34 +1615,34 @@ class DataFetcherManager:
                 circuit_breaker.record_failure(source_key, str(e))
                 continue
 
-        logger.warning(f"[筹码分布] {stock_code} 所有数据源均失败")
+        logger.warning(f"[筹码分布] {stock_code} 所有數據源均失败")
         return None
 
     def get_stock_name(self, stock_code: str, allow_realtime: bool = True) -> Optional[str]:
         """
-        获取股票中文名称（自动切换数据源）
+        获取股票中文名称（自动切换數據源）
         
-        尝试从多个数据源获取股票名称：
-        1. 先从内存缓存中获取（如果有）
-        2. 再尝试本地维护映射与 stocks.index.json 索引
-        3. 然后按需查询实时行情
-        4. 依次尝试各个数据源的 get_stock_name 方法
+        尝试从多个數據源获取股票名称：
+        1. 先从記憶體快取中获取（如果有）
+        2. 再尝试本機维护映射与 stocks.index.json 索引
+        3. 然后按需查詢实时行情
+        4. 依次尝试各个數據源的 get_stock_name 方法
         
         Args:
-            stock_code: 股票代码
+            stock_code: 股票代碼
             allow_realtime: Whether to query realtime quote first. Set False when
                 caller only wants lightweight prefetch without triggering heavy
                 realtime source calls.
             
         Returns:
-            股票中文名称，所有数据源都失败则返回 None
+            股票中文名称，所有數據源都失败则傳回 None
         """
         raw_stock_code = (stock_code or "").strip()
         # Normalize code (strip SH/SZ prefix etc.)
         stock_code = normalize_stock_code(stock_code)
         static_name = STOCK_NAME_MAP.get(stock_code)
 
-        # 1. 先检查缓存
+        # 1. 先检查快取
         cached_name = self._get_cached_stock_name(stock_code)
         if cached_name is not None:
             return cached_name
@@ -1663,7 +1663,7 @@ class DataFetcherManager:
                 logger.info(f"[股票名称] 从实时行情获取: {stock_code} -> {name}")
                 return name
 
-        # 3. 依次尝试各个数据源
+        # 3. 依次尝试各个數據源
         from .akshare_fetcher import _is_us_code
         is_us = _is_us_code(stock_code)
         _US_CAPABLE_FETCHERS = {"YfinanceFetcher", "LongbridgeFetcher", "FinnhubFetcher", "AlphaVantageFetcher"}
@@ -1684,8 +1684,8 @@ class DataFetcherManager:
                 logger.debug(f"[股票名称] {fetcher.name} 获取失败: {e}")
                 continue
 
-        # 4. 所有数据源都失败
-        logger.warning(f"[股票名称] 所有数据源都无法获取 {stock_code} 的名称")
+        # 4. 所有數據源都失败
+        logger.warning(f"[股票名称] 所有數據源都无法获取 {stock_code} 的名称")
         return ""
 
     def get_belong_boards(self, stock_code: str) -> List[Dict[str, Any]]:
@@ -1704,10 +1704,10 @@ class DataFetcherManager:
                 raw_data = fetcher.get_belong_board(stock_code)
                 boards = self._normalize_belong_boards(raw_data)
                 if boards:
-                    logger.info(f"[{fetcher.name}] 获取所属板块成功: {stock_code}, count={len(boards)}")
+                    logger.info(f"[{fetcher.name}] 获取所属板塊成功: {stock_code}, count={len(boards)}")
                     return boards
             except Exception as e:
-                logger.debug(f"[{fetcher.name}] 获取所属板块失败: {e}")
+                logger.debug(f"[{fetcher.name}] 获取所属板塊失败: {e}")
                 continue
         return []
 
@@ -1737,19 +1737,19 @@ class DataFetcherManager:
         """
         批量获取股票中文名称
         
-        先尝试从支持批量查询的数据源获取股票列表，
-        然后再逐个查询缺失的股票名称。
+        先尝试从支援批量查詢的數據源获取股票列表，
+        然后再逐个查詢缺失的股票名称。
         
         Args:
-            stock_codes: 股票代码列表
+            stock_codes: 股票代碼列表
             
         Returns:
-            {股票代码: 股票名称} 字典
+            {股票代碼: 股票名称} 字典
         """
         result = {}
         missing_codes = set(stock_codes)
         
-        # 1. 先检查缓存
+        # 1. 先检查快取
         self._ensure_concurrency_guards()
         with self._stock_name_cache_lock:
             for code in stock_codes:
@@ -1803,31 +1803,31 @@ class DataFetcherManager:
         return result
 
     def get_main_indices(self, region: str = "cn") -> List[Dict[str, Any]]:
-        """获取主要指数实时行情（自动切换数据源）"""
+        """获取主要指數实时行情（自动切换數據源）"""
         if region == "cn":
             tickflow_fetcher = self._get_tickflow_fetcher()
             if tickflow_fetcher is not None:
                 try:
                     data = tickflow_fetcher.get_main_indices(region=region)
                     if data:
-                        logger.info("[TickFlowFetcher] 获取指数行情成功")
+                        logger.info("[TickFlowFetcher] 获取指數行情成功")
                         return data
                 except Exception as e:
-                    logger.warning(f"[TickFlowFetcher] 获取指数行情失败: {e}")
+                    logger.warning(f"[TickFlowFetcher] 获取指數行情失败: {e}")
 
         for fetcher in self._fetchers:
             try:
                 data = fetcher.get_main_indices(region=region)
                 if data:
-                    logger.info(f"[{fetcher.name}] 获取指数行情成功")
+                    logger.info(f"[{fetcher.name}] 获取指數行情成功")
                     return data
             except Exception as e:
-                logger.warning(f"[{fetcher.name}] 获取指数行情失败: {e}")
+                logger.warning(f"[{fetcher.name}] 获取指數行情失败: {e}")
                 continue
         return []
 
     def get_market_stats(self) -> Dict[str, Any]:
-        """获取市场涨跌统计（自动切换数据源）"""
+        """获取市场漲跌统计（自动切换數據源）"""
         tickflow_fetcher = self._get_tickflow_fetcher()
         if tickflow_fetcher is not None:
             try:
@@ -2449,7 +2449,7 @@ class DataFetcherManager:
         return result_ctx
 
     def get_capital_flow_context(self, stock_code: str, budget_seconds: Optional[float] = None) -> Dict[str, Any]:
-        """资金流向块（fail-open）。"""
+        """資金流向块（fail-open）。"""
         from src.config import get_config
 
         config = get_config()
@@ -2563,7 +2563,7 @@ class DataFetcherManager:
         )
 
     def get_board_context(self, stock_code: str, budget_seconds: Optional[float] = None) -> Dict[str, Any]:
-        """板块榜单块（fail-open）。"""
+        """板塊榜单块（fail-open）。"""
         from src.config import get_config
 
         config = get_config()
@@ -2628,7 +2628,7 @@ class DataFetcherManager:
             source_chain: List[Dict[str, Any]] = []
             last_error = ""
 
-            # 直接遍历管理器已经按 priority 排好序的数据源列表
+            # 直接遍历管理器已经按 priority 排好序的數據源列表
             for fetcher in self._fetchers:
                 if not hasattr(fetcher, 'get_sector_rankings'):
                     continue
@@ -2645,10 +2645,10 @@ class DataFetcherManager:
                                 "duration_ms": duration_ms,
                             }
                         )
-                        logger.info(f"[{fetcher.name}] 获取板块排行成功")
+                        logger.info(f"[{fetcher.name}] 获取板塊排行成功")
                         return data[0], data[1], source_chain, ""
 
-                    last_error = f"{fetcher.name}返回空结果"
+                    last_error = f"{fetcher.name}傳回空结果"
                     source_chain.append(
                         {
                             "provider": fetcher.name,
@@ -2669,21 +2669,21 @@ class DataFetcherManager:
                             "error": error_reason,
                         }
                     )
-                    logger.warning(f"[{fetcher.name}] 获取板块排行失败: {error_reason}")
+                    logger.warning(f"[{fetcher.name}] 获取板塊排行失败: {error_reason}")
 
             return [], [], source_chain, last_error
 
     def get_sector_rankings(self, n: int = 5) -> Tuple[List[Dict], List[Dict]]:
-        """获取板块涨跌榜（自动切换数据源）"""
+        """获取板塊漲跌榜（自动切换數據源）"""
         # 按需求固定回退顺序：Akshare(EM) -> Akshare(Sina) -> Tushare -> Efinance
         top, bottom, _, last_error = self._get_sector_rankings_with_meta(n)
         if top or bottom:
             return top, bottom
-        logger.warning(f"[板块排行] 所有数据源均失败，最终错误: {last_error}")
+        logger.warning(f"[板塊排行] 所有數據源均失败，最终錯誤: {last_error}")
         return [], []
 
     def get_concept_rankings(self, n: int = 5) -> Tuple[List[Dict], List[Dict]]:
-        """获取概念/题材涨跌榜（自动切换数据源）。"""
+        """获取概念/题材漲跌榜（自动切换數據源）。"""
         last_error = ""
         for fetcher in self._fetchers:
             try:
@@ -2691,17 +2691,17 @@ class DataFetcherManager:
                 if data and (data[0] or data[1]):
                     logger.info(f"[{fetcher.name}] 获取概念排行成功")
                     return data[0] or [], data[1] or []
-                last_error = f"{fetcher.name}返回空结果"
+                last_error = f"{fetcher.name}傳回空结果"
             except Exception as e:
                 error_type, error_reason = summarize_exception(e)
                 last_error = f"{fetcher.name} ({error_type}) {error_reason}"
                 logger.warning(f"[{fetcher.name}] 获取概念排行失败: {error_reason}")
         if last_error:
-            logger.warning(f"[概念排行] 所有数据源均失败，最终错误: {last_error}")
+            logger.warning(f"[概念排行] 所有數據源均失败，最终錯誤: {last_error}")
         return [], []
 
     def get_hot_stocks(self, n: int = 10) -> List[Dict[str, Any]]:
-        """获取市场人气股榜（自动切换数据源）。"""
+        """获取市场人气股榜（自动切换數據源）。"""
         last_error = ""
         for fetcher in self._fetchers:
             try:
@@ -2709,13 +2709,13 @@ class DataFetcherManager:
                 if data:
                     logger.info(f"[{fetcher.name}] 获取人气股成功")
                     return data[:n]
-                last_error = f"{fetcher.name}返回空结果"
+                last_error = f"{fetcher.name}傳回空结果"
             except Exception as e:
                 error_type, error_reason = summarize_exception(e)
                 last_error = f"{fetcher.name} ({error_type}) {error_reason}"
                 logger.warning(f"[{fetcher.name}] 获取人气股失败: {error_reason}")
         if last_error:
-            logger.warning(f"[人气股] 所有数据源均失败，最终错误: {last_error}")
+            logger.warning(f"[人气股] 所有數據源均失败，最终錯誤: {last_error}")
         return []
 
     def get_limit_up_pool(
@@ -2723,19 +2723,19 @@ class DataFetcherManager:
         date: Optional[str] = None,
         n: int = 20,
     ) -> List[Dict[str, Any]]:
-        """获取涨停池与连板梯队（自动切换数据源）。"""
+        """获取漲停池与连板梯队（自动切换數據源）。"""
         last_error = ""
         for fetcher in self._fetchers:
             try:
                 data = fetcher.get_limit_up_pool(date=date, n=n)
                 if data:
-                    logger.info(f"[{fetcher.name}] 获取涨停池成功")
+                    logger.info(f"[{fetcher.name}] 获取漲停池成功")
                     return data[:n]
-                last_error = f"{fetcher.name}返回空结果"
+                last_error = f"{fetcher.name}傳回空结果"
             except Exception as e:
                 error_type, error_reason = summarize_exception(e)
                 last_error = f"{fetcher.name} ({error_type}) {error_reason}"
-                logger.warning(f"[{fetcher.name}] 获取涨停池失败: {error_reason}")
+                logger.warning(f"[{fetcher.name}] 获取漲停池失败: {error_reason}")
         if last_error:
-            logger.warning(f"[涨停池] 所有数据源均失败，最终错误: {last_error}")
+            logger.warning(f"[漲停池] 所有數據源均失败，最终錯誤: {last_error}")
         return []

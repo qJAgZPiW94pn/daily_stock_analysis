@@ -73,8 +73,8 @@ class AnalysisApiContractTestCase(unittest.TestCase):
         args, kwargs = task_queue.submit_background_task.call_args
         self.assertTrue(callable(args[0]))
         self.assertEqual(kwargs["stock_code"], "market_review")
-        self.assertEqual(kwargs["stock_name"], "大盘复盘")
-        self.assertEqual(kwargs["message"], "大盘复盘任务已提交")
+        self.assertEqual(kwargs["stock_name"], "大盤复盘")
+        self.assertEqual(kwargs["message"], "大盤复盘工作已提交")
 
     def test_trigger_market_review_rejects_duplicate_submission(self) -> None:
         if trigger_market_review is None or analysis_endpoint_module is None:
@@ -263,7 +263,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
         queue.get_task.return_value = SimpleNamespace(
             task_id="market-task-1",
             stock_code="market_review",
-            stock_name="大盘复盘",
+            stock_name="大盤复盘",
             status=analysis_endpoint_module.TaskStatusEnum.COMPLETED,
             progress=100,
             result={"result": "市场复盘报告示例文本"},
@@ -291,7 +291,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
             "_build_market_review_runtime",
             return_value=(runtime_notifier, runtime_analyzer, runtime_search),
         ), patch("src.core.market_review.run_market_review", return_value=None):
-            with self.assertRaisesRegex(RuntimeError, "大盘复盘未返回可持久化报告"):
+            with self.assertRaisesRegex(RuntimeError, "大盤复盘未傳回可持久化报告"):
                 analysis_endpoint_module._run_market_review_background(
                     send_notification=False,
                     override_region="cn",
@@ -350,15 +350,15 @@ class AnalysisApiContractTestCase(unittest.TestCase):
                     config=SimpleNamespace(),
                 ),
                 stock_code="market_review",
-                stock_name="大盘复盘",
-                message="大盘复盘任务已提交",
+                stock_name="大盤复盘",
+                message="大盤复盘工作已提交",
             )
 
         task_info = queue.get_task(task.task_id)
         self.assertIsNotNone(task_info)
         self.assertEqual(task_info.status, TaskStatus.FAILED)
         self.assertEqual(task_info.error, "runtime init failed")
-        self.assertEqual(task_info.message, "任务失败: runtime init failed")
+        self.assertEqual(task_info.message, "工作失败: runtime init failed")
         release_market_review_lock.assert_called_once()
 
     def test_get_analysis_status_completed_db_snapshot_preserves_zero_change_pct(self) -> None:
@@ -416,9 +416,9 @@ class AnalysisApiContractTestCase(unittest.TestCase):
             SimpleNamespace(
                 id=10,
                 code="MARKET",
-                name="大盘复盘",
+                name="大盤复盘",
                 report_type="market_review",
-                raw_result={"raw_response": "# 🎯 大盘复盘\n\n复盘正文"},
+                raw_result={"raw_response": "# 🎯 大盤复盘\n\n复盘正文"},
                 news_content="复盘正文",
                 created_at=None,
             )
@@ -429,7 +429,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
             result = get_analysis_status("market-task-1")
 
         self.assertEqual(result.status, "completed")
-        self.assertEqual(result.market_review_report, "# 🎯 大盘复盘\n\n复盘正文")
+        self.assertEqual(result.market_review_report, "# 🎯 大盤复盘\n\n复盘正文")
         self.assertIsNone(result.result)
 
     def test_get_analysis_status_completed_db_snapshot_reads_change_pct_from_raw_when_price_present(self) -> None:
@@ -771,7 +771,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
                         ],
                         "boards": {
                             "data": {
-                                "top": {"name": "坏数据"},
+                                "top": {"name": "坏數據"},
                                 "bottom": [
                                     {"name": " 消费 ", "change_pct": "-1.2%"},
                                     {"name": None, "change_pct": 1},
@@ -996,7 +996,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
         self.assertEqual(ctx.exception.status_code, 400)
         self.assertEqual(
             ctx.exception.detail["message"],
-            "股票代码不能为空或仅包含空白字符",
+            "股票代碼不能为空或仅包含空白字符",
         )
 
     def test_trigger_analysis_rejects_obviously_invalid_mixed_input_before_resolution(self) -> None:
@@ -1017,7 +1017,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
                 )
 
         self.assertEqual(ctx.exception.status_code, 400)
-        self.assertEqual(ctx.exception.detail["message"], "请输入有效的股票代码或股票名称")
+        self.assertEqual(ctx.exception.detail["message"], "请输入有效的股票代碼或股票名称")
         resolve_mock.assert_not_called()
 
     def test_trigger_analysis_rejects_unresolvable_alpha_garbage(self) -> None:
@@ -1039,7 +1039,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
                 )
 
         self.assertEqual(ctx.exception.status_code, 400)
-        self.assertEqual(ctx.exception.detail["message"], "请输入有效的股票代码或股票名称")
+        self.assertEqual(ctx.exception.detail["message"], "请输入有效的股票代碼或股票名称")
         queue_mock.assert_not_called()
 
     def test_trigger_analysis_accepts_us_suffix_code(self) -> None:
@@ -1602,7 +1602,7 @@ class BatchTaskQueueContractTestCase(unittest.TestCase):
         queue = AnalysisTaskQueue(max_workers=1)
         queue._executor = type("ExecutorStub", (), {"submit": lambda self, *args, **kwargs: Future()})()
 
-        with self.assertRaisesRegex(ValueError, "股票代码不能为空或仅包含空白字符"):
+        with self.assertRaisesRegex(ValueError, "股票代碼不能为空或仅包含空白字符"):
             queue.submit_task("   ", report_type="detailed")
 
         self.assertEqual(queue._tasks, {})

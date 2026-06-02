@@ -16,9 +16,9 @@ from src.report_language import (
 
 class ReportLanguageTestCase(unittest.TestCase):
     def test_get_signal_level_handles_compound_sell_advice(self) -> None:
-        signal_text, emoji, signal_tag = get_signal_level("卖出/观望", 60, "zh")
+        signal_text, emoji, signal_tag = get_signal_level("賣出/观望", 60, "zh")
 
-        self.assertEqual(signal_text, "卖出")
+        self.assertEqual(signal_text, "賣出")
         self.assertEqual(emoji, "🔴")
         self.assertEqual(signal_tag, "sell")
 
@@ -56,16 +56,16 @@ class ReportLanguageTestCase(unittest.TestCase):
         self.assertEqual(get_bias_status_emoji("Caution"), "⚠️")
 
     def test_infer_decision_type_from_advice_matches_chinese_phrases(self) -> None:
-        self.assertEqual(infer_decision_type_from_advice("建议买入"), "buy")
+        self.assertEqual(infer_decision_type_from_advice("建议買入"), "buy")
         self.assertEqual(infer_decision_type_from_advice("建议持有"), "hold")
         self.assertEqual(infer_decision_type_from_advice("建议减仓"), "sell")
-        self.assertEqual(infer_decision_type_from_advice("继续持有"), "hold")
+        self.assertEqual(infer_decision_type_from_advice("繼續持有"), "hold")
         self.assertEqual(infer_decision_type_from_advice("建议洗盘观察"), "hold")
         self.assertEqual(infer_decision_type_from_advice("洗盘观察", default=""), "hold")
         self.assertEqual(infer_decision_type_from_advice("观察", default=""), "hold")
-        self.assertEqual(infer_decision_type_from_advice("不建议买入"), "hold")
+        self.assertEqual(infer_decision_type_from_advice("不建议買入"), "hold")
         self.assertEqual(
-            infer_decision_type_from_advice("当前不跌破支撑位继续持有"),
+            infer_decision_type_from_advice("当前不跌破支撑位繼續持有"),
             "hold",
         )
         self.assertEqual(

@@ -311,12 +311,12 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
         _issue(
             "info",
             "context_channels_runtime_only",
-            "钉钉会话和飞书会话属于运行时消息上下文渠道，无法仅靠静态 .env 完整判断。",
+            "钉钉会话和飞书会话属于執行时訊息上下文渠道，无法仅靠静态 .env 完整判断。",
         ),
         _issue(
             "info",
             "phase_scope",
-            "通知诊断会检查渠道基线、只读诊断、Web 测试、P3 路由配置、P4 降噪配置和 P6 ntfy/Gotify 渠道。",
+            "通知诊断会检查渠道基线、只读诊断、Web 測試、P3 路由配置、P4 降噪配置和 P6 ntfy/Gotify 渠道。",
         ),
     ]
 
@@ -368,7 +368,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
         right_attr="email_password",
         left_key="EMAIL_SENDER",
         right_key="EMAIL_PASSWORD",
-        channel_name="邮件",
+        channel_name="電郵",
         errors=errors,
     )
     _require_pair(

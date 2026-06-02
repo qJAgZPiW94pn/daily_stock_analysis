@@ -71,7 +71,7 @@ class HistoryCommand(BotCommand):
             db = get_db()
         except Exception as e:
             logger.error(f"History: storage unavailable: {e}")
-            return BotResponse.text_response("⚠️ 存储模块不可用，无法查询对话历史。")
+            return BotResponse.text_response("⚠️ 存储模块不可用，无法查詢对话历史。")
 
         prefix = _user_prefix(message)
         legacy_chat_session_id = _legacy_chat_session_id(message)
@@ -84,7 +84,7 @@ class HistoryCommand(BotCommand):
                 if current_chat_session_id == f"{prefix}chat":
                     deleted += db.delete_conversation_session(legacy_chat_session_id)
                 return BotResponse.text_response(
-                    f"✅ 已清除当前会话 ({deleted} 条消息)"
+                    f"✅ 已清除当前会话 ({deleted} 条訊息)"
                 )
             except Exception as e:
                 logger.error(f"History clear failed: {e}")
@@ -99,7 +99,7 @@ class HistoryCommand(BotCommand):
             try:
                 messages_list = db.get_conversation_messages(session_id, limit=20)
                 if not messages_list:
-                    return BotResponse.text_response(f"📭 会话 `{session_id}` 无消息记录")
+                    return BotResponse.text_response(f"📭 会话 `{session_id}` 无訊息记录")
 
                 lines = [f"💬 **会话详情**: `{session_id}`", ""]
                 for msg in messages_list:
@@ -138,7 +138,7 @@ class HistoryCommand(BotCommand):
                 last_active = sess.get("last_active", "")[:16] if sess.get("last_active") else ""
                 sid = sess["session_id"]
                 lines.append(f"**{i}.** {title}")
-                lines.append(f"   💬 {msg_count} 条消息 | 🕐 {last_active}")
+                lines.append(f"   💬 {msg_count} 条訊息 | 🕐 {last_active}")
                 lines.append(f"   ID: `{sid}`")
                 lines.append("")
 

@@ -49,10 +49,10 @@ class AskCommandSkillSelectionTestCase(unittest.TestCase):
         skills = [
             Skill(
                 name="bull_trend",
-                display_name="默认多头趋势",
+                display_name="默认多头趨勢",
                 description="trend",
                 instructions="trend",
-                aliases=["趋势", "趋势分析"],
+                aliases=["趨勢", "趨勢分析"],
                 default_active=True,
                 default_priority=10,
             ),
@@ -92,7 +92,7 @@ class TestAskCommandMultiStock(unittest.TestCase):
             "decision_type": "buy",
             "sentiment_score": 72,
             "trend_prediction": "看多",
-            "operation_advice": "买入",
+            "operation_advice": "買入",
             "analysis_summary": f"{code} summary",
             "risk_warning": f"{code} risk",
             "dashboard": {
@@ -169,7 +169,7 @@ class TestAskCommandMultiStock(unittest.TestCase):
             ctx.data["portfolio_assessment"] = {
                 "summary": "组合偏消费集中，建议控制仓位。",
                 "portfolio_risk_score": 7,
-                "sector_warnings": ["白酒板块集中度过高"],
+                "sector_warnings": ["白酒板塊集中度过高"],
                 "correlation_warnings": ["600519 与 000858 相关性偏高"],
                 "rebalance_suggestions": ["降低单一行业暴露"],
                 "positions": [

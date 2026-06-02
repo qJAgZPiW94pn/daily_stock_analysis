@@ -34,7 +34,7 @@ _BUILD_INPUT_DIRS = ("src", "public")
 
 
 def _is_truthy_env(var_name: str, default: str = "true") -> bool:
-    """解析常见的环境变量真值/假值表达（大小写不敏感）。"""
+    """解析常见的环境變數真值/假值表达（大小写不敏感）。"""
     value = os.getenv(var_name, default).strip().lower()
     return value not in _FALSEY_ENV_VALUES
 
@@ -151,17 +151,17 @@ def _warn_if_assets_missing(artifact_index: Path, frontend_dir: Path) -> None:
     assets_dir = static_dir / "assets"
     if not _has_static_assets(static_dir):
         logger.warning(
-            "检测到 %s 但 %s 目录不存在或无 CSS/JS 文件，"
+            "检测到 %s 但 %s 目錄不存在或无 CSS/JS 文件，"
             "WebUI 将因缺少样式与脚本而显示异常（元素过大、布局错乱）",
             artifact_index,
             assets_dir,
         )
         logger.warning(
-            "请重新构建前端以修复此问题: %s",
+            "请重新构建前端以修复此議題: %s",
             _manual_build_command(frontend_dir),
         )
         logger.warning(
-            "Docker 用户请执行: docker-compose -f ./docker/docker-compose.yml build --no-cache"
+            "Docker 使用者请执行: docker-compose -f ./docker/docker-compose.yml build --no-cache"
         )
 
 
@@ -187,23 +187,23 @@ def prepare_webui_frontend_assets() -> bool:
             _warn_if_assets_missing(artifact_index, frontend_dir)
             return True
         logger.warning("未检测到 WebUI 前端静态产物: %s", artifact_index)
-        logger.warning("当前配置 WEBUI_AUTO_BUILD=false，不会在后端启动时自动编译前端")
+        logger.warning("当前配置 WEBUI_AUTO_BUILD=false，不会在后端啟動时自动編譯前端")
         logger.warning("请先手动构建前端: %s", _manual_build_command(frontend_dir))
-        logger.warning("如需启动时自动构建，可设置 WEBUI_AUTO_BUILD=true")
+        logger.warning("如需啟動时自动构建，可设置 WEBUI_AUTO_BUILD=true")
         return False
 
     force_build = _is_truthy_env("WEBUI_FORCE_BUILD", "false")
     needs_build, artifact_index = _needs_frontend_build(frontend_dir=frontend_dir, force_build=force_build)
 
     if not needs_build:
-        logger.info("检测到可直接复用的前端静态产物，跳过运行时自动构建: %s", artifact_index)
+        logger.info("检测到可直接复用的前端静态产物，略過執行时自动构建: %s", artifact_index)
         _warn_if_assets_missing(artifact_index, frontend_dir)
         return True
 
     package_json = frontend_dir / "package.json"
     if not package_json.exists():
         logger.warning("未找到前端项目，无法自动构建: %s", package_json)
-        logger.warning("可先手动检查前端目录或关闭 WEBUI_AUTO_BUILD")
+        logger.warning("可先手动检查前端目錄或關閉 WEBUI_AUTO_BUILD")
         return False
 
     npm_path = shutil.which("npm")

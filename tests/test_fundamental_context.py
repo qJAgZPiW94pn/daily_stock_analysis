@@ -434,8 +434,8 @@ class TestFundamentalContext(unittest.TestCase):
             "EfinanceFetcher",
             priority=0,
             boards=[
-                {"板块名称": "白酒", "板块代码": "BK0815", "板块类型": "行业"},
-                {"板块": "消费", "代码": "BK0475", "类别": "概念"},
+                {"板塊名称": "白酒", "板塊代碼": "BK0815", "板塊类型": "行业"},
+                {"板塊": "消费", "代碼": "BK0475", "类别": "概念"},
             ],
         )
         manager = DataFetcherManager(fetchers=[fetcher])
@@ -455,8 +455,8 @@ class TestFundamentalContext(unittest.TestCase):
             "EfinanceFetcher",
             priority=0,
             boards=[
-                {"所属板块": "新能源"},
-                {"板块名": "半导体"},
+                {"所属板塊": "新能源"},
+                {"板塊名": "半导体"},
                 {"industry": "医药"},
                 {"行业": "算力"},
             ],

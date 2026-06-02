@@ -19,15 +19,15 @@ class HistoryItem(BaseModel):
 
     id: Optional[int] = Field(None, description="分析历史记录主键 ID")
     query_id: str = Field(..., description="分析记录关联 query_id（批量分析时重复）")
-    stock_code: str = Field(..., description="股票代码")
+    stock_code: str = Field(..., description="股票代碼")
     stock_name: Optional[str] = Field(None, description="股票名称")
     report_type: Optional[str] = Field(None, description="报告类型")
     sentiment_score: Optional[int] = Field(
         None,
-        description="情绪评分（历史数据可能超出 0-100 范围，读取时不做约束）",
+        description="情绪評分（历史數據可能超出 0-100 范围，读取时不做约束）",
     )
     operation_advice: Optional[str] = Field(None, description="操作建议")
-    created_at: Optional[str] = Field(None, description="创建时间")
+    created_at: Optional[str] = Field(None, description="建立时间")
     
     class Config:
         json_schema_extra = {
@@ -45,7 +45,7 @@ class HistoryItem(BaseModel):
 
 
 class HistoryListResponse(BaseModel):
-    """历史记录列表响应"""
+    """历史记录列表回應"""
     
     total: int = Field(..., description="总记录数")
     page: int = Field(..., description="当前页码")
@@ -64,15 +64,15 @@ class HistoryListResponse(BaseModel):
 
 
 class DeleteHistoryRequest(BaseModel):
-    """删除历史记录请求"""
+    """刪除历史记录請求"""
 
-    record_ids: List[int] = Field(default_factory=list, description="要删除的历史记录主键 ID 列表")
+    record_ids: List[int] = Field(default_factory=list, description="要刪除的历史记录主键 ID 列表")
 
 
 class DeleteHistoryResponse(BaseModel):
-    """删除历史记录响应"""
+    """刪除历史记录回應"""
 
-    deleted: int = Field(..., description="实际删除的历史记录数量")
+    deleted: int = Field(..., description="实际刪除的历史记录数量")
 
 
 class NewsIntelItem(BaseModel):
@@ -85,7 +85,7 @@ class NewsIntelItem(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "title": "公司发布业绩快报，营收同比增长 20%",
+                "title": "公司發佈业绩快报，营收同比增长 20%",
                 "snippet": "公司公告显示，季度营收同比增长 20%...",
                 "url": "https://example.com/news/123"
             }
@@ -93,7 +93,7 @@ class NewsIntelItem(BaseModel):
 
 
 class NewsIntelResponse(BaseModel):
-    """新闻情报响应"""
+    """新闻情报回應"""
 
     total: int = Field(..., description="新闻条数")
     items: List[NewsIntelItem] = Field(default_factory=list, description="新闻列表")
@@ -108,19 +108,19 @@ class NewsIntelResponse(BaseModel):
 
 
 class ReportMeta(BaseModel):
-    """报告元信息"""
+    """报告元資訊"""
 
     model_config = ConfigDict(protected_namespaces=("model_validate", "model_dump"))
 
-    id: Optional[int] = Field(None, description="分析历史记录主键 ID（仅历史报告有此字段）")
+    id: Optional[int] = Field(None, description="分析历史记录主键 ID（仅历史报告有此欄位）")
     query_id: str = Field(..., description="分析记录关联 query_id（批量分析时重复）")
-    stock_code: str = Field(..., description="股票代码")
+    stock_code: str = Field(..., description="股票代碼")
     stock_name: Optional[str] = Field(None, description="股票名称")
     report_type: Optional[str] = Field(None, description="报告类型")
     report_language: Optional[str] = Field(None, description="报告输出语言（zh/en）")
-    created_at: Optional[str] = Field(None, description="创建时间")
-    current_price: Optional[float] = Field(None, description="分析时股价")
-    change_pct: Optional[float] = Field(None, description="分析时涨跌幅(%)")
+    created_at: Optional[str] = Field(None, description="建立时间")
+    current_price: Optional[float] = Field(None, description="分析时股價")
+    change_pct: Optional[float] = Field(None, description="分析时漲跌幅(%)")
     model_used: Optional[str] = Field(None, description="分析使用的 LLM 模型")
 
 
@@ -129,19 +129,19 @@ class ReportSummary(BaseModel):
     
     analysis_summary: Optional[str] = Field(None, description="关键结论")
     operation_advice: Optional[str] = Field(None, description="操作建议")
-    trend_prediction: Optional[str] = Field(None, description="趋势预测")
+    trend_prediction: Optional[str] = Field(None, description="趨勢預測")
     sentiment_score: Optional[int] = Field(
         None,
-        description="情绪评分（历史数据可能超出 0-100 范围，读取时不做约束）",
+        description="情绪評分（历史數據可能超出 0-100 范围，读取时不做约束）",
     )
-    sentiment_label: Optional[str] = Field(None, description="情绪标签")
+    sentiment_label: Optional[str] = Field(None, description="情绪標籤")
 
 
 class ReportStrategy(BaseModel):
     """策略点位区"""
     
-    ideal_buy: Optional[str] = Field(None, description="理想买入价")
-    secondary_buy: Optional[str] = Field(None, description="第二买入价")
+    ideal_buy: Optional[str] = Field(None, description="理想買入价")
+    secondary_buy: Optional[str] = Field(None, description="第二買入价")
     stop_loss: Optional[str] = Field(None, description="止损价")
     take_profit: Optional[str] = Field(None, description="止盈价")
 
@@ -154,14 +154,14 @@ class ReportDetails(BaseModel):
     context_snapshot: Optional[Any] = Field(None, description="分析时上下文快照（JSON）")
     financial_report: Optional[Any] = Field(None, description="结构化财报摘要（来自 fundamental_context）")
     dividend_metrics: Optional[Any] = Field(None, description="结构化分红指标（含 TTM 口径）")
-    belong_boards: Optional[Any] = Field(None, description="关联板块列表")
-    sector_rankings: Optional[Any] = Field(None, description="板块涨跌榜（结构 {top, bottom}）")
+    belong_boards: Optional[Any] = Field(None, description="关联板塊列表")
+    sector_rankings: Optional[Any] = Field(None, description="板塊漲跌榜（结构 {top, bottom}）")
 
 
 class AnalysisReport(BaseModel):
     """完整分析报告"""
 
-    meta: ReportMeta = Field(..., description="元信息")
+    meta: ReportMeta = Field(..., description="元資訊")
     summary: ReportSummary = Field(..., description="概览区")
     strategy: Optional[ReportStrategy] = Field(None, description="策略点位区")
     details: Optional[ReportDetails] = Field(None, description="详情区")
@@ -196,7 +196,7 @@ class AnalysisReport(BaseModel):
 
 
 class MarkdownReportResponse(BaseModel):
-    """Markdown 格式报告响应"""
+    """Markdown 格式报告回應"""
 
     content: str = Field(..., description="Markdown 格式的完整报告内容")
 

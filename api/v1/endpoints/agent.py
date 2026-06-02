@@ -25,15 +25,15 @@ TOOL_DISPLAY_NAMES: Dict[str, str] = {
     "get_stock_info":             "获取股票基本面",
     "search_stock_news":          "搜索股票新闻",
     "search_comprehensive_intel": "搜索综合情报",
-    "analyze_trend":              "分析技术趋势",
-    "calculate_ma":               "计算均线系统",
+    "analyze_trend":              "分析技术趨勢",
+    "calculate_ma":               "计算均线系統",
     "get_volume_analysis":        "分析量能变化",
     "analyze_pattern":            "识别K线形态",
-    "get_market_indices":         "获取市场指数",
-    "get_sector_rankings":        "分析行业板块",
+    "get_market_indices":         "获取市场指數",
+    "get_sector_rankings":        "分析行业板塊",
     "get_skill_backtest_summary": "获取技能回测概览",
     "get_strategy_backtest_summary": "获取策略回测概览",
-    "get_stock_backtest_summary": "获取个股回测数据",
+    "get_stock_backtest_summary": "获取個股回测數據",
 }
 
 logger = logging.getLogger(__name__)
@@ -227,7 +227,7 @@ async def list_chat_sessions(limit: int = 50, user_id: Optional[str] = None):
 
 @router.get("/chat/sessions/{session_id}", response_model=SessionMessagesResponse)
 async def get_chat_session_messages(session_id: str, limit: int = 100):
-    """获取单个会话的完整消息"""
+    """获取单个会话的完整訊息"""
     from src.storage import get_db
     messages = get_db().get_conversation_messages(session_id, limit=limit)
     return SessionMessagesResponse(session_id=session_id, messages=messages)
@@ -235,7 +235,7 @@ async def get_chat_session_messages(session_id: str, limit: int = 100):
 
 @router.delete("/chat/sessions/{session_id}")
 async def delete_chat_session(session_id: str):
-    """删除指定会话"""
+    """刪除指定会话"""
     from src.storage import get_db
     count = get_db().delete_conversation_session(session_id)
     return {"deleted": count}
@@ -439,7 +439,7 @@ async def agent_chat_stream(request: ChatRequest):
                 try:
                     event = await asyncio.wait_for(queue.get(), timeout=300.0)
                 except asyncio.TimeoutError:
-                    yield "data: " + json.dumps({"type": "error", "message": "分析超时"}, ensure_ascii=False) + "\n\n"
+                    yield "data: " + json.dumps({"type": "error", "message": "分析逾時"}, ensure_ascii=False) + "\n\n"
                     break
                 yield "data: " + json.dumps(event, ensure_ascii=False) + "\n\n"
                 if event.get("type") in ("done", "error"):

@@ -6,10 +6,10 @@
 
 职责：
 1. 按市场（A股/港股/美股）判断当日是否为交易日
-2. 按市场时区取“今日”日期，避免服务器 UTC 导致日期错误
-3. 支持 per-stock 过滤：只分析当日开市市场的股票
+2. 按市场时区取“今日”日期，避免服務器 UTC 导致日期錯誤
+3. 支援 per-stock 过滤：只分析当日开市市场的股票
 
-依赖：exchange-calendars（可选，不可用时 fail-open）
+依賴：exchange-calendars（可選，不可用时 fail-open）
 """
 
 import logging

@@ -1,7 +1,7 @@
 """Reusable market review runtime assembly helpers.
 
 Centralize the analyzer/search/notification construction so API, CLI and Bot
-entrypoints share one initialization path for 大盘复盘.
+entrypoints share one initialization path for 大盤复盘.
 """
 
 from __future__ import annotations

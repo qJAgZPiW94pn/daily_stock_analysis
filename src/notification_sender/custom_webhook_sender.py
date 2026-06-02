@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-自定义 Webhook 发送提醒服务
+自定义 Webhook 发送提醒服務
 
 职责：
-1. 发送自定义 Webhook 消息
+1. 发送自定义 Webhook 訊息
 """
 import logging
 import json
@@ -36,26 +36,26 @@ class CustomWebhookSender:
  
     def send_to_custom(self, content: str) -> bool:
         """
-        推送消息到自定义 Webhook
+        推送訊息到自定义 Webhook
         
-        支持任意接受 POST JSON 的 Webhook 端点
-        默认发送格式：{"text": "消息内容", "content": "消息内容"}
+        支援任意接受 POST JSON 的 Webhook 端点
+        默认发送格式：{"text": "訊息内容", "content": "訊息内容"}
         
         适用于：
         - 钉钉机器人
         - Discord Webhook
         - Slack Incoming Webhook
-        - 自建通知服务
-        - 其他支持 POST JSON 的服务
+        - 自建通知服務
+        - 其他支援 POST JSON 的服務
         
         Args:
-            content: 消息内容（Markdown 格式）
+            content: 訊息内容（Markdown 格式）
             
         Returns:
             是否至少有一个 Webhook 发送成功
         """
         if not self._custom_webhook_urls:
-            logger.warning("未配置自定义 Webhook，跳过推送")
+            logger.warning("未配置自定义 Webhook，略過推送")
             return False
         
         success_count = 0
@@ -135,12 +135,12 @@ class CustomWebhookSender:
                         payload = self._build_custom_webhook_payload(url, fallback_content)
                         if self._post_custom_webhook(url, payload, timeout=30):
                             logger.info(
-                                "自定义 Webhook %d（图片不支持，回退文本）推送成功", i + 1
+                                "自定义 Webhook %d（图片不支援，回退文本）推送成功", i + 1
                             )
                             success_count += 1
                     else:
                         logger.warning(
-                            "自定义 Webhook %d 不支持图片，且无回退内容，跳过", i + 1
+                            "自定义 Webhook %d 不支援图片，且无回退内容，略過", i + 1
                         )
             except Exception as e:
                 logger.error("自定义 Webhook %d 图片推送异常: %s", i + 1, e)
@@ -151,7 +151,7 @@ class CustomWebhookSender:
             'Content-Type': 'application/json; charset=utf-8',
             'User-Agent': 'StockAnalysis/1.0',
         }
-        # 支持 Bearer Token 认证（#51）
+        # 支援 Bearer Token 認證（#51）
         if self._custom_webhook_bearer_token:
             headers['Authorization'] = f'Bearer {self._custom_webhook_bearer_token}'
         body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
@@ -159,7 +159,7 @@ class CustomWebhookSender:
         if response.status_code == 200:
             return True
         logger.error(f"自定义 Webhook 推送失败: HTTP {response.status_code}")
-        logger.debug(f"响应内容: {response.text[:200]}")
+        logger.debug(f"回應内容: {response.text[:200]}")
         return False
 
     def test_custom_webhooks(self, content: str, *, timeout_seconds: float = 20.0) -> List[Dict[str, Any]]:
@@ -180,7 +180,7 @@ class CustomWebhookSender:
                 attempts.append({
                     "channel": "custom",
                     "success": False,
-                    "message": f"自定义 Webhook {index + 1} 测试异常: {exc}",
+                    "message": f"自定义 Webhook {index + 1} 測試异常: {exc}",
                     "target": url,
                     "error_code": self._classify_custom_webhook_exception(exc)[0],
                     "stage": "notification_send",
@@ -220,7 +220,7 @@ class CustomWebhookSender:
             return {
                 "channel": "custom",
                 "success": False,
-                "message": f"自定义 Webhook {index + 1} 测试失败: {exc}",
+                "message": f"自定义 Webhook {index + 1} 測試失败: {exc}",
                 "target": url,
                 "error_code": error_code,
                 "stage": "notification_send",
@@ -234,7 +234,7 @@ class CustomWebhookSender:
             return {
                 "channel": "custom",
                 "success": True,
-                "message": f"自定义 Webhook {index + 1} 测试发送成功",
+                "message": f"自定义 Webhook {index + 1} 測試发送成功",
                 "target": url,
                 "error_code": None,
                 "stage": "notification_send",
@@ -247,7 +247,7 @@ class CustomWebhookSender:
         return {
             "channel": "custom",
             "success": False,
-            "message": f"自定义 Webhook {index + 1} 测试失败: HTTP {response.status_code}",
+            "message": f"自定义 Webhook {index + 1} 測試失败: HTTP {response.status_code}",
             "target": url,
             "error_code": "http_error",
             "stage": "notification_send",
@@ -270,7 +270,7 @@ class CustomWebhookSender:
         """
         根据 URL 构建对应的 Webhook payload
         
-        自动识别常见服务并使用对应格式
+        自动识别常见服務并使用对应格式
         """
         templated_payload = self._build_custom_webhook_template_payload(content)
         if templated_payload is not None:
@@ -311,7 +311,7 @@ class CustomWebhookSender:
                 "group": "stock"
             }
         
-        # 通用格式（兼容大多数服务）
+        # 通用格式（兼容大多数服務）
         return {
             "text": content,
             "content": content,

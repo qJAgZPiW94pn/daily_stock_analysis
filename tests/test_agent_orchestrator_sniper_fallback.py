@@ -26,7 +26,7 @@ class TestAgentOrchestratorSniperFallback(unittest.TestCase):
 
         payload = {
             "decision_type": "buy",
-            "analysis_summary": "趋势仍强，等待回踩。",
+            "analysis_summary": "趨勢仍强，等待回踩。",
             "dashboard": {
                 "key_levels": {
                     "support": 301.61,
@@ -52,7 +52,7 @@ class TestAgentOrchestratorSniperFallback(unittest.TestCase):
 
         payload = {
             "decision_type": "buy",
-            "analysis_summary": "趋势仍强，等待回踩。",
+            "analysis_summary": "趨勢仍强，等待回踩。",
             "dashboard": {
                 "battle_plan": {
                     "sniper_points": {

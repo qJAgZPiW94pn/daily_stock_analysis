@@ -4,7 +4,7 @@
 命令基类
 ===================================
 
-定义命令处理器的抽象基类，所有命令都必须继承此类。
+定义命令處理器的抽象基类，所有命令都必须继承此类。
 """
 
 import asyncio
@@ -16,7 +16,7 @@ from bot.models import BotMessage, BotResponse
 
 class BotCommand(ABC):
     """
-    命令处理器抽象基类
+    命令處理器抽象基类
 
     所有命令都必须继承此类并实现抽象方法。
 
@@ -36,7 +36,7 @@ class BotCommand(ABC):
 
             @property
             def usage(self) -> str:
-                return "/mycommand [参数]"
+                return "/mycommand [參數]"
 
             def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
                 return BotResponse.text_response("命令执行成功")
@@ -48,7 +48,7 @@ class BotCommand(ABC):
         """
         命令名称（不含前缀）
 
-        例如 "analyze"，用户输入 "/analyze" 触发
+        例如 "analyze"，使用者输入 "/analyze" 触发
         """
         pass
 
@@ -58,23 +58,23 @@ class BotCommand(ABC):
         """
         命令别名列表
 
-        例如 ["a", "分析"]，用户输入 "/a" 或 "分析" 也能触发
+        例如 ["a", "分析"]，使用者输入 "/a" 或 "分析" 也能触发
         """
         pass
 
     @property
     @abstractmethod
     def description(self) -> str:
-        """命令描述（用于帮助信息）"""
+        """命令描述（用于帮助資訊）"""
         pass
 
     @property
     @abstractmethod
     def usage(self) -> str:
         """
-        使用说明（用于帮助信息）
+        使用说明（用于帮助資訊）
 
-        例如 "/analyze <股票代码>"
+        例如 "/analyze <股票代碼>"
         """
         pass
 
@@ -92,7 +92,7 @@ class BotCommand(ABC):
         """
         是否仅管理员可用
 
-        默认 False，设为 True 则需要管理员权限
+        默认 False，设为 True 则需要管理员權限
         """
         return False
 
@@ -102,32 +102,32 @@ class BotCommand(ABC):
         执行命令
 
         Args:
-            message: 原始消息对象
-            args: 命令参数列表（已分割）
+            message: 原始訊息对象
+            args: 命令參數列表（已分割）
 
         Returns:
-            BotResponse 响应对象
+            BotResponse 回應对象
         """
         pass
 
     async def execute_async(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """异步执行命令。
+        """非同步执行命令。
 
-        默认将同步 `execute()` 下沉到线程池，避免在异步分发链路中阻塞事件循环。
+        默认将同步 `execute()` 下沉到執行緒池，避免在非同步分发链路中阻塞事件循环。
         """
         return await asyncio.to_thread(self.execute, message, args)
 
     def validate_args(self, args: List[str]) -> Optional[str]:
         """
-        验证参数
+        验证參數
 
-        子类可重写此方法进行参数校验。
+        子类可重写此方法进行參數校验。
 
         Args:
-            args: 命令参数列表
+            args: 命令參數列表
 
         Returns:
-            如果参数有效返回 None，否则返回错误信息
+            如果參數有效傳回 None，否则傳回錯誤資訊
         """
         return None
 

@@ -314,7 +314,7 @@ class TestExtractStockCodesFromImage:
 
     def test_rejects_unsupported_mime(self):
         jpeg = _make_jpeg_bytes()
-        with pytest.raises(ValueError, match="不支持的图片类型"):
+        with pytest.raises(ValueError, match="不支援的图片类型"):
             extract_stock_codes_from_image(jpeg, "image/bmp")
 
     def test_rejects_empty_bytes(self):

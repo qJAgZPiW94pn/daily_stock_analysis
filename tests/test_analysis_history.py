@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-A股自选股智能分析系统 - 分析历史存储单元测试
+A股自选股智能分析系統 - 分析历史存储单元測試
 ===================================
 
 职责：
@@ -39,10 +39,10 @@ from src.services.history_service import HistoryService
 import src.auth as auth
 
 class AnalysisHistoryTestCase(unittest.TestCase):
-    """分析历史存储测试"""
+    """分析历史存储測試"""
 
     def setUp(self) -> None:
-        """为每个用例初始化独立数据库"""
+        """为每个用例初始化独立資料庫"""
         auth._auth_enabled = False
         self._temp_dir = tempfile.TemporaryDirectory()
         self._db_path = os.path.join(self._temp_dir.name, "test_analysis_history.db")
@@ -69,7 +69,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         )
 
     def _save_history(self, query_id: str) -> int:
-        """保存一条测试历史记录并返回主键 ID。"""
+        """保存一条測試历史记录并傳回主键 ID。"""
         result = self._build_result()
         saved = self.db.save_analysis_history(
             result=result,
@@ -93,7 +93,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         result.dashboard = {
             "battle_plan": {
                 "sniper_points": {
-                    "ideal_buy": "理想买入点：125.5元",
+                    "ideal_buy": "理想買入点：125.5元",
                     "secondary_buy": "120",
                     "stop_loss": "止损位：110元",
                     "take_profit": "目标位：150.0元",
@@ -128,7 +128,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             self.assertEqual(row.take_profit, 150.0)
 
     def test_save_analysis_history_without_snapshot(self) -> None:
-        """关闭快照保存时不写入 context_snapshot"""
+        """關閉快照保存时不写入 context_snapshot"""
         result = self._build_result()
 
         saved = self.db.save_analysis_history(
@@ -197,7 +197,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertIsNone(detail.get("model_used"))
 
     def test_history_detail_preserves_zero_change_pct(self) -> None:
-        """change_pct=0.0（平盘）应原样返回，而不是被当成缺失值丢失。
+        """change_pct=0.0（平盘）应原样傳回，而不是被当成缺失值丢失。
 
         Regression for issue #1084: history endpoint used `or` chains that
         treated 0.0 as falsy and silently dropped the daily change.
@@ -341,7 +341,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         result.dashboard = {
             "battle_plan": {
                 "sniper_points": {
-                    "ideal_buy": "理想买入点：125.5元",
+                    "ideal_buy": "理想買入点：125.5元",
                     "secondary_buy": "120-121 元分批",
                     "stop_loss": "跌破 110 元止损",
                     "take_profit": "目标位：150.0元",
@@ -368,7 +368,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         service = HistoryService(self.db)
         detail = service.get_history_detail_by_id(record_id)
         self.assertIsNotNone(detail)
-        self.assertEqual(detail.get("ideal_buy"), "理想买入点：125.5元")
+        self.assertEqual(detail.get("ideal_buy"), "理想買入点：125.5元")
         self.assertEqual(detail.get("secondary_buy"), "120-121 元分批")
         self.assertEqual(detail.get("stop_loss"), "跌破 110 元止损")
         self.assertEqual(detail.get("take_profit"), "目标位：150.0元")
@@ -617,19 +617,19 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         """Market review history should return the saved Markdown without rebuilding a stock report."""
         result = AnalysisResult(
             code="MARKET",
-            name="大盘复盘",
+            name="大盤复盘",
             sentiment_score=50,
-            trend_prediction="大盘复盘",
+            trend_prediction="大盤复盘",
             operation_advice="查看复盘",
-            analysis_summary="今日大盘复盘",
-            raw_response="# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文",
+            analysis_summary="今日大盤复盘",
+            raw_response="# 🎯 大盤复盘\n\n## 今日大盤\n\n复盘正文",
         )
 
         saved = self.db.save_analysis_history(
             result=result,
             query_id="market_review_query_001",
             report_type="market_review",
-            news_content="## 今日大盘\n\n复盘正文",
+            news_content="## 今日大盤\n\n复盘正文",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -645,21 +645,21 @@ class AnalysisHistoryTestCase(unittest.TestCase):
 
         markdown = HistoryService(self.db).get_markdown_report(str(record_id))
 
-        self.assertEqual(markdown, "# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文")
+        self.assertEqual(markdown, "# 🎯 大盤复盘\n\n## 今日大盤\n\n复盘正文")
 
     def test_history_detail_returns_persisted_market_review_report(self) -> None:
         """Market review detail should surface the saved recap content for Web history clicks."""
         if get_history_detail is None:
             self.skipTest("fastapi is not installed in this test environment")
 
-        report_content = "# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文"
+        report_content = "# 🎯 大盤复盘\n\n## 今日大盤\n\n复盘正文"
         result = AnalysisResult(
             code="MARKET",
-            name="大盘复盘",
+            name="大盤复盘",
             sentiment_score=50,
-            trend_prediction="大盘复盘",
+            trend_prediction="大盤复盘",
             operation_advice="查看复盘",
-            analysis_summary="今日大盘复盘",
+            analysis_summary="今日大盤复盘",
             raw_response=report_content,
         )
 
@@ -667,7 +667,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="market_review_query_detail_001",
             report_type="market_review",
-            news_content="## 今日大盘\n\n复盘正文",
+            news_content="## 今日大盤\n\n复盘正文",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -697,7 +697,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             name="股票AAPL",
             sentiment_score=78,
             trend_prediction="看多",
-            operation_advice="买入",
+            operation_advice="買入",
             analysis_summary="Momentum remains constructive.",
             report_language="en",
         )
@@ -779,7 +779,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertNotIn("🚨Safe", markdown)
 
     def test_delete_analysis_history_records_also_cleans_backtests(self) -> None:
-        """删除历史记录时应一并清理关联回测结果。"""
+        """刪除历史记录时应一并清理关联回测结果。"""
         record_id = self._save_history("query_delete_001")
 
         with self.db.session_scope() as session:

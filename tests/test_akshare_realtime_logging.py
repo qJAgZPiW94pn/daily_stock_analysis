@@ -163,7 +163,7 @@ def test_hot_stocks_uses_eastmoney_hot_ranking_when_available(monkeypatch, aksha
             {
                 "rank": 1,
                 "code": "SZ000066",
-                "name": "中国长城",
+                "name": "中國长城",
                 "price": 21.8,
                 "change_pct": 9.99,
                 "source": "东方财富人气榜",
@@ -174,7 +174,7 @@ def test_hot_stocks_uses_eastmoney_hot_ranking_when_available(monkeypatch, aksha
     result = akshare_fetcher.get_hot_stocks(5)
 
     assert result[0]["source"] == "东方财富人气榜"
-    assert result[0]["name"] == "中国长城"
+    assert result[0]["name"] == "中國长城"
 
 
 def test_hot_stocks_falls_back_to_xueqiu_when_primary_sources_empty(monkeypatch, akshare_fetcher):
@@ -224,47 +224,47 @@ def test_limit_up_pool_zero_pads_first_seal_times_before_sorting(monkeypatch, ak
     df = pd.DataFrame(
         [
             {
-                "代码": "000002",
+                "代碼": "000002",
                 "名称": "午后股",
-                "涨跌幅": 10.0,
+                "漲跌幅": 10.0,
                 "最新价": 12.3,
                 "成交额": 1,
                 "换手率": 2,
-                "封板资金": 3,
+                "封板資金": 3,
                 "首次封板时间": 141354,
                 "最后封板时间": 141500,
                 "炸板次数": 0,
-                "涨停统计": "1/1",
+                "漲停统计": "1/1",
                 "连板数": 1,
                 "所属行业": "地产",
             },
             {
-                "代码": "000001",
+                "代碼": "000001",
                 "名称": "竞价股",
-                "涨跌幅": 10.0,
+                "漲跌幅": 10.0,
                 "最新价": 10.0,
                 "成交额": 1,
                 "换手率": 2,
-                "封板资金": 3,
+                "封板資金": 3,
                 "首次封板时间": 92500,
                 "最后封板时间": 93000,
                 "炸板次数": 0,
-                "涨停统计": "1/1",
+                "漲停统计": "1/1",
                 "连板数": 1,
                 "所属行业": "计算机",
             },
             {
-                "代码": "000003",
+                "代碼": "000003",
                 "名称": "早盘股",
-                "涨跌幅": 10.0,
+                "漲跌幅": 10.0,
                 "最新价": 11.0,
                 "成交额": 1,
                 "换手率": 2,
-                "封板资金": 3,
+                "封板資金": 3,
                 "首次封板时间": 101500,
                 "最后封板时间": 102000,
                 "炸板次数": 0,
-                "涨停统计": "1/1",
+                "漲停统计": "1/1",
                 "连板数": 1,
                 "所属行业": "电子",
             },

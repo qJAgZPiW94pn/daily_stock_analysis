@@ -702,7 +702,7 @@ class TestAnalyzerGenerateText:
             "sentiment_score": 75,
             "trend_prediction": "看多",
             "operation_advice": "持有",
-            "analysis_summary": "测试分析",
+            "analysis_summary": "測試分析",
         })
         result = GeminiAnalyzer._parse_response(analyzer, valid_response, "600519", "贵州茅台")
         assert result.success is True
@@ -725,7 +725,7 @@ class TestAnalyzerGenerateText:
             dispatch_calls.append(model)
             if "primary" in model:
                 return SimpleNamespace(
-                    choices=[SimpleNamespace(message=SimpleNamespace(content="这不是 JSON 格式的响应"))],
+                    choices=[SimpleNamespace(message=SimpleNamespace(content="这不是 JSON 格式的回應"))],
                     usage=None,
                 )
             return SimpleNamespace(
@@ -758,7 +758,7 @@ class TestAnalyzerGenerateText:
 
         def fake_dispatch(model, call_kwargs, **kwargs):
             return SimpleNamespace(
-                choices=[SimpleNamespace(message=SimpleNamespace(content="这不是 JSON 格式的响应"))],
+                choices=[SimpleNamespace(message=SimpleNamespace(content="这不是 JSON 格式的回應"))],
                 usage=None,
             )
 
@@ -770,7 +770,7 @@ class TestAnalyzerGenerateText:
                     response_validator=analyzer._validate_json_response,
                 )
 
-        assert exc_info.value.last_response_text == "这不是 JSON 格式的响应"
+        assert exc_info.value.last_response_text == "这不是 JSON 格式的回應"
 
     def test_analyze_all_models_invalid_json_goes_through_post_processing(self):
         """When all models return non-JSON, analyze() must still run integrity
@@ -923,7 +923,7 @@ class TestMarketAnalyzerBypassFix:
             indices=[
                 MarketIndex(
                     code="000001",
-                    name="上证指数",
+                    name="上证指數",
                     current=3300.0,
                     change=5.0,
                     change_pct=0.15,
@@ -944,7 +944,7 @@ class TestMarketAnalyzerBypassFix:
             indices=[
                 MarketIndex(
                     code="000001",
-                    name="上证指数",
+                    name="上证指數",
                     current=3300.0,
                     change=5.0,
                     change_pct=0.15,
@@ -970,7 +970,7 @@ class TestMarketAnalyzerBypassFix:
             indices=[
                 MarketIndex(
                     code="000001",
-                    name="上证指数",
+                    name="上证指數",
                     current=3300.0,
                     change=12.0,
                     change_pct=0.36,
@@ -1019,7 +1019,7 @@ class TestMarketAnalyzerBypassFix:
 
         result = ma.generate_market_review(overview, [])
 
-        assert "## 2026-03-05 大盘复盘" in result
+        assert "## 2026-03-05 大盤复盘" in result
         assert "### 一、盘面总览" in result
         assert "今日美股市场整体呈现**小幅下跌**态势" in result
         assert "### 1. Market Summary" not in result
@@ -1035,7 +1035,7 @@ class TestMarketAnalyzerBypassFix:
             indices=[
                 MarketIndex(
                     code="000001",
-                    name="上证指数",
+                    name="上证指數",
                     current=3300.0,
                     change=12.0,
                     change_pct=0.36,
@@ -1082,7 +1082,7 @@ Sector text.
             indices=[
                 MarketIndex(
                     code="000001",
-                    name="上证指数",
+                    name="上证指數",
                     current=3300.0,
                     change=12.0,
                     change_pct=0.36,
@@ -1102,36 +1102,36 @@ Sector text.
             top_sectors=[{"name": "AI算力", "change_pct": 3.25}],
             bottom_sectors=[{"name": "煤炭", "change_pct": -1.12}],
         )
-        news = [{"title": "AI算力板块走强", "snippet": "算力产业链延续活跃，成交额放大"}]
-        review = """## 2026-03-05 大盘复盘
+        news = [{"title": "AI算力板塊走强", "snippet": "算力产业链延续活跃，成交额放大"}]
+        review = """## 2026-03-05 大盤复盘
 
 ### 一、盘面总览
 总结。
 
-### 二、指数结构
-指数。
+### 二、指數结构
+指數。
 
-### 三、板块主线
-板块。
+### 三、板塊主线
+板塊。
 
-### 五、消息催化
+### 五、訊息催化
 新闻。
 """
 
         result = ma._inject_data_into_review(review, overview, news)
 
-        assert "大盘红绿灯" in result
+        assert "大盤红绿灯" in result
         assert "green（可进攻）" in result
         assert "核心原因" in result
         assert "操作建议" in result
         assert "盘面温度" in result
         assert "| 上涨/下跌/平盘 | 3200 / 1800 / 100 |" in result
-        assert "| 指数 | 最新 | 涨跌幅 | 开盘 | 最高 | 最低 | 振幅 | 成交额(亿) |" in result
-        assert "| 上证指数 | 3300.00 | 🟢 +0.36% | 3288.00 | 3312.00 | 3276.00 | 1.10% | 1450 |" in result
-        assert "#### 领涨板块 Top 5" in result
+        assert "| 指數 | 最新 | 漲跌幅 | 開盤 | 最高 | 最低 | 振幅 | 成交额(亿) |" in result
+        assert "| 上证指數 | 3300.00 | 🟢 +0.36% | 3288.00 | 3312.00 | 3276.00 | 1.10% | 1450 |" in result
+        assert "#### 领涨板塊 Top 5" in result
         assert "| 1 | AI算力 | +3.25% |" in result
         assert "#### 近三日催化线索" in result
-        assert "AI算力板块走强" in result
+        assert "AI算力板塊走强" in result
 
     def test_news_block_labels_snippets_and_preserves_source_url(self):
         from src.market_analyzer import MarketAnalyzer
@@ -1141,12 +1141,12 @@ Sector text.
         ma.region = "cn"
         long_snippet = (
             "复盘必读 2026-05-06 复盘的意义在于更清晰地把握市场脉搏，"
-            "综合描述 A 股三大指数今日集体反弹，成交额放大，科技成长方向领涨。"
+            "综合描述 A 股三大指數今日集体反弹，成交额放大，科技成长方向领涨。"
         )
 
         result = ma._build_news_block([
             {
-                "title": "A股收评：科创50指数放量反弹涨5.47% 两市成交额重回3万亿元",
+                "title": "A股收评：科创50指數放量反弹涨5.47% 两市成交额重回3万亿元",
                 "snippet": long_snippet,
                 "source": "东方财富",
                 "published_date": "2026-05-06",
@@ -1168,13 +1168,13 @@ Sector text.
 
         result = ma._build_news_block([
             {
-                "title": "政策利好带动板块活跃",
+                "title": "政策利好带动板塊活跃",
                 "snippet": "相关主题成交放大",
             }
         ])
 
-        assert "| 1 | 政策利好带动板块活跃 | 相关主题成交放大 | - |" in result
-        assert "| 1 | 政策利好带动板块活跃 | 相关主题成交放大 | source |" not in result
+        assert "| 1 | 政策利好带动板塊活跃 | 相关主题成交放大 | - |" in result
+        assert "| 1 | 政策利好带动板塊活跃 | 相关主题成交放大 | source |" not in result
 
     def test_review_prompt_caps_news_url_context(self):
         from src.market_analyzer import MarketOverview
@@ -1186,9 +1186,9 @@ Sector text.
             MarketOverview(date="2026-05-06"),
             [
                 {
-                    "title": "A股收评：指数放量反弹",
+                    "title": "A股收评：指數放量反弹",
                     "snippet": "科技成长方向领涨",
-                    "source": "测试来源",
+                    "source": "測試来源",
                     "published_date": "2026-05-06",
                     "url": long_url,
                 }
@@ -1206,7 +1206,7 @@ Sector text.
         overview = MarketOverview(
             date="2026-03-06",
             indices=[
-                MarketIndex(code="000001", name="上证指数", current=3200, change_pct=-1.8),
+                MarketIndex(code="000001", name="上证指數", current=3200, change_pct=-1.8),
                 MarketIndex(code="399001", name="深证成指", current=9800, change_pct=-2.4),
             ],
             up_count=900,
@@ -1292,7 +1292,7 @@ Sector text.
         overview = MarketOverview(
             date="2026-03-05",
             indices=[
-                MarketIndex(code="000001", name="上证指数", current=3200.0, change_pct=0.68),
+                MarketIndex(code="000001", name="上证指數", current=3200.0, change_pct=0.68),
                 MarketIndex(code="399001", name="深证成指", current=9800.0, change_pct=-0.42),
                 MarketIndex(code="399006", name="创业板指", current=2100.0, change_pct=0.0),
             ],
@@ -1300,7 +1300,7 @@ Sector text.
 
         result = ma._build_indices_block(overview)
 
-        assert "| 上证指数 | 3200.00 | 🔴 +0.68% |" in result
+        assert "| 上证指數 | 3200.00 | 🔴 +0.68% |" in result
         assert "| 深证成指 | 9800.00 | 🟢 -0.42% |" in result
         assert "| 创业板指 | 2100.00 | ⚪ +0.00% |" in result
 
@@ -1311,14 +1311,14 @@ Sector text.
         overview = MarketOverview(
             date="2026-03-05",
             indices=[
-                MarketIndex(code="000001", name="上证指数", current=3200.0, change_pct=0.68),
+                MarketIndex(code="000001", name="上证指數", current=3200.0, change_pct=0.68),
                 MarketIndex(code="399001", name="深证成指", current=9800.0, change_pct=-0.42),
             ],
         )
 
         result = ma._build_indices_block(overview)
 
-        assert "| 上证指数 | 3200.00 | 🟢 +0.68% |" in result
+        assert "| 上证指數 | 3200.00 | 🟢 +0.68% |" in result
         assert "| 深证成指 | 9800.00 | 🔴 -0.42% |" in result
 
     def test_no_private_attribute_access_in_market_analyzer_source(self):

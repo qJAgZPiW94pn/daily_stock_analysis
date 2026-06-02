@@ -191,9 +191,9 @@ class SearchServiceConcurrencyTestCase(unittest.TestCase):
             news_strategy_profile="short",
         )
         search_days = service._effective_news_window_days()
-        cache_key = service._cache_key("贵州茅台 600519 股票 最新消息|news_pref=zh", 3, search_days)
+        cache_key = service._cache_key("贵州茅台 600519 股票 最新訊息|news_pref=zh", 3, search_days)
         cached_response = SearchResponse(
-            query="贵州茅台 600519 股票 最新消息",
+            query="贵州茅台 600519 股票 最新訊息",
             results=[
                 SearchResult(
                     title="cached-after-wait",

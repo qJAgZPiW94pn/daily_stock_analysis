@@ -35,7 +35,7 @@ class TestParseImportFromBytesCsv:
         assert result[1] == ("00700", "腾讯控股", "medium")
 
     def test_parses_csv_chinese_column_names(self):
-        data = "股票代码,股票名称\n600519,贵州茅台".encode("utf-8")
+        data = "股票代碼,股票名称\n600519,贵州茅台".encode("utf-8")
         result = parse_import_from_bytes(data, "a.csv")
         assert result[0] == ("600519", "贵州茅台", "medium")
 
@@ -122,7 +122,7 @@ class TestParseImportFromBytesExcel:
 
     def test_rejects_xls(self):
         data = b"dummy"
-        with pytest.raises(ValueError, match="仅支持 .xlsx"):
+        with pytest.raises(ValueError, match="仅支援 .xlsx"):
             parse_import_from_bytes(data, "a.xls")
 
     def test_excel_error_includes_actionable_hint(self):
@@ -132,7 +132,7 @@ class TestParseImportFromBytesExcel:
         with pytest.raises(ValueError) as exc_info:
             parse_import_from_bytes(data, "a.xlsx")
         msg = str(exc_info.value)
-        assert "请确认" in msg or ".xlsx" in msg
+        assert "請確認" in msg or ".xlsx" in msg
 
 
 # ---------------------------------------------------------------------------

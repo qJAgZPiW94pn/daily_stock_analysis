@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-Bot Webhook 处理器
+Bot Webhook 處理器
 ===================================
 
-处理各平台的 Webhook 回调，分发到命令处理器。
+處理各平台的 Webhook 回调，分发到命令處理器。
 """
 
 import asyncio
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# 平台实例缓存
+# 平台实例快取
 _platform_instances: Dict[str, 'BotPlatform'] = {}
 
 
@@ -30,7 +30,7 @@ def get_platform(platform_name: str) -> Optional['BotPlatform']:
     """
     获取平台适配器实例
 
-    使用缓存避免重复创建。
+    使用快取避免重复建立。
 
     Args:
         platform_name: 平台名称
@@ -56,20 +56,20 @@ def handle_webhook(
     query_params: Optional[Dict[str, list]] = None
 ) -> WebhookResponse:
     """
-    处理 Webhook 请求
+    處理 Webhook 請求
 
     这是所有平台 Webhook 的统一入口。
 
     Args:
         platform_name: 平台名称 (feishu, dingtalk, wecom, telegram)
-        headers: HTTP 请求头
-        body: 请求体原始字节
-        query_params: URL 查询参数（用于某些平台的验证）
+        headers: HTTP 請求头
+        body: 請求体原始字节
+        query_params: URL 查詢參數（用于某些平台的验证）
 
     Returns:
-        WebhookResponse 响应对象
+        WebhookResponse 回應对象
     """
-    logger.info(f"[BotHandler] 收到 {platform_name} Webhook 请求")
+    logger.info(f"[BotHandler] 收到 {platform_name} Webhook 請求")
 
     # 检查机器人功能是否启用
     from src.config import get_config
@@ -84,26 +84,26 @@ def handle_webhook(
     if not platform:
         return WebhookResponse.error(f"Unknown platform: {platform_name}", 400)
 
-    # 解析 JSON 数据
+    # 解析 JSON 數據
     try:
         data = json.loads(body.decode('utf-8')) if body else {}
     except json.JSONDecodeError as e:
         logger.error(f"[BotHandler] JSON 解析失败: {e}")
         return WebhookResponse.error("Invalid JSON", 400)
 
-    logger.debug(f"[BotHandler] 请求数据: {json.dumps(data, ensure_ascii=False)[:500]}")
+    logger.debug(f"[BotHandler] 請求數據: {json.dumps(data, ensure_ascii=False)[:500]}")
 
-    # 处理 Webhook
+    # 處理 Webhook
     message, immediate_response = platform.handle_webhook(headers, body, data)
 
-    # 如果是验证/错误响应且没有消息需要处理，直接返回
+    # 如果是验证/錯誤回應且没有訊息需要處理，直接傳回
     if immediate_response and not message:
-        logger.info("[BotHandler] 返回验证响应")
+        logger.info("[BotHandler] 傳回验证回應")
         return immediate_response
 
-    # 延迟响应（如 Discord type 5）：立即返回 ACK，后台处理命令
+    # 延遲回應（如 Discord type 5）：立即傳回 ACK，后台處理命令
     if immediate_response and message:
-        logger.info("[BotHandler] 返回延迟 ACK，后台处理命令")
+        logger.info("[BotHandler] 傳回延遲 ACK，后台處理命令")
 
         def _deferred_dispatch() -> None:
             try:
@@ -112,23 +112,23 @@ def handle_webhook(
                 if response.text:
                     platform.send_followup(response, message)
             except Exception as exc:
-                logger.error("[BotHandler] 延迟命令处理失败: %s", exc)
+                logger.error("[BotHandler] 延遲命令處理失败: %s", exc)
 
         threading.Thread(target=_deferred_dispatch, daemon=True).start()
         return immediate_response
 
-    # 如果没有消息需要处理，返回空响应
+    # 如果没有訊息需要處理，傳回空回應
     if not message:
-        logger.debug("[BotHandler] 无需处理的消息")
+        logger.debug("[BotHandler] 無需處理的訊息")
         return WebhookResponse.success()
 
-    logger.info(f"[BotHandler] 解析到消息: user={message.user_name}, content={message.content[:50]}")
+    logger.info(f"[BotHandler] 解析到訊息: user={message.user_name}, content={message.content[:50]}")
 
-    # 分发到命令处理器
+    # 分发到命令處理器
     dispatcher = get_dispatcher()
     response = dispatcher.dispatch(message)
 
-    # 格式化响应
+    # 格式化回應
     if response.text:
         webhook_response = platform.format_response(response, message)
         return webhook_response
@@ -147,7 +147,7 @@ async def handle_webhook_async(
     Preferred when called from an async context (e.g. FastAPI endpoint)
     to avoid blocking the event loop.
     """
-    logger.info(f"[BotHandler] 收到 {platform_name} Webhook 请求 (async)")
+    logger.info(f"[BotHandler] 收到 {platform_name} Webhook 請求 (async)")
 
     from src.config import get_config
     config = get_config()
@@ -166,16 +166,16 @@ async def handle_webhook_async(
         logger.error(f"[BotHandler] JSON 解析失败: {e}")
         return WebhookResponse.error("Invalid JSON", 400)
 
-    logger.debug(f"[BotHandler] 请求数据: {json.dumps(data, ensure_ascii=False)[:500]}")
+    logger.debug(f"[BotHandler] 請求數據: {json.dumps(data, ensure_ascii=False)[:500]}")
 
     message, immediate_response = platform.handle_webhook(headers, body, data)
 
     if immediate_response and not message:
-        logger.info("[BotHandler] 返回验证响应")
+        logger.info("[BotHandler] 傳回验证回應")
         return immediate_response
 
     if immediate_response and message:
-        logger.info("[BotHandler] 返回延迟 ACK，后台处理命令 (async)")
+        logger.info("[BotHandler] 傳回延遲 ACK，后台處理命令 (async)")
 
         async def _deferred_dispatch() -> None:
             try:
@@ -184,16 +184,16 @@ async def handle_webhook_async(
                 if response.text:
                     await asyncio.to_thread(platform.send_followup, response, message)
             except Exception as exc:
-                logger.error("[BotHandler] 延迟命令处理失败: %s", exc)
+                logger.error("[BotHandler] 延遲命令處理失败: %s", exc)
 
         asyncio.ensure_future(_deferred_dispatch())
         return immediate_response
 
     if not message:
-        logger.debug("[BotHandler] 无需处理的消息")
+        logger.debug("[BotHandler] 無需處理的訊息")
         return WebhookResponse.success()
 
-    logger.info(f"[BotHandler] 解析到消息: user={message.user_name}, content={message.content[:50]}")
+    logger.info(f"[BotHandler] 解析到訊息: user={message.user_name}, content={message.content[:50]}")
 
     dispatcher = get_dispatcher()
     response = await dispatcher.dispatch_async(message)
@@ -206,20 +206,20 @@ async def handle_webhook_async(
 
 
 def handle_feishu_webhook(headers: Dict[str, str], body: bytes) -> WebhookResponse:
-    """处理飞书 Webhook"""
+    """處理飞书 Webhook"""
     return handle_webhook('feishu', headers, body)
 
 
 def handle_dingtalk_webhook(headers: Dict[str, str], body: bytes) -> WebhookResponse:
-    """处理钉钉 Webhook"""
+    """處理钉钉 Webhook"""
     return handle_webhook('dingtalk', headers, body)
 
 
 def handle_wecom_webhook(headers: Dict[str, str], body: bytes) -> WebhookResponse:
-    """处理企业微信 Webhook"""
+    """處理企业微信 Webhook"""
     return handle_webhook('wecom', headers, body)
 
 
 def handle_telegram_webhook(headers: Dict[str, str], body: bytes) -> WebhookResponse:
-    """处理 Telegram Webhook"""
+    """處理 Telegram Webhook"""
     return handle_webhook('telegram', headers, body)

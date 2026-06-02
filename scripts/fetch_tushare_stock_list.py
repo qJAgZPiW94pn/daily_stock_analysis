@@ -3,23 +3,23 @@
 """
 Tushare 股票列表获取脚本
 
-从 Tushare Pro 获取 A股、港股、美股列表信息，保存为 CSV 文件
+从 Tushare Pro 获取 A股、港股、美股列表資訊，保存为 CSV 文件
 
 使用方法：
     python3 scripts/fetch_tushare_stock_list.py
 
 环境要求：
     - 需要在 .env 中配置 TUSHARE_TOKEN
-    - 需要安装 tushare: pip install tushare
+    - 需要安裝 tushare: pip install tushare
     - 账号积分要求：
         * A股/港股：2000积分
-        * 美股：120积分试用，5000积分正式权限
+        * 美股：120积分试用，5000积分正式權限
 
 输出文件：
     - data/stock_list_a.csv      A股列表
     - data/stock_list_hk.csv     港股列表
     - data/stock_list_us.csv     美股列表
-    - data/README_stock_list.md  数据说明文档
+    - data/README_stock_list.md  數據说明文档
 """
 
 import os
@@ -33,13 +33,13 @@ from typing import Optional
 import pandas as pd
 from dotenv import load_dotenv
 
-# 添加项目根目录到路径
+# 添加项目根目錄到路徑
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
     import tushare as ts
 except ImportError:
-    print("[错误] 未安装 tushare 库")
+    print("[錯誤] 未安裝 tushare 库")
     print("请执行: pip install tushare")
     sys.exit(1)
 
@@ -59,21 +59,21 @@ def get_tushare_api() -> Optional[ts.pro_api]:
     获取 Tushare API 实例
 
     Returns:
-        Tushare API 实例，失败返回 None
+        Tushare API 实例，失败傳回 None
     """
     if not TUSHARE_TOKEN:
-        print("[错误] 未找到 TUSHARE_TOKEN")
+        print("[錯誤] 未找到 TUSHARE_TOKEN")
         print("请在 .env 文件中配置: TUSHARE_TOKEN=你的token")
         return None
 
     try:
         api = ts.pro_api(TUSHARE_TOKEN)
-        # 测试连接
+        # 測試連線
         api.trade_cal(exchange='SSE', start_date='20240101', end_date='20240101')
-        print("✓ Tushare API 连接成功")
+        print("✓ Tushare API 連線成功")
         return api
     except Exception as e:
-        print(f"[错误] Tushare API 连接失败: {e}")
+        print(f"[錯誤] Tushare API 連線失败: {e}")
         print("请检查：")
         print("  1. TUSHARE_TOKEN 是否正确")
         print("  2. 账号积分是否足够（A股/港股需要2000积分）")
@@ -82,7 +82,7 @@ def get_tushare_api() -> Optional[ts.pro_api]:
 
 def random_sleep(min_seconds: int = SLEEP_MIN, max_seconds: int = SLEEP_MAX):
     """
-    随机睡眠，避免频繁请求
+    随机睡眠，避免频繁請求
 
     Args:
         min_seconds: 最小睡眠时间
@@ -104,7 +104,7 @@ def fetch_a_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
         api: Tushare API 实例
 
     Returns:
-        A股数据 DataFrame，失败返回 None
+        A股數據 DataFrame，失败傳回 None
     """
     print("\n[1/3] 正在获取 A股列表...")
 
@@ -123,11 +123,11 @@ def fetch_a_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
                 print(f"    {exchange}: {count} 只")
             return df
         else:
-            print("[错误] A股数据为空")
+            print("[錯誤] A股數據为空")
             return None
 
     except Exception as e:
-        print(f"[错误] 获取 A股列表失败: {e}")
+        print(f"[錯誤] 获取 A股列表失败: {e}")
         return None
 
 
@@ -142,7 +142,7 @@ def fetch_hk_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
         api: Tushare API 实例
 
     Returns:
-        港股数据 DataFrame，失败返回 None
+        港股數據 DataFrame，失败傳回 None
     """
     print("\n[2/3] 正在获取港股列表...")
 
@@ -156,11 +156,11 @@ def fetch_hk_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
             print(f"✓ 港股列表获取成功，共 {len(df)} 只股票")
             return df
         else:
-            print("[错误] 港股数据为空")
+            print("[錯誤] 港股數據为空")
             return None
 
     except Exception as e:
-        print(f"[错误] 获取港股列表失败: {e}")
+        print(f"[錯誤] 获取港股列表失败: {e}")
         return None
 
 
@@ -175,7 +175,7 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
         api: Tushare API 实例
 
     Returns:
-        美股数据 DataFrame，失败返回 None
+        美股數據 DataFrame，失败傳回 None
     """
     print("\n[3/3] 正在获取美股列表（分页读取）...")
 
@@ -193,13 +193,13 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
             )
 
             if df is None or len(df) == 0:
-                print(f"  ✓ 第 {page} 页无数据，读取完成")
+                print(f"  ✓ 第 {page} 页无數據，读取完成")
                 break
 
             all_data.append(df)
             print(f"  ✓ 第 {page} 页获取 {len(df)} 只股票")
 
-            # 如果返回数据少于页大小，说明已经到最后一页
+            # 如果傳回數據少于页大小，说明已经到最后一页
             if len(df) < PAGE_SIZE:
                 break
 
@@ -221,28 +221,28 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
 
             return result_df
         else:
-            print("[错误] 美股数据为空")
+            print("[錯誤] 美股數據为空")
             return None
 
     except Exception as e:
-        print(f"[错误] 获取美股列表失败: {e}")
+        print(f"[錯誤] 获取美股列表失败: {e}")
         return None
 
 
 def save_to_csv(df: pd.DataFrame, filename: str, market_name: str) -> bool:
     """
-    保存数据到 CSV 文件
+    保存數據到 CSV 文件
 
     Args:
-        df: 数据 DataFrame
+        df: 數據 DataFrame
         filename: 文件名
-        market_name: 市场名称（用于日志）
+        market_name: 市场名称（用于日誌）
 
     Returns:
         是否保存成功
     """
     if df is None or len(df) == 0:
-        print(f"[跳过] {market_name} 数据为空，不保存文件")
+        print(f"[略過] {market_name} 數據为空，不保存文件")
         return False
 
     try:
@@ -252,11 +252,11 @@ def save_to_csv(df: pd.DataFrame, filename: str, market_name: str) -> bool:
         df.to_csv(output_path, index=False, encoding='utf-8-sig')
 
         file_size = output_path.stat().st_size / 1024  # KB
-        print(f"✓ {market_name} 数据已保存：{output_path} ({file_size:.2f} KB)")
+        print(f"✓ {market_name} 數據已保存：{output_path} ({file_size:.2f} KB)")
         return True
 
     except Exception as e:
-        print(f"[错误] 保存 {market_name} 数据失败: {e}")
+        print(f"[錯誤] 保存 {market_name} 數據失败: {e}")
         return False
 
 
@@ -266,18 +266,18 @@ def generate_data_documentation(
     us_df: Optional[pd.DataFrame]
 ):
     """
-    生成数据说明文档
+    生成數據说明文档
 
     Args:
-        a_df: A股数据
-        hk_df: 港股数据
-        us_df: 美股数据
+        a_df: A股數據
+        hk_df: 港股數據
+        us_df: 美股數據
     """
     doc_path = OUTPUT_DIR / "README_stock_list.md"
 
-    content = f"""# Tushare 股票列表数据说明
+    content = f"""# Tushare 股票列表數據说明
 
-> 数据来源：[Tushare Pro](https://tushare.pro)
+> 數據来源：[Tushare Pro](https://tushare.pro)
 > 生成时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ## 文件说明
@@ -290,19 +290,19 @@ def generate_data_documentation(
 
 ---
 
-## A股数据（stock_list_a.csv）
+## A股數據（stock_list_a.csv）
 
-### 数据接口
+### 數據接口
 - **接口名称**：`stock_basic`
-- **数据权限**：2000积分起，每分钟请求50次
-- **数据限量**：单次最多6000行（覆盖全市场A股）
+- **數據權限**：2000积分起，每分钟請求50次
+- **數據限量**：单次最多6000行（覆盖全市场A股）
 
-### 字段说明
+### 欄位说明
 
-| 字段名 | 类型 | 说明 | 示例 |
+| 欄位名 | 类型 | 说明 | 示例 |
 |--------|------|------|------|
-| ts_code | str | TS代码 | 000001.SZ |
-| symbol | str | 股票代码 | 000001 |
+| ts_code | str | TS代碼 | 000001.SZ |
+| symbol | str | 股票代碼 | 000001 |
 | name | str | 股票名称 | 平安银行 |
 | area | str | 地域 | 深圳 |
 | industry | str | 所属行业 | 银行 |
@@ -310,16 +310,16 @@ def generate_data_documentation(
 | enname | str | 英文全称 | Ping An Bank Co., Ltd. |
 | cnspell | str | 拼音缩写 | PAYH |
 | market | str | 市场类型 | 主板/创业板/科创板/CDR |
-| exchange | str | 交易所代码 | SSE上交所/SZSE深交所/BSE北交所 |
+| exchange | str | 交易所代碼 | SSE上交所/SZSE深交所/BSE北交所 |
 | curr_type | str | 交易货币 | CNY |
-| list_status | str | 上市状态 | L上市/D退市/P暂停上市 |
+| list_status | str | 上市狀態 | L上市/D退市/P暂停上市 |
 | list_date | str | 上市日期 | 19910403 |
 | delist_date | str | 退市日期 | - |
-| is_hs | str | 是否沪深港通标的 | N否/H沪股通/S深股通 |
+| is_hs | str | 是否滬深港通标的 | N否/H沪股通/S深股通 |
 | act_name | str | 实控人名称 | - |
 | act_ent_type | str | 实控人企业性质 | - |
 
-### 数据样例
+### 數據样例
 ```csv
 ts_code,symbol,name,area,industry,fullname,enname,cnspell,market,exchange,curr_type,list_status,list_date,delist_date,is_hs,act_name,act_ent_type
 000001.SZ,000001,平安银行,深圳,银行,平安银行股份有限公司,Ping An Bank Co., Ltd.,PAYH,主板,SZSE,CNY,L,19910403,,S,,
@@ -328,31 +328,31 @@ ts_code,symbol,name,area,industry,fullname,enname,cnspell,market,exchange,curr_t
 
 ---
 
-## 港股数据（stock_list_hk.csv）
+## 港股數據（stock_list_hk.csv）
 
-### 数据接口
+### 數據接口
 - **接口名称**：`hk_basic`
-- **数据权限**：用户需要至少2000积分才可以调取
-- **数据限量**：单次可提取全部在交易的港股列表数据
+- **數據權限**：使用者需要至少2000积分才可以调取
+- **數據限量**：单次可提取全部在交易的港股列表數據
 
-### 字段说明
+### 欄位说明
 
-| 字段名 | 类型 | 说明 | 示例 |
+| 欄位名 | 类型 | 说明 | 示例 |
 |--------|------|------|------|
-| ts_code | str | TS代码 | 00001.HK |
+| ts_code | str | TS代碼 | 00001.HK |
 | name | str | 股票简称 | 长和 |
 | fullname | str | 公司全称 | 长江和记实业有限公司 |
 | enname | str | 英文名称 | CK Hutchison Holdings Ltd. |
 | cn_spell | str | 拼音 | ZH |
 | market | str | 市场类别 | 主板/创业板 |
-| list_status | str | 上市状态 | L上市/D退市/P暂停上市 |
+| list_status | str | 上市狀態 | L上市/D退市/P暂停上市 |
 | list_date | str | 上市日期 | 19720731 |
 | delist_date | str | 退市日期 | - |
 | trade_unit | float | 交易单位 | 1000 |
-| isin | str | ISIN代码 | KYG217651051 |
-| curr_type | str | 货币代码 | HKD |
+| isin | str | ISIN代碼 | KYG217651051 |
+| curr_type | str | 货币代碼 | HKD |
 
-### 数据样例
+### 數據样例
 ```csv
 ts_code,name,fullname,enname,cn_spell,market,list_status,list_date,delist_date,trade_unit,isin,curr_type
 00001.HK,长和,长江和记实业有限公司,CK Hutchison Holdings Ltd.,ZH,主板,L,19720731,,1000,KYG217651051,HKD
@@ -361,18 +361,18 @@ ts_code,name,fullname,enname,cn_spell,market,list_status,list_date,delist_date,t
 
 ---
 
-## 美股数据（stock_list_us.csv）
+## 美股數據（stock_list_us.csv）
 
-### 数据接口
+### 數據接口
 - **接口名称**：`us_basic`
-- **数据权限**：120积分可以试用，5000积分有正式权限
-- **数据限量**：单次最大6000，可分页提取
+- **數據權限**：120积分可以试用，5000积分有正式權限
+- **數據限量**：单次最大6000，可分页提取
 
-### 字段说明
+### 欄位说明
 
-| 字段名 | 类型 | 说明 | 示例 |
+| 欄位名 | 类型 | 说明 | 示例 |
 |--------|------|------|------|
-| ts_code | str | 美股代码 | AAPL |
+| ts_code | str | 美股代碼 | AAPL |
 | name | str | 中文名称 | 苹果 |
 | enname | str | 英文名称 | Apple Inc. |
 | classify | str | 分类 | ADR/GDR/EQT |
@@ -380,11 +380,11 @@ ts_code,name,fullname,enname,cn_spell,market,list_status,list_date,delist_date,t
 | delist_date | str | 退市日期 | - |
 
 ### 分类说明
-- **ADR**：美国存托凭证（American Depositary Receipt）
+- **ADR**：美國存托凭证（American Depositary Receipt）
 - **GDR**：全球存托凭证（Global Depositary Receipt）
 - **EQT**：普通股（Equity）
 
-### 数据样例
+### 數據样例
 ```csv
 ts_code,name,enname,classify,list_date,delist_date
 AAPL,苹果,Apple Inc.,EQT,19801212,
@@ -396,46 +396,46 @@ BABA,阿里巴巴,Alibaba Group Holding Ltd.,ADR,20140919,
 
 ## 使用说明
 
-### 读取数据
+### 读取數據
 
 ```python
 import pandas as pd
 
-# 读取 A股数据
+# 读取 A股數據
 a_stocks = pd.read_csv('data/stock_list_a.csv')
 
-# 读取港股数据
+# 读取港股數據
 hk_stocks = pd.read_csv('data/stock_list_hk.csv')
 
-# 读取美股数据
+# 读取美股數據
 us_stocks = pd.read_csv('data/stock_list_us.csv')
 ```
 
-### 代码格式说明
+### 代碼格式说明
 
-**A股代码格式**：
+**A股代碼格式**：
 - 沪市：`600000.SH`（主板）、`688xxx.SH`（科创板）、`900xxx.SH`（B股）
 - 深市：`000001.SZ`（主板）、`300xxx.SZ`（创业板）、`200xxx.SZ`（B股）
 - 北交所：`8xxxxx.BJ`、`4xxxxx.BJ`、`920xxx.BJ`
 
-**港股代码格式**：
+**港股代碼格式**：
 - 格式：`xxxxx.HK`（5位数字 + .HK）
 - 示例：`00700.HK`（腾讯控股）
 
-**美股代码格式**：
-- 格式：代码字母（无后缀）
+**美股代碼格式**：
+- 格式：代碼字母（无后缀）
 - 示例：`AAPL`（苹果）、`TSLA`（特斯拉）
 
 ---
 
 ## 注意事项
 
-1. **数据更新**：建议定期更新数据（如每月一次）
+1. **數據更新**：建议定期更新數據（如每月一次）
 2. **积分要求**：
    - A股/港股：需要2000积分
-   - 美股：120积分试用，5000积分正式权限
-3. **请求限制**：注意 API 的每分钟请求次数限制
-4. **数据完整性**：本数据仅包含基础信息，如需更多数据请参考 Tushare 官方文档
+   - 美股：120积分试用，5000积分正式權限
+3. **請求限制**：注意 API 的每分钟請求次数限制
+4. **數據完整性**：本數據仅包含基础資訊，如需更多數據請參考 Tushare 官方文档
 
 ---
 
@@ -444,19 +444,19 @@ us_stocks = pd.read_csv('data/stock_list_us.csv')
 - [Tushare 官网](https://tushare.pro)
 - [Tushare 文档](https://tushare.pro/document/2)
 - [积分获取办法](https://tushare.pro/document/1)
-- [API 数据调试](https://tushare.pro/document/2)
+- [API 數據调试](https://tushare.pro/document/2)
 """
 
     try:
         with open(doc_path, 'w', encoding='utf-8') as f:
             f.write(content)
-        print(f"✓ 数据说明文档已生成：{doc_path}")
+        print(f"✓ 數據说明文档已生成：{doc_path}")
     except Exception as e:
-        print(f"[错误] 生成说明文档失败: {e}")
+        print(f"[錯誤] 生成说明文档失败: {e}")
 
 
 def main():
-    """主函数"""
+    """主函數"""
     print("=" * 60)
     print("Tushare 股票列表获取工具")
     print("=" * 60)
@@ -466,30 +466,30 @@ def main():
     if not api:
         return 1
 
-    # 2. 获取 A股数据
+    # 2. 获取 A股數據
     a_df = fetch_a_stock_list(api)
     if a_df is not None:
         save_to_csv(a_df, 'stock_list_a.csv', 'A股')
 
-    # 3. 获取港股数据
+    # 3. 获取港股數據
     random_sleep()  # 休息后再获取港股
     hk_df = fetch_hk_stock_list(api)
     if hk_df is not None:
         save_to_csv(hk_df, 'stock_list_hk.csv', '港股')
 
-    # 4. 获取美股数据（分页）
+    # 4. 获取美股數據（分页）
     random_sleep()  # 休息后再获取美股
     us_df = fetch_us_stock_list(api)
     if us_df is not None:
         save_to_csv(us_df, 'stock_list_us.csv', '美股')
 
-    # 5. 生成数据说明文档
-    print("\n正在生成数据说明文档...")
+    # 5. 生成數據说明文档
+    print("\n正在生成數據说明文档...")
     generate_data_documentation(a_df, hk_df, us_df)
 
     # 6. 总结
     print("\n" + "=" * 60)
-    print("任务完成！")
+    print("工作完成！")
     print("=" * 60)
 
     total_count = 0
@@ -504,7 +504,7 @@ def main():
         print(f"  ✓ 美股：{len(us_df)} 只")
 
     print(f"\n总计：{total_count} 只股票")
-    print(f"输出目录：{OUTPUT_DIR}")
+    print(f"输出目錄：{OUTPUT_DIR}")
 
     return 0
 
@@ -513,10 +513,10 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except KeyboardInterrupt:
-        print("\n\n[中断] 用户取消操作")
+        print("\n\n[中断] 使用者取消操作")
         sys.exit(1)
     except Exception as e:
-        print(f"\n[错误] 未预期的异常: {e}")
+        print(f"\n[錯誤] 未预期的异常: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

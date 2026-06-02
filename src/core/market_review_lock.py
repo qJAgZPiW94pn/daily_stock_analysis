@@ -84,7 +84,7 @@ def _is_windows_process_alive(pid: int) -> bool:
         finally:
             kernel32.CloseHandle(handle)
     except Exception as exc:
-        logger.warning("Windows 进程存活探测失败，保守视为仍在运行: %s", exc)
+        logger.warning("Windows 程式存活探测失败，保守视为仍在執行: %s", exc)
         return True
 
 

@@ -50,7 +50,7 @@ class TestAnalysisReportSchema(unittest.TestCase):
     def test_schema_allows_optional_fields_missing(self) -> None:
         """Schema accepts minimal valid structure."""
         data = {
-            "stock_name": "测试",
+            "stock_name": "測試",
             "sentiment_score": 50,
             "trend_prediction": "震荡",
             "operation_advice": "观望",
@@ -62,10 +62,10 @@ class TestAnalysisReportSchema(unittest.TestCase):
     def test_schema_allows_numeric_strings(self) -> None:
         """Schema accepts string values for numeric fields (LLM may return N/A)."""
         data = {
-            "stock_name": "测试",
+            "stock_name": "測試",
             "sentiment_score": 60,
             "trend_prediction": "看多",
-            "operation_advice": "买入",
+            "operation_advice": "買入",
             "dashboard": {
                 "data_perspective": {
                     "price_position": {
@@ -86,10 +86,10 @@ class TestAnalysisReportSchema(unittest.TestCase):
     def test_schema_fails_on_invalid_sentiment_score(self) -> None:
         """Schema validation fails when sentiment_score out of range."""
         data = {
-            "stock_name": "测试",
+            "stock_name": "測試",
             "sentiment_score": 150,  # out of 0-100
             "trend_prediction": "看多",
-            "operation_advice": "买入",
+            "operation_advice": "買入",
         }
         with self.assertRaises(Exception):
             AnalysisReportSchema.model_validate(data)
@@ -106,7 +106,7 @@ class TestAnalyzerSchemaFallback(unittest.TestCase):
             "sentiment_score": 150,  # invalid for schema
             "trend_prediction": "看多",
             "operation_advice": "持有",
-            "analysis_summary": "测试摘要",
+            "analysis_summary": "測試摘要",
         })
         result = analyzer._parse_response(response, "600519", "贵州茅台")
         self.assertIsInstance(result, AnalysisResult)

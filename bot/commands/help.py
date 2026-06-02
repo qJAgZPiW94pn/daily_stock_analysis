@@ -35,7 +35,7 @@ class HelpCommand(BotCommand):
     
     @property
     def description(self) -> str:
-        return "显示帮助信息"
+        return "显示帮助資訊"
     
     @property
     def usage(self) -> str:
@@ -43,7 +43,7 @@ class HelpCommand(BotCommand):
     
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
         """执行帮助命令"""
-        # 延迟导入避免循环依赖
+        # 延遲匯入避免循环依賴
         from bot.dispatcher import get_dispatcher
         
         dispatcher = get_dispatcher()
@@ -97,7 +97,7 @@ class HelpCommand(BotCommand):
             "",
             f"• {prefix}analyze 301023 - 奕帆传动",
             "",
-            f"• {prefix}market - 查看大盘复盘",
+            f"• {prefix}market - 查看大盤复盘",
             "",
             f"• {prefix}batch - 批量分析自选股",
         ])
@@ -119,9 +119,9 @@ class HelpCommand(BotCommand):
             lines.append(f"**别名：** {', '.join(aliases)}")
             lines.append("")
         
-        # 权限
+        # 權限
         if command.admin_only:
-            lines.append("⚠️ **需要管理员权限**")
+            lines.append("⚠️ **需要管理员權限**")
             lines.append("")
         
         return "\n".join(lines)

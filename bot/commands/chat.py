@@ -49,7 +49,7 @@ class ChatCommand(BotCommand):
     Chat command handler.
     
     Usage: /chat <message>
-    Example: /chat 帮我分析一下茅台最近的走势
+    Example: /chat 帮我分析一下茅台最近的走勢
     """
     
     @property
@@ -62,7 +62,7 @@ class ChatCommand(BotCommand):
         
     @property
     def usage(self) -> str:
-        return "/chat <问题>"
+        return "/chat <議題>"
         
     @property
     def aliases(self) -> list[str]:
@@ -71,7 +71,7 @@ class ChatCommand(BotCommand):
     def validate_args(self, args: List[str]) -> Optional[str]:
         """Require at least one argument (the question)."""
         if not args:
-            return "请提供要询问的问题。"
+            return "请提供要询问的議題。"
         return None
 
     def execute(self, message: BotMessage, args: list[str]) -> BotResponse:
@@ -85,7 +85,7 @@ class ChatCommand(BotCommand):
             
         if not args:
             return BotResponse.text_response(
-                "⚠️ 请提供要询问的问题。\n用法: `/chat <问题>`\n示例: `/chat 帮我分析一下茅台最近的走势`"
+                "⚠️ 请提供要询问的議題。\n用法: `/chat <議題>`\n示例: `/chat 帮我分析一下茅台最近的走勢`"
             )
             
         user_message = " ".join(args)

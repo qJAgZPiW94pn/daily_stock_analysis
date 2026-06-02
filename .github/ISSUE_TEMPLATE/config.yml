@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: 💬 讨论区 / Discussions
+  - name: 💬 討論区 / Discussions
     url: https://github.com/ZhuLinsen/daily_stock_analysis/discussions
-    about: 有问题想讨论？欢迎来讨论区交流 / Want to chat? Join the discussion board
+    about: 有議題想討論？欢迎来討論区交流 / Want to chat? Join the discussion board
   - name: 📖 使用文档 / Documentation
     url: https://github.com/ZhuLinsen/daily_stock_analysis#-快速开始
     about: 查看中文 README 获取使用帮助 / View the Chinese README for setup help

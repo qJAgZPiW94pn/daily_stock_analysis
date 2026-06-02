@@ -4,7 +4,7 @@
 钉钉平台适配器
 ===================================
 
-处理钉钉机器人的 Webhook 回调。
+處理钉钉机器人的 Webhook 回调。
 
 钉钉机器人文档：
 https://open.dingtalk.com/document/robots/robot-overview
@@ -29,10 +29,10 @@ class DingtalkPlatform(BotPlatform):
     """
     钉钉平台适配器
     
-    支持：
+    支援：
     - 企业内部机器人回调
     - 群机器人 Outgoing 回调
-    - 消息签名验证
+    - 訊息签名验证
     
     配置要求：
     - DINGTALK_APP_KEY: 应用 AppKey
@@ -52,23 +52,23 @@ class DingtalkPlatform(BotPlatform):
     
     def verify_request(self, headers: Dict[str, str], body: bytes) -> bool:
         """
-        验证钉钉请求签名
+        验证钉钉請求签名
         
-        钉钉签名算法：
+        钉钉签名演算法：
         1. 获取 timestamp 和 sign
         2. 计算：base64(hmac_sha256(timestamp + "\n" + app_secret))
         3. 比对签名
         """
         if not self._app_secret:
-            logger.warning("[DingTalk] 未配置 app_secret，跳过签名验证")
+            logger.warning("[DingTalk] 未配置 app_secret，略過签名验证")
             return True
         
         timestamp = headers.get('timestamp', '')
         sign = headers.get('sign', '')
         
         if not timestamp or not sign:
-            logger.warning("[DingTalk] 缺少签名参数")
-            return True  # 可能是不需要签名的请求
+            logger.warning("[DingTalk] 缺少签名參數")
+            return True  # 可能是不需要签名的請求
         
         # 验证时间戳（1小时内有效）
         try:
@@ -102,9 +102,9 @@ class DingtalkPlatform(BotPlatform):
     
     def parse_message(self, data: Dict[str, Any]) -> Optional[BotMessage]:
         """
-        解析钉钉消息
+        解析钉钉訊息
         
-        钉钉 Outgoing 机器人消息格式：
+        钉钉 Outgoing 机器人訊息格式：
         {
             "msgtype": "text",
             "text": {
@@ -116,7 +116,7 @@ class DingtalkPlatform(BotPlatform):
             "conversationId": "xxx",
             "conversationTitle": "群名",
             "senderId": "xxx",
-            "senderNick": "用户昵称",
+            "senderNick": "使用者昵称",
             "senderCorpId": "xxx",
             "senderStaffId": "xxx",
             "chatbotUserId": "xxx",
@@ -126,13 +126,13 @@ class DingtalkPlatform(BotPlatform):
             "sessionWebhookExpiredTime": 1234567890
         }
         """
-        # 检查消息类型
+        # 检查訊息类型
         msg_type = data.get('msgtype', '')
         if msg_type != 'text':
-            logger.debug(f"[DingTalk] 忽略非文本消息: {msg_type}")
+            logger.debug(f"[DingTalk] 忽略非文本訊息: {msg_type}")
             return None
         
-        # 获取消息内容
+        # 获取訊息内容
         text_content = data.get('text', {})
         raw_content = text_content.get('content', '')
         
@@ -152,7 +152,7 @@ class DingtalkPlatform(BotPlatform):
         else:
             chat_type = ChatType.UNKNOWN
         
-        # 创建时间
+        # 建立时间
         create_at = data.get('createAt', '')
         try:
             timestamp = datetime.fromtimestamp(int(create_at) / 1000)
@@ -184,9 +184,9 @@ class DingtalkPlatform(BotPlatform):
         """
         提取命令内容（去除 @机器人）
         
-        钉钉的 @用户 格式通常是 @昵称 后跟空格
+        钉钉的 @使用者 格式通常是 @昵称 后跟空格
         """
-        # 简单处理：移除开头的 @xxx 部分
+        # 简单處理：移除开头的 @xxx 部分
         import re
         # 匹配开头的 @xxx（中英文都可能）
         text = re.sub(r'^@[\S]+\s*', '', text.strip())
@@ -198,12 +198,12 @@ class DingtalkPlatform(BotPlatform):
         message: BotMessage
     ) -> WebhookResponse:
         """
-        格式化钉钉响应
+        格式化钉钉回應
         
-        钉钉 Outgoing 机器人可以直接在响应中返回消息。
-        也可以使用 sessionWebhook 异步发送。
+        钉钉 Outgoing 机器人可以直接在回應中傳回訊息。
+        也可以使用 sessionWebhook 非同步发送。
         
-        响应格式：
+        回應格式：
         {
             "msgtype": "text" | "markdown",
             "text": {"content": "xxx"},
@@ -214,7 +214,7 @@ class DingtalkPlatform(BotPlatform):
         if not response.text:
             return WebhookResponse.success()
         
-        # 构建响应
+        # 构建回應
         if response.markdown:
             body = {
                 "msgtype": "markdown",
@@ -247,14 +247,14 @@ class DingtalkPlatform(BotPlatform):
         message: BotMessage
     ) -> bool:
         """
-        通过 sessionWebhook 发送消息
+        通过 sessionWebhook 发送訊息
         
-        适用于需要异步发送或多条消息的场景。
+        适用于需要非同步发送或多条訊息的场景。
         
         Args:
             session_webhook: 钉钉提供的会话 Webhook URL
-            response: 响应对象
-            message: 原始消息对象
+            response: 回應对象
+            message: 原始訊息对象
             
         Returns:
             是否发送成功
@@ -266,7 +266,7 @@ class DingtalkPlatform(BotPlatform):
         import requests
         
         try:
-            # 构建消息
+            # 构建訊息
             if response.markdown:
                 payload = {
                     "msgtype": "markdown",
@@ -290,7 +290,7 @@ class DingtalkPlatform(BotPlatform):
                     "isAtAll": False,
                 }
             
-            # 发送请求
+            # 发送請求
             resp = requests.post(
                 session_webhook,
                 json=payload,
@@ -306,7 +306,7 @@ class DingtalkPlatform(BotPlatform):
                     logger.error(f"[DingTalk] sessionWebhook 发送失败: {result}")
                     return False
             else:
-                logger.error(f"[DingTalk] sessionWebhook 请求失败: {resp.status_code}")
+                logger.error(f"[DingTalk] sessionWebhook 請求失败: {resp.status_code}")
                 return False
                 
         except Exception as e:

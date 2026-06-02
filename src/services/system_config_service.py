@@ -338,8 +338,8 @@ class SystemConfigService:
         channel: str,
         items: Sequence[Dict[str, str]],
         mask_token: str = "******",
-        title: str = "DSA 通知测试",
-        content: str = "这是一条来自 DSA Web 设置页的通知测试消息。",
+        title: str = "DSA 通知測試",
+        content: str = "这是一条来自 DSA Web 设置页的通知測試訊息。",
         timeout_seconds: float = 20.0,
     ) -> Dict[str, Any]:
         """Send one real notification test without persisting submitted values."""
@@ -392,7 +392,7 @@ class SystemConfigService:
             error_code, retryable = self._classify_notification_exception(exc)
             return self._build_notification_test_result(
                 success=False,
-                message=f"通知测试异常: {exc}",
+                message=f"通知測試异常: {exc}",
                 error_code=error_code,
                 stage="notification_send",
                 retryable=retryable,
@@ -1400,14 +1400,14 @@ class SystemConfigService:
             if reload_now:
                 warnings.append(
                     (
-                        f"MAX_WORKERS={max_workers} 已保存。任务队列空闲时会自动应用；"
-                        "若当前存在运行中任务，将在队列空闲后生效。"
+                        f"MAX_WORKERS={max_workers} 已保存。工作隊列空闲时会自动应用；"
+                        "若当前存在執行中工作，将在隊列空闲后生效。"
                     )
                 )
             else:
                 warnings.append(
                     (
-                        f"MAX_WORKERS={max_workers} 已写入 .env，但本次未触发运行时重载"
+                        f"MAX_WORKERS={max_workers} 已写入 .env，但本次未触发執行时重载"
                         "（reload_now=false）；重载后才会应用。"
                     )
                 )
@@ -1419,8 +1419,8 @@ class SystemConfigService:
             warnings.append(
                 (
                     f"{', '.join(sorted(startup_only_run_keys))} 已写入 .env。"
-                    "它属于启动期单次运行配置：当前已运行的 WebUI/API 进程不会因为本次保存立即触发分析；"
-                    "请重启当前进程后，在非 schedule 模式下按新值生效。"
+                    "它属于啟動期单次執行配置：当前已執行的 WebUI/API 程式不会因为本次保存立即触发分析；"
+                    "请重啟当前程式后，在非 schedule 模式下按新值生效。"
                 )
             )
 
@@ -1432,8 +1432,8 @@ class SystemConfigService:
             warnings.append(
                 (
                     f"{', '.join(sorted(startup_only_schedule_keys))} 已写入 .env。"
-                    "这些属于启动期调度模式配置：当前已运行的 WebUI/API 进程不会因为本次保存启动、"
-                    "停止或重建 scheduler；请重启当前进程，并以 schedule 模式重新启动后生效。"
+                    "这些属于啟動期调度模式配置：当前已執行的 WebUI/API 程式不会因为本次保存啟動、"
+                    "停止或重建 scheduler；请重啟当前程式，并以 schedule 模式重新啟動后生效。"
                 )
             )
 
@@ -1442,8 +1442,8 @@ class SystemConfigService:
             warnings.append(
                 (
                     f"SCHEDULE_TIME={schedule_time} 已写入 .env。"
-                    "如果当前进程已经以 schedule 模式运行，scheduler 会在下一轮检查中自动重建 daily job；"
-                    "如果当前进程未以 schedule 模式运行，本次保存不会启动 scheduler。"
+                    "如果当前程式已经以 schedule 模式執行，scheduler 会在下一轮检查中自动重建 daily job；"
+                    "如果当前程式未以 schedule 模式執行，本次保存不会啟動 scheduler。"
                 )
             )
 
@@ -1455,8 +1455,8 @@ class SystemConfigService:
             warnings.append(
                 (
                     f"{', '.join(sorted(startup_only_bind_keys))} 已写入 .env。"
-                    "这些属于启动期监听配置：当前已运行的 WebUI/API 进程不会因为本次保存重新绑定监听地址或端口；"
-                    "请重启当前进程、Docker 容器或服务管理器后生效。"
+                    "这些属于啟動期监听配置：当前已執行的 WebUI/API 程式不会因为本次保存重新绑定监听地址或端口；"
+                    "请重啟当前程式、Docker 容器或服務管理器后生效。"
                 )
             )
 
@@ -1502,9 +1502,9 @@ class SystemConfigService:
 
         cleaned_text = " / ".join(cleaned_targets)
         warning = (
-            f"检测到已同步清理失效的运行时模型引用：{cleaned_text}。"
-            "如需恢复，请先补回对应渠道模型列表后重新选择；"
-            "也可用桌面端导出备份或手动 .env 还原之前的 LLM_* / "
+            f"检测到已同步清理失效的執行时模型引用：{cleaned_text}。"
+            "如需恢復，请先补回对应渠道模型列表后重新选择；"
+            "也可用桌面端匯出備份或手动 .env 还原之前的 LLM_* / "
             "LITELLM_MODEL / AGENT_LITELLM_MODEL / VISION_MODEL / LLM_TEMPERATURE。"
         )
         return [warning]
@@ -2002,11 +2002,11 @@ class SystemConfigService:
             total_count = len(attempts)
             success = success_count > 0
             if success_count == total_count and total_count > 0:
-                message = f"自定义 Webhook 通知测试成功（{success_count}/{total_count}）"
+                message = f"自定义 Webhook 通知測試成功（{success_count}/{total_count}）"
             elif success_count > 0:
-                message = f"自定义 Webhook 通知测试部分成功（{success_count}/{total_count}）"
+                message = f"自定义 Webhook 通知測試部分成功（{success_count}/{total_count}）"
             else:
-                message = f"自定义 Webhook 通知测试失败（{success_count}/{total_count}）"
+                message = f"自定义 Webhook 通知測試失败（{success_count}/{total_count}）"
             return self._build_notification_test_result(
                 success=success,
                 message=message,
@@ -2037,7 +2037,7 @@ class SystemConfigService:
         attempt = {
             "channel": channel,
             "success": ok,
-            "message": "通知测试发送成功" if ok else "通知测试发送失败",
+            "message": "通知測試发送成功" if ok else "通知測試发送失败",
             "target": target,
             "error_code": None if ok else "send_failed",
             "stage": "notification_send",
@@ -2046,7 +2046,7 @@ class SystemConfigService:
         }
         return self._build_notification_test_result(
             success=ok,
-            message=f"{channel} 通知测试成功" if ok else f"{channel} 通知测试失败",
+            message=f"{channel} 通知測試成功" if ok else f"{channel} 通知測試失败",
             error_code=None if ok else "send_failed",
             stage="notification_send",
             retryable=False,
@@ -2605,8 +2605,8 @@ class SystemConfigService:
             "notification",
             False,
             "optional",
-            "通知为可选项，未配置也不影响首次跑通。",
-            "需要推送时可稍后配置飞书、Telegram、邮件或其他通知渠道。",
+            "通知为可選项，未配置也不影响首次跑通。",
+            "需要推送时可稍后配置飞书、Telegram、電郵或其他通知渠道。",
         )
 
     def _build_setup_storage_check(self, effective_map: Dict[str, str]) -> Dict[str, Any]:
@@ -2619,21 +2619,21 @@ class SystemConfigService:
         if not probe.exists() or not probe.is_dir():
             return self._setup_check(
                 "storage",
-                "数据库 / 本地存储",
+                "資料庫 / 本機存储",
                 "system",
                 True,
                 "needs_action",
-                f"数据库路径父目录不可用: {parent}",
-                "请检查 DATABASE_PATH 或上级目录权限。",
+                f"資料庫路徑父目錄不可用: {parent}",
+                "请检查 DATABASE_PATH 或上级目錄權限。",
             )
 
         if os.access(probe, os.W_OK):
-            detail = f"数据库路径可用: {db_path}"
+            detail = f"資料庫路徑可用: {db_path}"
             if not parent.exists():
-                detail = f"数据库上级目录可创建: {parent}"
+                detail = f"資料庫上级目錄可建立: {parent}"
             return self._setup_check(
                 "storage",
-                "数据库 / 本地存储",
+                "資料庫 / 本機存储",
                 "system",
                 True,
                 "configured",
@@ -2642,12 +2642,12 @@ class SystemConfigService:
 
         return self._setup_check(
             "storage",
-            "数据库 / 本地存储",
+            "資料庫 / 本機存储",
             "system",
             True,
             "needs_action",
-            f"数据库路径上级目录不可写: {probe}",
-            "请调整 DATABASE_PATH 或目录权限。",
+            f"資料庫路徑上级目錄不可写: {probe}",
+            "请调整 DATABASE_PATH 或目錄權限。",
         )
 
     @staticmethod
@@ -2919,7 +2919,7 @@ class SystemConfigService:
             "blocked due to policy",
             "moderation_blocked",
             "policy_blocked",
-            "请求被拦截",
+            "請求被拦截",
         )
         return any(token in lowered for token in blocked_tokens)
 
@@ -3183,7 +3183,7 @@ class SystemConfigService:
                     "message": (
                         "仅配置 FEISHU_APP_ID / FEISHU_APP_SECRET 不会开启飞书群 Webhook 推送；"
                         "如需通知推送请填写 FEISHU_WEBHOOK_URL，若要使用应用机器人请同时开启 "
-                        "FEISHU_STREAM_ENABLED 并完成应用发布与权限配置。"
+                        "FEISHU_STREAM_ENABLED 并完成应用發佈与權限配置。"
                     ),
                     "severity": "warning",
                     "expected": "FEISHU_WEBHOOK_URL or FEISHU_STREAM_ENABLED=true",

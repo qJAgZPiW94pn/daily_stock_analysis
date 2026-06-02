@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-异步任务服务层
+非同步工作服務层
 ===================================
 
 职责：
-1. 管理异步分析任务（线程池）
+1. 管理非同步分析工作（執行緒池）
 2. 执行股票分析并推送结果
-3. 查询任务状态和历史
+3. 查詢工作狀態和历史
 
 迁移自 web/services.py 的 AnalysisService 类
 """
@@ -29,10 +29,10 @@ logger = logging.getLogger(__name__)
 
 class TaskService:
     """
-    异步任务服务
+    非同步工作服務
 
     负责：
-    1. 管理异步分析任务
+    1. 管理非同步分析工作
     2. 执行股票分析
     3. 触发通知推送
     """
@@ -57,7 +57,7 @@ class TaskService:
 
     @property
     def executor(self) -> ThreadPoolExecutor:
-        """获取或创建线程池"""
+        """获取或建立執行緒池"""
         if self._executor is None:
             self._executor = ThreadPoolExecutor(
                 max_workers=self._max_workers,
@@ -74,17 +74,17 @@ class TaskService:
         query_source: str = "bot"
     ) -> Dict[str, Any]:
         """
-        提交异步分析任务
+        提交非同步分析工作
 
         Args:
-            code: 股票代码
+            code: 股票代碼
             report_type: 报告类型枚举
-            source_message: 来源消息（用于回复）
+            source_message: 来源訊息（用于回复）
             save_context_snapshot: 是否保存上下文快照
-            query_source: 任务来源标识（bot/api/cli/system）
+            query_source: 工作来源标识（bot/api/cli/system）
 
         Returns:
-            任务信息字典
+            工作資訊字典
         """
         # 确保 report_type 是枚举类型
         if isinstance(report_type, str):
@@ -92,7 +92,7 @@ class TaskService:
 
         task_id = f"{code}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
 
-        # 提交到线程池
+        # 提交到執行緒池
         self.executor.submit(
             self._run_analysis,
             code,
@@ -103,23 +103,23 @@ class TaskService:
             query_source
         )
 
-        logger.info(f"[TaskService] 已提交股票 {code} 的分析任务, task_id={task_id}, report_type={report_type.value}")
+        logger.info(f"[TaskService] 已提交股票 {code} 的分析工作, task_id={task_id}, report_type={report_type.value}")
 
         return {
             "success": True,
-            "message": "分析任务已提交，将异步执行并推送通知",
+            "message": "分析工作已提交，将非同步执行并推送通知",
             "code": code,
             "task_id": task_id,
             "report_type": report_type.value
         }
 
     def get_task_status(self, task_id: str) -> Optional[Dict[str, Any]]:
-        """获取任务状态"""
+        """获取工作狀態"""
         with self._tasks_lock:
             return self._tasks.get(task_id)
 
     def list_tasks(self, limit: int = 20) -> List[Dict[str, Any]]:
-        """列出最近的任务"""
+        """列出最近的工作"""
         with self._tasks_lock:
             tasks = list(self._tasks.values())
         # 按开始时间倒序
@@ -150,9 +150,9 @@ class TaskService:
         """
         执行单只股票分析
 
-        内部方法，在线程池中运行
+        内部方法，在執行緒池中執行
         """
-        # 初始化任务状态
+        # 初始化工作狀態
         with self._tasks_lock:
             self._tasks[task_id] = {
                 "task_id": task_id,
@@ -165,13 +165,13 @@ class TaskService:
             }
 
         try:
-            # 延迟导入避免循环依赖
+            # 延遲匯入避免循环依賴
             from src.config import get_config
             from main import StockAnalysisPipeline
 
             logger.info(f"[TaskService] 开始分析股票: {code}")
 
-            # 创建分析管道
+            # 建立分析管道
             config = get_config()
             pipeline = StockAnalysisPipeline(
                 config=config,
@@ -210,7 +210,7 @@ class TaskService:
                 logger.info(f"[TaskService] 股票 {code} 分析完成: {result.operation_advice}")
                 return {"success": True, "task_id": task_id, "result": result_data}
             else:
-                fail_message = "分析返回空结果"
+                fail_message = "分析傳回空结果"
                 if result is not None:
                     fail_message = result.error_message or fail_message
                 with self._tasks_lock:
@@ -238,9 +238,9 @@ class TaskService:
 
 
 # ============================================================
-# 便捷函数
+# 便捷函數
 # ============================================================
 
 def get_task_service() -> TaskService:
-    """获取任务服务单例"""
+    """获取工作服務单例"""
     return TaskService.get_instance()

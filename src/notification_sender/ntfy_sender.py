@@ -70,7 +70,7 @@ class NtfySender:
     ) -> bool:
         """Publish a notification to ntfy using a JSON body with UTF-8 text."""
         if not self._is_ntfy_configured():
-            logger.warning("ntfy URL 未配置，跳过推送")
+            logger.warning("ntfy URL 未配置，略過推送")
             return False
 
         server_url, topic = self._resolve_ntfy_endpoint()
@@ -106,20 +106,20 @@ class NtfySender:
                 verify=self._webhook_verify_ssl,
             )
             if 200 <= response.status_code < 300:
-                logger.info("ntfy 消息发送成功")
+                logger.info("ntfy 訊息发送成功")
                 return True
 
-            logger.error("ntfy 请求失败: HTTP %s", response.status_code)
-            logger.debug("ntfy 响应内容: %s", response.text)
+            logger.error("ntfy 請求失败: HTTP %s", response.status_code)
+            logger.debug("ntfy 回應内容: %s", response.text)
             return False
         except requests.exceptions.Timeout:
-            logger.error("发送 ntfy 消息失败: 请求超时")
+            logger.error("发送 ntfy 訊息失败: 請求逾時")
             return False
         except requests.exceptions.RequestException as exc:
-            logger.error("发送 ntfy 消息失败: 网络请求异常")
-            logger.debug("ntfy 请求异常类型: %s", type(exc).__name__)
+            logger.error("发送 ntfy 訊息失败: 網路請求异常")
+            logger.debug("ntfy 請求异常类型: %s", type(exc).__name__)
             return False
         except Exception as exc:
-            logger.error("发送 ntfy 消息失败: 未知异常")
+            logger.error("发送 ntfy 訊息失败: 未知异常")
             logger.debug("ntfy 未知异常类型: %s", type(exc).__name__)
             return False

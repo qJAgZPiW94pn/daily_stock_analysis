@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 <!--
-中文用户请直接填写下方表单。
+中文使用者请直接填写下方表单。
 English users: fill in the English fields below.
 -->
 
@@ -31,8 +31,8 @@ Describe how you would expect this feature to work.
 描述你考虑过的其他替代方案。  
 Describe any alternative solutions you have considered.
 
-## 相关信息 / Additional Context
+## 相关資訊 / Additional Context
 
-- 是否愿意贡献代码实现 / Willing to implement: [Yes / No]
+- 是否愿意贡献代碼实现 / Willing to implement: [Yes / No]
 - 参考链接 / Reference links:
 - 其他说明 / Other notes:

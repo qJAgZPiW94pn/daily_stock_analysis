@@ -58,7 +58,7 @@ class TestExtractStockCode(unittest.TestCase):
         self.assertEqual(_extract_stock_code("600519怎么样"), "600519")
 
     def test_a_share_in_sentence(self):
-        self.assertEqual(_extract_stock_code("请帮我看看600519的走势"), "600519")
+        self.assertEqual(_extract_stock_code("请帮我看看600519的走勢"), "600519")
 
     def test_a_share_with_prefix_0(self):
         self.assertEqual(_extract_stock_code("分析000858"), "000858")
@@ -546,7 +546,7 @@ class TestOrchestratorModes(unittest.TestCase):
 
     def test_build_context_extracts_code_from_query(self):
         orch = self._make_orchestrator()
-        ctx = orch._build_context("分析600519的走势")
+        ctx = orch._build_context("分析600519的走勢")
         self.assertEqual(ctx.stock_code, "600519")
 
     def test_fallback_summary(self):
@@ -662,7 +662,7 @@ class TestOrchestratorExecution(unittest.TestCase):
                 agent_name="technical",
                 signal="buy",
                 confidence=0.8,
-                reasoning="技术面结构未出现明显拐点，趋势偏强。",
+                reasoning="技术面结构未出现明显拐点，趨勢偏强。",
                 raw_data={"ma_alignment": "bullish", "trend_score": 82, "volume_status": "normal"},
             ))
             return self._stage_result("technical")
@@ -698,7 +698,7 @@ class TestOrchestratorExecution(unittest.TestCase):
                 agent_name="technical",
                 signal="buy",
                 confidence=0.8,
-                reasoning="技术面结构未出现明显拐点，趋势偏强。",
+                reasoning="技术面结构未出现明显拐点，趨勢偏强。",
                 raw_data={"ma_alignment": "bullish", "trend_score": 82, "volume_status": "normal"},
             ))
             return self._stage_result("technical")
@@ -711,7 +711,7 @@ class TestOrchestratorExecution(unittest.TestCase):
                 agent_name="decision",
                 signal="buy",
                 confidence=0.87,
-                reasoning="综合技术与情绪判断，倾向于买入。",
+                reasoning="综合技术与情绪判断，倾向于買入。",
             ))
             return self._stage_result("decision")
 
@@ -776,9 +776,9 @@ class TestOrchestratorExecution(unittest.TestCase):
                 "sentiment_score": 88,
                 "operation_advice": {
                     "no_position": "分批布局",
-                    "has_position": "继续持有",
+                    "has_position": "繼續持有",
                 },
-                "analysis_summary": "趋势仍强，回踩可观察。",
+                "analysis_summary": "趨勢仍强，回踩可观察。",
                 "dashboard": {
                     "key_levels": {
                         "support": 1800,
@@ -792,7 +792,7 @@ class TestOrchestratorExecution(unittest.TestCase):
                 agent_name="decision",
                 signal="buy",
                 confidence=0.88,
-                reasoning="趋势仍强，回踩可观察。",
+                reasoning="趨勢仍强，回踩可观察。",
                 raw_data=dashboard,
             ))
             return self._stage_result("decision")
@@ -806,7 +806,7 @@ class TestOrchestratorExecution(unittest.TestCase):
         self.assertTrue(result.success)
         self.assertIn("timed out", result.error)
         self.assertEqual(result.dashboard["decision_type"], "buy")
-        self.assertEqual(result.dashboard["operation_advice"], "买入")
+        self.assertEqual(result.dashboard["operation_advice"], "買入")
         self.assertEqual(
             result.dashboard["dashboard"]["battle_plan"]["sniper_points"]["stop_loss"],
             1760.0,
@@ -865,7 +865,7 @@ class TestOrchestratorExecution(unittest.TestCase):
 
         orch = self._make_orchestrator()
         history = [
-            {"role": "user", "content": "之前的问题"},
+            {"role": "user", "content": "之前的議題"},
             {"role": "assistant", "content": "之前的回答"},
         ]
         captured = {}
@@ -1011,12 +1011,12 @@ class TestDecisionAgentChatMode(unittest.TestCase):
         agent = DecisionAgent(tool_registry=MagicMock(), llm_adapter=MagicMock())
         ctx = AgentContext(query="帮我总结一下", stock_code="600519")
         ctx.meta["response_mode"] = "chat"
-        ctx.add_opinion(AgentOpinion(agent_name="technical", signal="buy", confidence=0.8, reasoning="趋势偏强"))
+        ctx.add_opinion(AgentOpinion(agent_name="technical", signal="buy", confidence=0.8, reasoning="趨勢偏强"))
 
-        opinion = agent.post_process(ctx, "建议继续观察量价配合，分批参与。")
+        opinion = agent.post_process(ctx, "建议繼續观察量价配合，分批参与。")
 
         self.assertIsNotNone(opinion)
-        self.assertEqual(ctx.get_data("final_response_text"), "建议继续观察量价配合，分批参与。")
+        self.assertEqual(ctx.get_data("final_response_text"), "建议繼續观察量价配合，分批参与。")
         self.assertIsNone(ctx.get_data("final_dashboard"))
         self.assertEqual(opinion.signal, "buy")
 
@@ -1045,13 +1045,13 @@ class TestTechnicalAgentSkillPolicy(unittest.TestCase):
         agent = TechnicalAgent(
             tool_registry=MagicMock(),
             llm_adapter=MagicMock(),
-            skill_instructions="### 技能 1: 默认多头趋势",
+            skill_instructions="### 技能 1: 默认多头趨勢",
             technical_skill_policy=TECHNICAL_SKILL_RULES_EN,
         )
         prompt = agent.system_prompt(AgentContext(query="分析 600519", stock_code="600519"))
 
         self.assertIn("Bias from MA5 < 2%", prompt)
-        self.assertIn("### 技能 1: 默认多头趋势", prompt)
+        self.assertIn("### 技能 1: 默认多头趨勢", prompt)
 
 
 class TestBaseAgentMessageAssembly(unittest.TestCase):
@@ -1440,7 +1440,7 @@ class TestAgentMemory(unittest.TestCase):
             created_at=SimpleNamespace(date=lambda: SimpleNamespace(isoformat=lambda: "2026-03-01")),
             raw_result=json.dumps({"decision_type": "buy", "current_price": 1880.0}),
             sentiment_score=72,
-            operation_advice="买入",
+            operation_advice="買入",
         )
         db = MagicMock()
         db.get_analysis_history.return_value = [record]
@@ -1576,16 +1576,16 @@ class TestRiskOverride(unittest.TestCase):
         return {
             "decision_type": "buy",
             "sentiment_score": 76,
-            "operation_advice": "买入",
+            "operation_advice": "買入",
             "analysis_summary": "原始结论",
-            "risk_warning": "原风险提示",
+            "risk_warning": "原風險提示",
             "dashboard": {
                 "core_conclusion": {
                     "one_sentence": "可以参与",
-                    "signal_type": "🟢买入信号",
+                    "signal_type": "🟢買入信号",
                     "position_advice": {
-                        "no_position": "分批买入",
-                        "has_position": "继续持有",
+                        "no_position": "分批買入",
+                        "has_position": "繼續持有",
                     },
                 }
             },
@@ -1606,8 +1606,8 @@ class TestRiskOverride(unittest.TestCase):
             agent_name="risk",
             signal="strong_sell",
             confidence=0.9,
-            reasoning="重大风险",
-            raw_data={"veto_buy": True, "reasoning": "存在重大减持风险"},
+            reasoning="重大風險",
+            raw_data={"veto_buy": True, "reasoning": "存在重大减持風險"},
         ))
         ctx.add_risk_flag("insider", "大股东减持", severity="high")
 
@@ -1637,7 +1637,7 @@ class TestRiskOverride(unittest.TestCase):
             agent_name="risk",
             signal="strong_sell",
             confidence=0.9,
-            raw_data={"veto_buy": True, "reasoning": "存在重大风险"},
+            raw_data={"veto_buy": True, "reasoning": "存在重大風險"},
         ))
         ctx.add_risk_flag("insider", "大股东减持", severity="high")
 
@@ -1710,7 +1710,7 @@ class TestResearchCommandTimeout(unittest.TestCase):
              )):
             response = cmd.execute(msg, ["600519"])
 
-        self.assertIn("超时", response.text)
+        self.assertIn("逾時", response.text)
 
     def test_research_recognizes_five_letter_us_ticker(self):
         from bot.commands.research import ResearchCommand
@@ -1750,7 +1750,7 @@ class TestResearchCommandTimeout(unittest.TestCase):
              patch("src.agent.factory.get_tool_registry", return_value=MagicMock()), \
              patch("src.agent.llm_adapter.LLMToolAdapter", return_value=MagicMock()), \
              patch("src.agent.research.ResearchAgent.research", side_effect=_capture_research):
-            response = cmd.execute(msg, ["googl", "风险"])
+            response = cmd.execute(msg, ["googl", "風險"])
 
         self.assertIn("Deep Research Report", response.text)
         self.assertEqual(captured["context"], {"stock_code": "GOOGL", "stock_name": ""})
@@ -1898,7 +1898,7 @@ class TestAgentResearchEndpoint(unittest.IsolatedAsyncioTestCase):
             patch("src.agent.factory.get_tool_registry", return_value=MagicMock()),
             patch("src.agent.llm_adapter.LLMToolAdapter", return_value=MagicMock()),
         ):
-            response = await agent_research(ResearchRequest(question="600519 风险"))
+            response = await agent_research(ResearchRequest(question="600519 風險"))
 
         self.assertFalse(response.success)
         self.assertIn("timed out", response.error)

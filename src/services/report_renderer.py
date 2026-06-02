@@ -46,8 +46,8 @@ def _clean_sniper_value(val: Any) -> str:
     if not s or s == "N/A":
         return s or "N/A"
     prefixes = [
-        "理想买入点：", "次优买入点：", "止损位：", "目标位：",
-        "理想买入点:", "次优买入点:", "止损位:", "目标位:",
+        "理想買入点：", "次优買入点：", "止损位：", "目标位：",
+        "理想買入点:", "次优買入点:", "止损位:", "目标位:",
         "Ideal Entry:", "Secondary Entry:", "Stop Loss:", "Target:",
     ]
     for prefix in prefixes:

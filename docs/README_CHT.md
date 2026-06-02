@@ -47,7 +47,7 @@
 | Web / 桌面工作台 | 手動分析、任務進度、歷史報告、完整 Markdown、回測、持倉、配置管理、淺色 / 深色主題 |
 | Agent 策略問股 | 多輪追問，支援均線、纏論、波浪、趨勢、熱點、事件、成長、預期等 15 種內建策略，覆蓋 Web/Bot/API |
 | 智能匯入與補全 | 圖片、CSV/Excel、剪貼簿匯入；股票代碼/名稱/拼音/別名補全 |
-| 自動化與推送 | GitHub Actions、Docker、本地定時任務、FastAPI 服務和企業微信/飛書/Telegram/Discord/Slack/郵件推送 |
+| 自動化與推送 | GitHub Actions、Docker、本機定時任務、FastAPI 服務和企業微信/飛書/Telegram/Discord/Slack/郵件推送 |
 
 > 功能細節、欄位契約、基本面 P0 超時語義、交易紀律、數據源優先級、Web/API 行為請看 [完整配置與部署指南](./full-guide.md)。
 
@@ -55,12 +55,12 @@
 
 | 類型 | 支援 |
 |------|------|
-| AI 模型 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[AIHubMix](https://aihubmix.com/?aff=CfMq)、Gemini、OpenAI 兼容、DeepSeek、通義千問、Claude、Ollama 本地模型等 |
+| AI 模型 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[AIHubMix](https://aihubmix.com/?aff=CfMq)、Gemini、OpenAI 兼容、DeepSeek、通義千問、Claude、Ollama 本機模型等 |
 | 行情數據 | [TickFlow](https://tickflow.org/auth/register?ref=WDSGSPS5XC)、AkShare、Tushare、Pytdx、Baostock、YFinance、Longbridge |
 | 新聞搜尋 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis)、[Tavily](https://tavily.com/)、[Bocha](https://open.bocha.cn/)、[Brave](https://brave.com/search/api/)、[MiniMax](https://platform.minimaxi.com/)、SearXNG |
 | 社交輿情 | [Stock Sentiment API](https://api.adanos.org/docs)（Reddit / X / Polymarket，僅美股，可選） |
 
-> 完整規則見 [數據源配置](./full-guide.md#数据源配置)。
+> 完整規則見 [數據源配置](./full-guide.md#數據源配置)。
 
 ## 🚀 快速開始
 
@@ -78,7 +78,7 @@
 
 **AI 模型配置（至少配置一個）**
 
-預設先選一個模型服務商並填寫 API Key；需要多模型、圖片識別、本地模型或高級路由時，再參考 [LLM 配置指南](./LLM_CONFIG_GUIDE.md)。
+預設先選一個模型服務商並填寫 API Key；需要多模型、圖片識別、本機模型或高級路由時，再參考 [LLM 配置指南](./LLM_CONFIG_GUIDE.md)。
 
 | Secret 名稱 | 說明 | 必填 |
 |-------------|------|:----:|
@@ -89,7 +89,7 @@
 | `OPENAI_API_KEY` | OpenAI 兼容 API Key（支援 DeepSeek、通義千問等） | 可選 |
 | `OPENAI_BASE_URL` / `OPENAI_MODEL` | 使用 OpenAI 兼容服務時填寫 | 可選 |
 
-> Ollama 更適合本地 / Docker 部署，GitHub Actions 推薦使用雲端 API。
+> Ollama 更適合本機 / Docker 部署，GitHub Actions 推薦使用雲端 API。
 
 **通知渠道配置（至少配置一個）**
 
@@ -124,7 +124,7 @@
 | `MINIMAX_API_KEYS` | [MiniMax](https://platform.minimaxi.com/)：結構化搜尋結果 | 可選 |
 | `SEARXNG_BASE_URLS` | SearXNG 自建實例：無配額兜底，適合私有部署 | 可選 |
 
-更多搜尋源、社交輿情和降級規則見 [搜尋服務配置](./full-guide.md#搜索服务配置)。
+更多搜尋源、社交輿情和降級規則見 [搜尋服務配置](./full-guide.md#搜索服務配置)。
 
 #### 3. 啟用 Actions
 
@@ -136,9 +136,9 @@
 
 #### 完成
 
-預設每個工作日 18:00（北京時間）自動執行，也可手動觸發。預設非交易日（含 A/H/US 節假日）不執行；強制運行、交易日檢查、斷點續傳等規則見 [完整指南](./full-guide.md#定时任务配置)。
+預設每個工作日 18:00（北京時間）自動執行，也可手動觸發。預設非交易日（含 A/H/US 節假日）不執行；強制運行、交易日檢查、斷點續傳等規則見 [完整指南](./full-guide.md#定时工作配置)。
 
-### 方式二：本地運行 / Docker 部署
+### 方式二：本機運行 / Docker 部署
 
 ```bash
 # 克隆項目
@@ -216,7 +216,7 @@ python main.py --webui
 python main.py --webui-only
 ```
 
-訪問 `http://127.0.0.1:8000` 即可使用。認證、智能匯入、搜尋補全、歷史報告複製、雲端伺服器訪問等細節見 [本地 WebUI 管理介面](./full-guide.md#本地-webui-管理界面)。
+訪問 `http://127.0.0.1:8000` 即可使用。認證、智能匯入、搜尋補全、歷史報告複製、雲端伺服器訪問等細節見 [本機 WebUI 管理介面](./full-guide.md#本機-webui-管理界面)。
 
 ## 🤖 Agent 策略問股
 
@@ -227,7 +227,7 @@ python main.py --webui-only
 - 支援多輪追問、會話匯出、發送到通知渠道和後台執行
 - 支援自訂策略文件與多 Agent 編排（實驗性）
 
-> Agent 具體參數、`skill` 命名兼容、多 Agent 模式和預算護欄見 [完整指南](./full-guide.md#本地-webui-管理界面) 與 [LLM 配置指南](./LLM_CONFIG_GUIDE.md)。
+> Agent 具體參數、`skill` 命名兼容、多 Agent 模式和預算護欄見 [完整指南](./full-guide.md#本機-webui-管理界面) 與 [LLM 配置指南](./LLM_CONFIG_GUIDE.md)。
 
 ## 🧩 相關項目 (Related Projects)
 

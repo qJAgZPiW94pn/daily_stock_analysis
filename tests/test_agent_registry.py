@@ -549,18 +549,18 @@ class TestYAMLStrategyLoading(unittest.TestCase):
 
         yaml_content = """
 name: test_yaml_strategy
-display_name: 测试YAML策略
-description: 一个用于测试的策略
+display_name: 測試YAML策略
+description: 一个用于測試的策略
 category: trend
 core_rules: [1, 3]
 required_tools:
   - analyze_trend
   - get_daily_history
 instructions: |
-  **测试策略**
+  **測試策略**
 
-  这是一个用自然语言编写的测试策略。
-  判断标准：当 MA5 > MA10 时买入。
+  这是一个用自然语言编写的測試策略。
+  判断标准：当 MA5 > MA10 时買入。
 """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8') as f:
             f.write(yaml_content)
@@ -570,7 +570,7 @@ instructions: |
             skill = load_skill_from_yaml(tmp_path)
             self.assertIsInstance(skill, Skill)
             self.assertEqual(skill.name, "test_yaml_strategy")
-            self.assertEqual(skill.display_name, "测试YAML策略")
+            self.assertEqual(skill.display_name, "測試YAML策略")
             self.assertEqual(skill.category, "trend")
             self.assertEqual(skill.core_rules, [1, 3])
             self.assertEqual(skill.required_tools, ["analyze_trend", "get_daily_history"])
@@ -610,15 +610,15 @@ instructions: 用自然语言描述的策略内容
 
         yaml_content = """
 name: metadata_skill
-display_name: 元数据技能
-description: 带有默认元数据的技能
+display_name: 元數據技能
+description: 带有默认元數據的技能
 aliases: [别名一, 别名二]
 default_active: true
 default_router: true
 default_priority: 15
 market_regimes: [trending_up, volatile]
 instructions: |
-  这是一个测试技能。
+  这是一个測試技能。
 """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8') as f:
             f.write(yaml_content)

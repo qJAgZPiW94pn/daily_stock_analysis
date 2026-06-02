@@ -131,7 +131,7 @@ class HistoryService:
             }
             
         except Exception as e:
-            logger.error(f"查询历史列表失败: {e}", exc_info=True)
+            logger.error(f"查詢历史列表失败: {e}", exc_info=True)
             return {"total": 0, "items": []}
 
     def _resolve_record(self, record_id: str):
@@ -216,7 +216,7 @@ class HistoryService:
                 return None
             return self._record_to_detail_dict(record)
         except Exception as e:
-            logger.error(f"根据 ID 查询历史详情失败: {e}", exc_info=True)
+            logger.error(f"根据 ID 查詢历史详情失败: {e}", exc_info=True)
             return None
 
     @staticmethod
@@ -354,7 +354,7 @@ class HistoryService:
             return items
 
         except Exception as e:
-            logger.error(f"查询新闻情报失败: {e}", exc_info=True)
+            logger.error(f"查詢新闻情报失败: {e}", exc_info=True)
             return []
 
     def get_news_intel_by_record_id(self, record_id: int, limit: int = 20) -> List[Dict[str, str]]:
@@ -381,7 +381,7 @@ class HistoryService:
             return self.get_news_intel(query_id=record.query_id, limit=limit)
 
         except Exception as e:
-            logger.error(f"根据 record_id 查询新闻情报失败: {e}", exc_info=True)
+            logger.error(f"根据 record_id 查詢新闻情报失败: {e}", exc_info=True)
             return []
 
     def _fallback_news_by_analysis_context(self, query_id: str, limit: int) -> List[Any]:
@@ -411,7 +411,7 @@ class HistoryService:
             if item.fetched_at and start_time <= item.fetched_at <= end_time
         ]
 
-        # 历史兜底链路也做发布时间硬过滤，避免旧库脏数据重新冒出。
+        # 历史兜底链路也做發佈时间硬过滤，避免旧库脏數據重新冒出。
         cfg = get_config()
         window_days = resolve_news_window_days(
             news_max_age_days=getattr(cfg, "news_max_age_days", 3),
@@ -610,11 +610,11 @@ class HistoryService:
         analysis_date_label = "Analysis Date" if report_language == "en" else "分析日期"
         report_time_label = "Report Time" if report_language == "en" else "报告生成时间"
         reason_label = "Rationale" if report_language == "en" else "操作理由"
-        risk_warning_label = "Risk Warning" if report_language == "en" else "风险提示"
+        risk_warning_label = "Risk Warning" if report_language == "en" else "風險提示"
         technical_heading = "Technicals" if report_language == "en" else "技术面"
         ma_label = "Moving Averages" if report_language == "en" else "均线"
         volume_analysis_label = "Volume" if report_language == "en" else "量能"
-        news_heading = "News Flow" if report_language == "en" else "消息面"
+        news_heading = "News Flow" if report_language == "en" else "訊息面"
 
         # Escape markdown special characters in stock name
         name_escaped = self._escape_md(
@@ -647,7 +647,7 @@ class HistoryService:
             # 业绩预期
             if intel.get('earnings_outlook'):
                 report_lines.append(f"**📊 {labels['earnings_outlook_label']}**: {intel['earnings_outlook']}")
-            # 风险警报（醒目显示）
+            # 風險警报（醒目显示）
             risk_alerts = intel.get('risk_alerts', [])
             if risk_alerts:
                 report_lines.append("")
@@ -661,7 +661,7 @@ class HistoryService:
                 report_lines.append(f"**✨ {labels['positive_catalysts_label']}**:")
                 for cat in catalysts:
                     report_lines.append(f"- {cat}")
-            # 最新消息
+            # 最新訊息
             if intel.get('latest_news'):
                 report_lines.append("")
                 report_lines.append(f"**📢 {labels['latest_news_label']}**: {intel['latest_news']}")
@@ -683,7 +683,7 @@ class HistoryService:
             f"⏰ **{labels['time_sensitivity_label']}**: {time_sense}",
             "",
         ])
-        # 持仓分类建议
+        # 持倉分类建议
         if pos_advice:
             report_lines.extend([
                 f"| {labels['position_status_label']} | {labels['action_advice_label']} |",
@@ -696,7 +696,7 @@ class HistoryService:
         # ========== 行情快照 ==========
         self._append_market_snapshot_to_report(report_lines, result, labels)
 
-        # ========== 数据透视 ==========
+        # ========== 數據透视 ==========
         data_persp = dashboard.get('data_perspective', {}) if dashboard else {}
         if data_persp:
             trend_data = data_persp.get('trend_status', {})
@@ -708,7 +708,7 @@ class HistoryService:
                 f"### 📊 {labels['data_perspective_heading']}",
                 "",
             ])
-            # 趋势状态
+            # 趨勢狀態
             if trend_data:
                 is_bullish = (
                     f"✅ {labels['yes_label']}"
@@ -812,7 +812,7 @@ class HistoryService:
                     f"**💡 {reason_label}**: {result.buy_reason}",
                     "",
                 ])
-            # 风险提示
+            # 風險提示
             if result.risk_warning:
                 report_lines.extend([
                     f"**⚠️ {risk_warning_label}**: {result.risk_warning}",
@@ -829,7 +829,7 @@ class HistoryService:
                 if result.volume_analysis:
                     report_lines.append(f"**{volume_analysis_label}**: {result.volume_analysis}")
                 report_lines.append("")
-            # 消息面
+            # 訊息面
             if result.news_summary:
                 report_lines.extend([
                     f"### 📰 {news_heading}",

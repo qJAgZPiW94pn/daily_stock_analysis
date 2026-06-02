@@ -127,7 +127,7 @@ def determine_market_and_type(code: str) -> tuple:
             # Four digits: likely a US symbol or special market code.
             return 'US', 'stock'
 
-    # 字母代码，美股或其他
+    # 字母代碼，美股或其他
     return 'US', 'stock'
 
 
@@ -142,7 +142,7 @@ def market_to_suffix(market: str) -> str:
         Market suffix
     """
     suffix_map = {
-        'CN': 'SH',  # 简化处理，默认上海
+        'CN': 'SH',  # 简化處理，默认上海
         'HK': 'HK',
         'US': 'US',
         'INDEX': 'SH',
@@ -197,7 +197,7 @@ def generate_aliases(name: str) -> List[str]:
     # 常见简称映射
     alias_map = {
         '贵州茅台': ['茅台'],
-        '中国平安': ['平安'],
+        '中國平安': ['平安'],
         '平安银行': ['平银'],
         '招商银行': ['招行'],
         '五粮液': ['五粮'],
@@ -206,7 +206,7 @@ def generate_aliases(name: str) -> List[str]:
         '工商银行': ['工行'],
         '建设银行': ['建行'],
         '农业银行': ['农行'],
-        '中国银行': ['中行'],
+        '中國银行': ['中行'],
         '交通银行': ['交行'],
         '兴业银行': ['兴业'],
         '浦发银行': ['浦发'],
@@ -215,10 +215,10 @@ def generate_aliases(name: str) -> List[str]:
         '东方财富': ['东财'],
         '海康威视': ['海康'],
         '隆基绿能': ['隆基'],
-        '中国神华': ['神华'],
+        '中國神华': ['神华'],
         '长江电力': ['长电'],
-        '中国石化': ['石化'],
-        '中国石油': ['石油'],
+        '中國石化': ['石化'],
+        '中國石油': ['石油'],
     }
 
     if name in alias_map:
@@ -256,26 +256,26 @@ def compress_index(index: List[Dict[str, Any]]) -> List[List]:
 
 def main():
     """Main function"""
-    # 解析命令行参数
+    # 解析命令行參數
     parser = argparse.ArgumentParser(
         description='生成股票自动补全索引文件',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
   python3 scripts/generate_stock_index.py              # 默认：生成索引文件
-  python3 scripts/generate_stock_index.py --test       # 测试模式：只读取不写入
-  python3 scripts/generate_stock_index.py --test -v    # 测试模式 + 显示详细数据
+  python3 scripts/generate_stock_index.py --test       # 測試模式：只读取不写入
+  python3 scripts/generate_stock_index.py --test -v    # 測試模式 + 显示详细數據
         """
     )
     parser.add_argument(
         '--test', '-t',
         action='store_true',
-        help='测试模式：只读取和验证数据，不写入文件'
+        help='測試模式：只读取和验证數據，不写入文件'
     )
     parser.add_argument(
         '--verbose', '-v',
         action='store_true',
-        help='详细模式：显示前10条数据预览'
+        help='详细模式：显示前10条數據预览'
     )
     args = parser.parse_args()
 
@@ -295,20 +295,20 @@ def main():
     # 压缩格式（减少文件大小）
     compressed = compress_index(index)
 
-    # 测试模式：不写入文件
+    # 測試模式：不写入文件
     if args.test:
-        print("\n[测试模式] 不会写入文件")
+        print("\n[測試模式] 不会写入文件")
         print(f"预计文件大小：{len(json.dumps(compressed, ensure_ascii=False, separators=(',', ':'))) / 1024:.2f} KB")
 
         if args.verbose:
-            print("\n前10条数据预览：")
+            print("\n前10条數據预览：")
             for i, item in enumerate(index[:10]):
                 print(f"  {i + 1}. {item['canonicalCode']} - {item['nameZh']} ({item['market']})")
 
-        print("\n✓ 测试通过，数据格式正确")
+        print("\n✓ 測試通过，數據格式正确")
         return 0
 
-    # 输出路径
+    # 输出路徑
     output_path = Path(__file__).parent.parent / "apps" / "dsa-web" / "public" / "stocks.index.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 

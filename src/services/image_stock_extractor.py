@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-图片股票代码提取 (Vision LLM)
+图片股票代碼提取 (Vision LLM)
 ===================================
 
-从截图/图片中提取股票代码，使用 Vision LLM。
+从截图/图片中提取股票代碼，使用 Vision LLM。
 优先级：Gemini -> Anthropic -> OpenAI（首个可用）。
 """
 
@@ -33,25 +33,25 @@ class _LiteLLMPlaceholder:
 # Keep a patchable module attribute while still avoiding a hard import at module load.
 litellm = sys.modules.get("litellm") or _LiteLLMPlaceholder()
 
-EXTRACT_PROMPT = """请分析这张股票市场截图或图片，提取其中所有可见的股票代码及名称。
+EXTRACT_PROMPT = """请分析这张股票市场截图或图片，提取其中所有可见的股票代碼及名称。
 
-重要：若图中同时显示股票名称和代码（如自选股列表、ETF 列表），必须同时提取两者，每个元素必须包含 code 和 name 字段。
+重要：若图中同时显示股票名称和代碼（如自选股列表、ETF 列表），必须同时提取两者，每个元素必须包含 code 和 name 欄位。
 
-输出格式：仅返回有效的 JSON 数组，不要 markdown、不要解释。
-每个元素为对象：{"code":"股票代码","name":"股票名称","confidence":"high|medium|low"}
-- code: 必填，股票代码（A股6位、港股5位、美股1-5字母、ETF 如 159887/512880）
-- name: 若图中有名称则必填（如 贵州茅台、银行ETF、证券ETF），与代码一一对应；仅当图中确实无名称时可省略
-- confidence: 必填，识别置信度，high=确定、medium=较确定、low=不确定
+输出格式：仅傳回有效的 JSON 数组，不要 markdown、不要解释。
+每个元素为对象：{"code":"股票代碼","name":"股票名称","confidence":"high|medium|low"}
+- code: 必填，股票代碼（A股6位、港股5位、美股1-5字母、ETF 如 159887/512880）
+- name: 若图中有名称则必填（如 贵州茅台、银行ETF、证券ETF），与代碼一一对应；仅当图中确实无名称时可省略
+- confidence: 必填，识别置信度，high=確定、medium=较確定、low=不確定
 
-示例（图中同时有名称和代码时）：
-- 个股：600519 贵州茅台、300750 宁德时代
+示例（图中同时有名称和代碼时）：
+- 個股：600519 贵州茅台、300750 宁德时代
 - 港股：00700 腾讯控股、09988 阿里巴巴
 - 美股：AAPL 苹果、TSLA 特斯拉
 - ETF：159887 银行ETF、512880 证券ETF、512000 券商ETF、512480 半导体ETF、515030 新能源车ETF
 
 输出示例：[{"code":"600519","name":"贵州茅台","confidence":"high"},{"code":"159887","name":"银行ETF","confidence":"high"}]
 
-禁止只返回代码数组如 ["159887","512880"]，必须使用对象格式。若未找到任何股票代码，返回：[]"""
+禁止只傳回代碼数组如 ["159887","512880"]，必须使用对象格式。若未找到任何股票代碼，傳回：[]"""
 
 # Valid confidence values; invalid ones normalized to medium
 _VALID_CONFIDENCE = frozenset({"high", "medium", "low"})
@@ -109,7 +109,7 @@ def _normalize_code(raw: str) -> Optional[str]:
 
 
 def _parse_codes_from_text(text: str) -> List[str]:
-    """从 LLM 响应文本解析股票代码（legacy format）。"""
+    """从 LLM 回應文本解析股票代碼（legacy format）。"""
     seen: set[str] = set()
     result: List[str] = []
 
@@ -136,7 +136,7 @@ def _parse_codes_from_text(text: str) -> List[str]:
     except json.JSONDecodeError:
         pass
 
-    # 兜底：查找 5-6 位数字及美股代码
+    # 兜底：查找 5-6 位数字及美股代碼
     for m in re.finditer(r"\b([0-9]{5,6}|[A-Z]{1,5}(\.[A-Z])?)\b", text, re.IGNORECASE):
         c = _normalize_code(m.group(1))
         if c and c not in seen and c not in _FAKE_CODES:
@@ -285,24 +285,24 @@ def extract_stock_codes_from_image(
     mime_type: str,
 ) -> Tuple[List[Tuple[str, Optional[str], str]], str]:
     """
-    从图片中提取股票代码及名称（使用 Vision LLM）。
+    从图片中提取股票代碼及名称（使用 Vision LLM）。
 
     优先级：Gemini -> Anthropic -> OpenAI（首个可用）。
-    支持多 Key 轮询与重试（最多 3 次，指数退避）。
+    支援多 Key 轮询与重试（最多 3 次，指數退避）。
 
     Args:
         image_bytes: 原始图片字节
         mime_type: MIME 类型（如 image/jpeg, image/png）
 
     Returns:
-        (items, raw_text) - items 为 [(code, name?, confidence), ...]，raw_text 为原始 LLM 响应。
+        (items, raw_text) - items 为 [(code, name?, confidence), ...]，raw_text 为原始 LLM 回應。
 
     Raises:
         ValueError: 图片无效、未配置 Vision API 或提取失败时。
     """
     mime_type = (mime_type or "image/jpeg").strip().lower().split(";")[0].strip()
     if mime_type not in ALLOWED_MIME:
-        raise ValueError(f"不支持的图片类型: {mime_type}。允许: {list(ALLOWED_MIME)}")
+        raise ValueError(f"不支援的图片类型: {mime_type}。允许: {list(ALLOWED_MIME)}")
 
     if not image_bytes:
         raise ValueError("图片内容为空")
@@ -336,5 +336,5 @@ def extract_stock_codes_from_image(
                 time.sleep(delay)
 
     raise ValueError(
-        f"Vision API 调用失败，请检查 API Key 与网络: {last_error}"
+        f"Vision API 调用失败，请检查 API Key 与網路: {last_error}"
     ) from last_error

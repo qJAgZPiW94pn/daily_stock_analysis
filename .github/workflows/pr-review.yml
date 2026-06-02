@@ -1,5 +1,5 @@
 # PR 自动审查 - 语法检查 + AI 语义审查
-# 当有 PR 创建或更新时自动触发
+# 当有 PR 建立或更新时自动触发
 
 name: PR Review
 
@@ -24,10 +24,10 @@ on:
       - '.github/scripts/**'
       - 'docker/Dockerfile'
       - 'docker-compose.yml'
-  # 支持手动触发（用于重新审查）
+  # 支援手动触发（用于重新审查）
   workflow_dispatch:
 
-# 限制并发，避免同一 PR 多次触发时重复评论
+# 限制並行，避免同一 PR 多次触发时重复評論
 concurrency:
   group: pr-review-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -47,7 +47,7 @@ jobs:
       sensitive_files_changed: ${{ steps.check_sensitive.outputs.sensitive_files_changed }}
     
     steps:
-      - name: 📥 检出代码
+      - name: 📥 检出代碼
         uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -70,7 +70,7 @@ jobs:
             echo "$SENSITIVE_FILES" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "已标记为敏感变更，请重点人工复核；自动流程继续执行。" >> $GITHUB_STEP_SUMMARY
+            echo "已标记为敏感变更，请重点人工复核；自动流程繼續执行。" >> $GITHUB_STEP_SUMMARY
             echo "sensitive_files_changed=true" >> $GITHUB_OUTPUT
             echo "safe_to_run=true" >> $GITHUB_OUTPUT
           else
@@ -91,7 +91,7 @@ jobs:
       has_reviewable_changes: ${{ steps.check_files.outputs.has_reviewable_changes }}
     
     steps:
-      - name: 📥 检出代码
+      - name: 📥 检出代碼
         uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -106,7 +106,7 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       
-      - name: 📦 安装依赖
+      - name: 📦 安裝依賴
         run: |
           pip install --upgrade pip
           pip install flake8
@@ -146,7 +146,7 @@ jobs:
           for file in $CHANGED_FILES; do
             if [ -f "$file" ]; then
               if ! python -m py_compile "$file" 2>&1; then
-                ERRORS="$ERRORS\n❌ $file 语法错误"
+                ERRORS="$ERRORS\n❌ $file 语法錯誤"
                 SYNTAX_OK="false"
               fi
             fi
@@ -161,19 +161,19 @@ jobs:
             echo "✅ 所有文件语法正确" >> $GITHUB_STEP_SUMMARY
           fi
       
-      - name: 🔎 Flake8 检查（严重错误）
+      - name: 🔎 Flake8 检查（严重錯誤）
         if: steps.check_files.outputs.has_py_changes == 'true'
         run: |
-          echo "## 🔎 代码质量检查" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔎 代碼质量检查" >> $GITHUB_STEP_SUMMARY
           RESULT=$(flake8 $CHANGED_FILES --select=E9,F63,F7,F82 --format='%(path)s:%(row)d: %(code)s %(text)s' 2>/dev/null || true)
           if [ -n "$RESULT" ]; then
-            echo "⚠️ 发现以下问题：" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ 发现以下議題：" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             echo "$RESULT" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             exit 1
           else
-            echo "✅ 未发现严重代码问题" >> $GITHUB_STEP_SUMMARY
+            echo "✅ 未发现严重代碼議題" >> $GITHUB_STEP_SUMMARY
           fi
       
       - name: 📊 变更统计
@@ -184,9 +184,9 @@ jobs:
           STATS=$(git diff --stat origin/$BASE_REF...HEAD 2>/dev/null | tail -1)
           echo "$STATS" >> $GITHUB_STEP_SUMMARY
 
-  # ==================== AI 代码审查（依赖静态检查通过）====================
+  # ==================== AI 代碼审查（依賴静态检查通过）====================
   ai-review:
-    name: 🤖 AI 代码审查
+    name: 🤖 AI 代碼审查
     runs-on: ubuntu-latest
     needs: [security-check, auto-check]
     if: |
@@ -206,8 +206,8 @@ jobs:
           sparse-checkout-cone-mode: false
           path: main-scripts
       
-      # 再检出 PR 代码（用于 diff 分析）
-      - name: 📥 检出 PR 代码
+      # 再检出 PR 代碼（用于 diff 分析）
+      - name: 📥 检出 PR 代碼
         uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -223,10 +223,10 @@ jobs:
         with:
           python-version: '3.11'
       
-      - name: 📦 安装依赖
+      - name: 📦 安裝依賴
         run: pip install google-genai openai httpx
       
-      - name: 🤖 AI 审查代码变更
+      - name: 🤖 AI 审查代碼变更
         working-directory: pr-code
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -243,7 +243,7 @@ jobs:
           CI_AUTO_CHECK_RESULT: ${{ needs.auto-check.result || '' }}
         run: python ../main-scripts/.github/scripts/ai_review.py
       
-      - name: 📤 上传审查结果
+      - name: 📤 上傳审查结果
         uses: actions/upload-artifact@v6
         if: always()
         with:
@@ -251,16 +251,16 @@ jobs:
           path: pr-code/ai_review_result.txt
           if-no-files-found: ignore
 
-  # ==================== PR 标签自动分类 ====================
+  # ==================== PR 標籤自动分类 ====================
   labeler:
-    name: 🏷️ 自动标签
+    name: 🏷️ 自动標籤
     runs-on: ubuntu-latest
     
     steps:
-      - name: 📥 检出代码
+      - name: 📥 检出代碼
         uses: actions/checkout@v5
       
-      - name: 🏷️ 添加标签
+      - name: 🏷️ 添加標籤
         if: github.event_name == 'pull_request_target'
         uses: actions/github-script@v8
         with:
@@ -330,7 +330,7 @@ jobs:
               }
             }
 
-  # ==================== 自动评论检查结果 ====================
+  # ==================== 自动評論检查结果 ====================
   comment:
     name: 💬 审查报告
     runs-on: ubuntu-latest
@@ -338,12 +338,12 @@ jobs:
     if: always() && github.event_name == 'pull_request_target' && needs.security-check.outputs.safe_to_run == 'true'
     
     steps:
-      - name: 📥 检出代码
+      - name: 📥 检出代碼
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
       
-      - name: 📥 下载 AI 审查结果
+      - name: 📥 下載 AI 审查结果
         uses: actions/download-artifact@v7
         if: needs.ai-review.result == 'success'
         continue-on-error: true
@@ -388,9 +388,9 @@ jobs:
               c.body.includes('## 🤖 自动审查报告')
             );
             
-            const checkStatus = process.env.AUTO_CHECK_RESULT === 'success' ? '✅ 通过' : '⚠️ 有问题';
+            const checkStatus = process.env.AUTO_CHECK_RESULT === 'success' ? '✅ 通过' : '⚠️ 有議題';
             const aiStatus = process.env.AI_REVIEW_RESULT === 'success' ? '✅ 已完成' : 
-                            process.env.AI_REVIEW_RESULT === 'skipped' ? '⏭️ 跳过' : '⚠️ 失败';
+                            process.env.AI_REVIEW_RESULT === 'skipped' ? '⏭️ 略過' : '⚠️ 失败';
             
             let report = `## 🤖 自动审查报告
 
@@ -398,7 +398,7 @@ jobs:
             |------|------|
             | 📊 变更文件 | ${changedFiles} 个 |
             | ➕ 新增行数 | ${additions} 行 |
-            | ➖ 删除行数 | ${deletions} 行 |
+            | ➖ 刪除行数 | ${deletions} 行 |
             | 🔍 静态检查 | ${checkStatus} |
             | 🧠 AI 审查 | ${aiStatus} |
 
@@ -420,7 +420,7 @@ jobs:
               report += `
             ---
 
-            ### 🧠 AI 代码审查意见
+            ### 🧠 AI 代碼审查意见
 
             ${aiReview}
             `;
@@ -429,7 +429,7 @@ jobs:
             report += `
             ---
 
-            > 💡 **提示**: 请确保代码已通过本地测试，并遵循项目代码规范。
+            > 💡 **提示**: 请确保代碼已通过本機測試，并遵循项目代碼规范。
             `;
             
             if (botComment) {

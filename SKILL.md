@@ -1,6 +1,6 @@
 ---
 name: "stock_analyzer"
-description: "分析股票和市场。当用户想要分析单个或多个股票，或进行市场复盘时调用。"
+description: "分析股票和市场。当使用者想要分析单个或多個股票，或进行市场复盘时调用。"
 ---
 
 # 股票分析器
@@ -9,35 +9,35 @@ description: "分析股票和市场。当用户想要分析单个或多个股票
 
 ## 输出结构 (`AnalysisResult`)
 
-分析函数返回一个 `AnalysisResult` 对象（或其列表），该对象具有丰富的结构。以下是其关键组件的简要概述，并附有真实的输出示例：
+分析函數傳回一个 `AnalysisResult` 对象（或其列表），该对象具有丰富的结构。以下是其关键组件的简要概述，并附有真实的输出示例：
 
 `dashboard` 属性包含核心分析，分为四个主要部分：
 1.  **`core_conclusion`**: 一句话总结、信号类型和仓位建议。
-2.  **`data_perspective`**: 技术数据，包括趋势状态、价格位置、量能分析和筹码结构。
-3.  **`intelligence`**: 定性信息，如新闻、风险警报和积极催化剂。
-4.  **`battle_plan`**: 可操作的策略，包括狙击点（买/卖目标）、仓位策略和风险控制清单。
+2.  **`data_perspective`**: 技术數據，包括趨勢狀態、价格位置、量能分析和筹码结构。
+3.  **`intelligence`**: 定性資訊，如新闻、風險警报和积极催化剂。
+4.  **`battle_plan`**: 可操作的策略，包括狙击点（买/卖目标）、仓位策略和風險控制清单。
 
 ## 配置 (`Config`)
 
-所有分析函数都可以接受一个可选的 `config` 对象。该对象包含应用程序的所有配置，例如 API 密钥、通知设置和分析参数。
+所有分析函數都可以接受一个可選的 `config` 对象。该对象包含应用程式的所有配置，例如 API 密钥、通知设置和分析參數。
 
-如果未提供 `config` 对象，函数将自动使用从 `.env` 文件加载的全局单例实例。
+如果未提供 `config` 对象，函數将自动使用从 `.env` 文件加载的全局单例实例。
 
 **参考:** [`Config`](src/config.py)
 
-## 函数
+## 函數
 
 ### 1. 分析单只股票
 
-**描述:** 分析单只股票并返回分析结果。
+**描述:** 分析单只股票并傳回分析结果。
 
-**何时使用:** 当用户要求分析特定股票时。
+**何时使用:** 当使用者要求分析特定股票时。
 
 **输入:**
-- `stock_code` (str): 要分析的股票代码。
-- `config` (Config, 可选): 配置对象。默认为 `None`。
-- `full_report` (bool, 可选): 是否生成完整报告。默认为 `False`。
-- `notifier` (NotificationService, 可选): 通知服务对象。默认为 `None`。
+- `stock_code` (str): 要分析的股票代碼。
+- `config` (Config, 可選): 配置对象。默认为 `None`。
+- `full_report` (bool, 可選): 是否生成完整报告。默认为 `False`。
+- `notifier` (NotificationService, 可選): 通知服務对象。默认为 `None`。
 
 **输出:** `Optional[AnalysisResult]`
 一个包含分析结果的 `AnalysisResult` 对象，如果分析失败则为 `None`。
@@ -59,15 +59,15 @@ if result:
 
 ### 2. 分析多只股票
 
-**描述:** 分析一个股票列表并返回分析结果列表。
+**描述:** 分析一個股票列表并傳回分析结果列表。
 
-**何时使用:** 当用户想要一次分析多只股票时。
+**何时使用:** 当使用者想要一次分析多只股票时。
 
 **输入:**
-- `stock_codes` (List[str]): 要分析的股票代码列表。
-- `config` (Config, 可选): 配置对象。默认为 `None`。
-- `full_report` (bool, 可选): 是否为每只股票生成完整报告。默认为 `False`。
-- `notifier` (NotificationService, 可选): 通知服务对象。默认为 `None`。
+- `stock_codes` (List[str]): 要分析的股票代碼列表。
+- `config` (Config, 可選): 配置对象。默认为 `None`。
+- `full_report` (bool, 可選): 是否为每只股票生成完整报告。默认为 `False`。
+- `notifier` (NotificationService, 可選): 通知服務对象。默认为 `None`。
 
 **输出:** `List[AnalysisResult]`
 一个 `AnalysisResult` 对象列表。
@@ -86,15 +86,15 @@ for result in results:
 **参考:** [`analyze_stocks`](src/services/analyzer_service.py)
 
 
-### 3. 执行大盘复盘
+### 3. 执行大盤复盘
 
-**描述:** 对整体市场进行复盘并返回一份报告。
+**描述:** 对整体市场进行复盘并傳回一份报告。
 
-**何时使用:** 当用户要求市场概览、摘要或复盘时。
+**何时使用:** 当使用者要求市场概览、摘要或复盘时。
 
 **输入:**
-- `config` (Config, 可选): 配置对象。默认为 `None`。
-- `notifier` (NotificationService, 可选): 通知服务对象。默认为 `None`。
+- `config` (Config, 可選): 配置对象。默认为 `None`。
+- `notifier` (NotificationService, 可選): 通知服務对象。默认为 `None`。
 
 **输出:** `Optional[str]`
 一个包含市场复盘报告的字符串，如果失败则为 `None`。
@@ -104,7 +104,7 @@ for result in results:
 ```python
 from src.services.analyzer_service import perform_market_review
 
-# 执行大盘复盘
+# 执行大盤复盘
 report = perform_market_review()
 if report:
     print(report)

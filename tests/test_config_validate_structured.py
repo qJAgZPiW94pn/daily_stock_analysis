@@ -134,7 +134,7 @@ class TestValidateStructuredStockList:
         warning = next(i for i in issues if i.field == "STOCK_GROUP_N")
         assert warning.severity == "warning"
         assert "000001" in warning.message
-        assert "邮件路由" in warning.message
+        assert "電郵路由" in warning.message
         assert "STOCK_LIST" in warning.message
 
     def test_stock_email_groups_subset_of_stock_list_has_no_warning(self):

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Server酱3 发送提醒服务
+Server酱3 发送提醒服務
 
 职责：
-1. 通过 Server酱3 API 发送 Server酱3 消息
+1. 通过 Server酱3 API 发送 Server酱3 訊息
 """
 import logging
 from typing import Optional
@@ -36,34 +36,34 @@ class Serverchan3Sender:
         timeout_seconds: Optional[float] = None,
     ) -> bool:
         """
-        推送消息到 Server酱3
+        推送訊息到 Server酱3
 
         Server酱3 API 格式：
         POST https://sctapi.ftqq.com/{sendkey}.send
         或
         POST https://{num}.push.ft07.com/send/{sendkey}.send
         {
-            "title": "消息标题",
-            "desp": "消息内容",
+            "title": "訊息标题",
+            "desp": "訊息内容",
             "options": {}
         }
 
         Server酱3 特点：
-        - 国内推送服务，支持多家国产系统推送通道，可无后台推送
+        - 国内推送服務，支援多家国产系統推送通道，可无后台推送
         - 简单易用的 API 接口
 
         Args:
-            content: 消息内容（Markdown 格式）
-            title: 消息标题（可选）
+            content: 訊息内容（Markdown 格式）
+            title: 訊息标题（可選）
 
         Returns:
             是否发送成功
         """
         if not self._serverchan3_sendkey:
-            logger.warning("Server酱3 SendKey 未配置，跳过推送")
+            logger.warning("Server酱3 SendKey 未配置，略過推送")
             return False
 
-        # 处理消息标题
+        # 處理訊息标题
         if title is None:
             date_str = datetime.now().strftime('%Y-%m-%d')
             title = f"📈 股票分析报告 - {date_str}"
@@ -82,14 +82,14 @@ class Serverchan3Sender:
             else:
                 url = f"https://sctapi.ftqq.com/{sendkey}.send"
 
-            # 构建请求参数
+            # 构建請求參數
             params = {
                 'title': title,
                 'desp': content,
                 'options': {}
             }
 
-            # 发送请求
+            # 发送請求
             headers = {
                 'Content-Type': 'application/json;charset=utf-8'
             }
@@ -97,15 +97,15 @@ class Serverchan3Sender:
 
             if response.status_code == 200:
                 result = response.json()
-                logger.info(f"Server酱3 消息发送成功: {result}")
+                logger.info(f"Server酱3 訊息发送成功: {result}")
                 return True
             else:
-                logger.error(f"Server酱3 请求失败: HTTP {response.status_code}")
-                logger.error(f"响应内容: {response.text}")
+                logger.error(f"Server酱3 請求失败: HTTP {response.status_code}")
+                logger.error(f"回應内容: {response.text}")
                 return False
 
         except Exception as e:
-            logger.error(f"发送 Server酱3 消息失败: {e}")
+            logger.error(f"发送 Server酱3 訊息失败: {e}")
             import traceback
             logger.debug(traceback.format_exc())
             return False

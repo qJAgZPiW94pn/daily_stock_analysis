@@ -21,7 +21,7 @@ def _make_platform(public_key: str) -> DiscordPlatform:
 
 
 def _current_timestamp() -> str:
-    """返回当前 Unix 秒字符串，用于生成有效签名。"""
+    """傳回当前 Unix 秒字符串，用于生成有效签名。"""
     return str(int(time.time()))
 
 
@@ -54,7 +54,7 @@ def test_signed_ping_request_is_accepted():
 
 
 def test_signed_interaction_request_returns_deferred_ack():
-    """type=2 交互应返回 type 5 延迟 ACK，同时仍解析出 BotMessage。"""
+    """type=2 交互应傳回 type 5 延遲 ACK，同时仍解析出 BotMessage。"""
     signing_key = SigningKey.generate()
     platform = _make_platform(signing_key.verify_key.encode().hex())
     payload = {
@@ -85,12 +85,12 @@ def test_signed_interaction_request_returns_deferred_ack():
         payload,
     )
 
-    # 应返回 type 5 延迟 ACK
+    # 应傳回 type 5 延遲 ACK
     assert response is not None
     assert response.status_code == 200
     assert response.body == {"type": 5}
 
-    # 同时仍解析出消息
+    # 同时仍解析出訊息
     assert message is not None
     assert message.platform == "discord"
     assert message.chat_id == "channel-1"
@@ -98,7 +98,7 @@ def test_signed_interaction_request_returns_deferred_ack():
     assert message.user_id == "user-1"
     assert message.user_name == "tester"
     assert message.content == "/analyze 600519"
-    # follow-up 需要的字段存在于 raw_data
+    # follow-up 需要的欄位存在于 raw_data
     assert message.raw_data.get("application_id") == "app-123"
     assert message.raw_data.get("token") == "interaction-token"
 
@@ -182,7 +182,7 @@ def test_expired_timestamp_is_rejected():
 
 
 def test_format_response_wraps_interaction_callback():
-    """type=2 交互响应应使用 Interaction Response 回调格式（type=4 + data）。"""
+    """type=2 交互回應应使用 Interaction Response 回调格式（type=4 + data）。"""
     from bot.models import BotMessage, BotResponse, ChatType
 
     platform = _make_platform("00" * 32)
@@ -281,7 +281,7 @@ def test_send_followup_chunks_long_content():
 
 
 def test_send_followup_missing_token_returns_false():
-    """缺少 interaction token 时 send_followup 应返回 False。"""
+    """缺少 interaction token 时 send_followup 应傳回 False。"""
     from bot.models import BotMessage, BotResponse, ChatType
 
     platform = _make_platform("00" * 32)

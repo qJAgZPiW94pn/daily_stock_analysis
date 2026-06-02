@@ -204,7 +204,7 @@ class TestSerpAPISearchProvider(unittest.TestCase):
             }
         ), patch(
             "src.search_service.fetch_url_content",
-            return_value="网页正文补充信息 " * 40,
+            return_value="网页正文补充資訊 " * 40,
         ) as mock_fetch:
             resp = provider.search("阿里巴巴 财报", max_results=3)
 
@@ -331,7 +331,7 @@ class TestSerpAPISearchProvider(unittest.TestCase):
             }
         ), patch(
             "src.search_service.fetch_url_content",
-            return_value="网页正文补充信息 " * 40,
+            return_value="网页正文补充資訊 " * 40,
         ) as mock_fetch:
             resp = provider.search("阿里巴巴 财报", max_results=3)
 
@@ -373,7 +373,7 @@ class TestSerpAPISearchProvider(unittest.TestCase):
             }
         ), patch(
             "src.search_service.fetch_url_content",
-            return_value="网页正文补充信息 " * 40,
+            return_value="网页正文补充資訊 " * 40,
         ) as mock_fetch:
             resp = provider.search("阿里巴巴 财报", max_results=3)
 
@@ -415,7 +415,7 @@ class TestSerpAPISearchProvider(unittest.TestCase):
             }
         ), patch(
             "src.search_service.fetch_url_content",
-            return_value="网页正文补充信息 " * 40,
+            return_value="网页正文补充資訊 " * 40,
         ) as mock_fetch:
             resp = provider.search("阿里巴巴 财报", max_results=3)
 
@@ -451,7 +451,7 @@ class TestSerpAPISearchProvider(unittest.TestCase):
             }
         ), patch(
             "src.search_service.fetch_url_content",
-            return_value="网页正文补充信息 " * 40,
+            return_value="网页正文补充資訊 " * 40,
         ) as mock_fetch:
             resp = provider.search("阿里巴巴 财报", max_results=2)
 
@@ -486,7 +486,7 @@ class TestSerpAPISearchProvider(unittest.TestCase):
             }
         ), patch(
             "src.search_service.fetch_url_content",
-            return_value="网页正文补充信息 " * 40,
+            return_value="网页正文补充資訊 " * 40,
         ) as mock_fetch:
             resp = provider.search("阿里巴巴 财报", max_results=2)
 

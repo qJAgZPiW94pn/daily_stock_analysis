@@ -374,7 +374,7 @@ class SearchNewsFreshnessTestCase(unittest.TestCase):
         with patch("src.search_service.time.sleep"):
             intel = service.search_comprehensive_intel(
                 stock_code="510300",
-                stock_name="沪深300ETF",
+                stock_name="滬深300ETF",
                 max_searches=3,
             )
 
@@ -490,7 +490,7 @@ class SearchNewsFreshnessTestCase(unittest.TestCase):
         with patch("src.search_service.time.sleep"):
             intel = service.search_comprehensive_intel(
                 stock_code="510300",
-                stock_name="沪深300ETF",
+                stock_name="滬深300ETF",
                 max_searches=4,
             )
 

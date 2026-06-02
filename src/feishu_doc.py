@@ -20,7 +20,7 @@ class FeishuDocManager:
         self.folder_token = self.config.feishu_folder_token
 
         # 初始化 SDK 客户端
-        # SDK 会自动处理 tenant_access_token 的获取和刷新，无需人工干预
+        # SDK 会自动處理 tenant_access_token 的获取和刷新，無需人工干预
         if self.is_configured():
             self.client = lark.Client.builder() \
                 .app_id(self.app_id) \
@@ -36,15 +36,15 @@ class FeishuDocManager:
 
     def create_daily_doc(self, title: str, content_md: str) -> Optional[str]:
         """
-        创建日报文档
+        建立日报文档
         """
         if not self.client or not self.is_configured():
-            logger.warning("飞书 SDK 未初始化或配置缺失，跳过创建")
+            logger.warning("飞书 SDK 未初始化或配置缺失，略過建立")
             return None
 
         try:
-            # 1. 创建文档
-            # 使用官方 SDK 的 Builder 模式构造请求
+            # 1. 建立文档
+            # 使用官方 SDK 的 Builder 模式构造請求
             create_request = CreateDocumentRequest.builder() \
                 .request_body(CreateDocumentRequestBody.builder()
                               .folder_token(self.folder_token)
@@ -55,13 +55,13 @@ class FeishuDocManager:
             response = self.client.docx.v1.document.create(create_request)
 
             if not response.success():
-                logger.error(f"创建文档失败: {response.code} - {response.msg} - {response.error}")
+                logger.error(f"建立文档失败: {response.code} - {response.msg} - {response.error}")
                 return None
 
             doc_id = response.data.document.document_id
             # 这里的 domain 只是为了生成链接，实际访问会重定向
             doc_url = f"https://feishu.cn/docx/{doc_id}"
-            logger.info(f"飞书文档创建成功: {title} (ID: {doc_id})")
+            logger.info(f"飞书文档建立成功: {title} (ID: {doc_id})")
 
             # 2. 解析 Markdown 并写入内容
             # 将 Markdown 转换为 SDK 需要的 Block 对象列表
@@ -74,7 +74,7 @@ class FeishuDocManager:
             for i in range(0, len(blocks), batch_size):
                 batch_blocks = blocks[i:i + batch_size]
 
-                # 构造批量添加块的请求
+                # 构造批量添加块的請求
                 batch_add_request = CreateDocumentBlockChildrenRequest.builder() \
                     .document_id(doc_id) \
                     .block_id(doc_block_id) \

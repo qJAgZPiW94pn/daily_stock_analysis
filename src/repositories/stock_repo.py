@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票数据访问层
+股票數據访问层
 ===================================
 
 职责：
-1. 封装股票数据的数据库操作
-2. 提供日线数据查询接口
+1. 封装股票數據的資料庫操作
+2. 提供日线數據查詢接口
 """
 
 import logging
@@ -23,26 +23,26 @@ logger = logging.getLogger(__name__)
 
 class StockRepository:
     """
-    股票数据访问层
+    股票數據访问层
     
-    封装 StockDaily 表的数据库操作
+    封装 StockDaily 表的資料庫操作
     """
     
     def __init__(self, db_manager: Optional[DatabaseManager] = None):
         """
-        初始化数据访问层
+        初始化數據访问层
         
         Args:
-            db_manager: 数据库管理器（可选，默认使用单例）
+            db_manager: 資料庫管理器（可選，默认使用单例）
         """
         self.db = db_manager or DatabaseManager.get_instance()
     
     def get_latest(self, code: str, days: int = 2) -> List[StockDaily]:
         """
-        获取最近 N 天的数据
+        获取最近 N 天的數據
         
         Args:
-            code: 股票代码
+            code: 股票代碼
             days: 获取天数
             
         Returns:
@@ -51,7 +51,7 @@ class StockRepository:
         try:
             return self.db.get_latest_data(code, days)
         except Exception as e:
-            logger.error(f"获取最新数据失败: {e}")
+            logger.error(f"获取最新數據失败: {e}")
             return []
     
     def get_range(
@@ -61,10 +61,10 @@ class StockRepository:
         end_date: date
     ) -> List[StockDaily]:
         """
-        获取指定日期范围的数据
+        获取指定日期范围的數據
         
         Args:
-            code: 股票代码
+            code: 股票代碼
             start_date: 开始日期
             end_date: 结束日期
             
@@ -74,7 +74,7 @@ class StockRepository:
         try:
             return self.db.get_data_range(code, start_date, end_date)
         except Exception as e:
-            logger.error(f"获取日期范围数据失败: {e}")
+            logger.error(f"获取日期范围數據失败: {e}")
             return []
     
     def save_dataframe(
@@ -84,12 +84,12 @@ class StockRepository:
         data_source: str = "Unknown"
     ) -> int:
         """
-        保存 DataFrame 到数据库
+        保存 DataFrame 到資料庫
         
         Args:
-            df: 包含日线数据的 DataFrame
-            code: 股票代码
-            data_source: 数据来源
+            df: 包含日线數據的 DataFrame
+            code: 股票代碼
+            data_source: 數據来源
             
         Returns:
             保存的记录数
@@ -97,24 +97,24 @@ class StockRepository:
         try:
             return self.db.save_daily_data(df, code, data_source)
         except Exception as e:
-            logger.error(f"保存日线数据失败: {e}")
+            logger.error(f"保存日线數據失败: {e}")
             return 0
     
     def has_today_data(self, code: str, target_date: Optional[date] = None) -> bool:
         """
-        检查是否有指定日期的数据
+        检查是否有指定日期的數據
         
         Args:
-            code: 股票代码
+            code: 股票代碼
             target_date: 目标日期（默认今天）
             
         Returns:
-            是否存在数据
+            是否存在數據
         """
         try:
             return self.db.has_today_data(code, target_date)
         except Exception as e:
-            logger.error(f"检查数据存在失败: {e}")
+            logger.error(f"检查數據存在失败: {e}")
             return False
     
     def get_analysis_context(
@@ -126,7 +126,7 @@ class StockRepository:
         获取分析上下文
         
         Args:
-            code: 股票代码
+            code: 股票代碼
             target_date: 目标日期
             
         Returns:

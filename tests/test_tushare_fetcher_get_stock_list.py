@@ -163,7 +163,7 @@ class TestTushareFetcherFetchRawData(unittest.TestCase):
         with patch.object(fetcher, "_check_rate_limit"):
             with self.assertRaises(DataFetchError) as ctx:
                 fetcher._fetch_raw_data("AAPL", "2026-01-01", "2026-01-05")
-        self.assertIn("不支持美股", str(ctx.exception))
+        self.assertIn("不支援美股", str(ctx.exception))
         fetcher._api.daily.assert_not_called()
 
     def test_fetch_raw_data_api_unconfigured_raises(self) -> None:

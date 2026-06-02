@@ -9,7 +9,7 @@
 # 3. 按需配置下面的 model_list
 #
 # 密钥引用格式：
-#   api_key: "os.environ/ENV_VAR_NAME"  → 从环境变量读取，避免明文写入文件
+#   api_key: "os.environ/ENV_VAR_NAME"  → 从环境變數读取，避免明文写入文件
 #   api_key: "sk-xxxxxxxx"              → 直接写入（不推荐）
 #
 # 更多文档: https://docs.litellm.ai/docs/proxy/configs
@@ -21,7 +21,7 @@ model_list:
   - model_name: openai/Qwen/Qwen3.5-397B-A17B
     litellm_params:
       model: openai/Qwen/Qwen3.5-397B-A17B
-      api_key: "os.environ/LITELLM_API_KEY" # 从环境变量读取 Key，安全防泄漏
+      api_key: "os.environ/LITELLM_API_KEY" # 从环境變數读取 Key，安全防泄漏
       api_base: https://api.siliconflow.cn/v1
       # 以下配置是表示如何启用Qwen模型的enable_thinking开关
       extra_body:
@@ -76,18 +76,18 @@ model_list:
   #     api_key: "os.environ/OPENROUTER_API_KEY"
   #     api_base: https://openrouter.ai/api/v1
 
-  # --- Ollama 本地模型 ---
+  # --- Ollama 本機模型 ---
   # - model_name: ollama/qwen3:8b
   #   litellm_params:
   #     model: ollama/qwen3:8b
   #     api_base: http://localhost:11434
 
 # ===================================
-# Router 设置（可选）
+# Router 设置（可選）
 # ===================================
 router_settings:
   routing_strategy: simple-shuffle    # simple-shuffle / least-busy / latency-based
   num_retries: 2                      # 单个 deployment 失败后重试次数
-  # timeout: 30                       # 请求超时（秒）
+  # timeout: 30                       # 請求逾時（秒）
   # allowed_fails: 3                  # deployment 被冷却前允许的失败次数
   # cooldown_time: 60                 # deployment 冷却时间（秒）

@@ -9,21 +9,21 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: '运行模式'
+        description: '執行模式'
         required: true
         default: 'full'
         type: choice
         options:
-          - full          # 完整分析（股票+大盘）
-          - market-only   # 仅大盘复盘
+          - full          # 完整分析（股票+大盤）
+          - market-only   # 仅大盤复盘
           - stocks-only   # 仅股票分析
       force_run:
-        description: '强制运行（跳过交易日检查）'
+        description: '强制執行（略過交易日检查）'
         required: false
         default: false
         type: boolean
 
-# 并发控制：同一时间只运行一个分析任务
+# 並行控制：同一时间只執行一个分析工作
 concurrency:
   group: stock-analysis
   cancel-in-progress: false
@@ -31,14 +31,14 @@ concurrency:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    # 添加超时限制，防止任务卡死
+    # 添加逾時限制，防止工作卡死
     timeout-minutes: ${{ fromJSON(vars.ANALYSIS_TIMEOUT_MINUTES || '30') }}
     
     steps:
-      - name: 随机延迟（避免固定时间访问）
-        run: sleep $((RANDOM % 60))  # 随机延迟0-60秒启动
+      - name: 随机延遲（避免固定时间访问）
+        run: sleep $((RANDOM % 60))  # 随机延遲0-60秒啟動
       
-      - name: 检出代码
+      - name: 检出代碼
         uses: actions/checkout@v5
       
       - name: 设置 Python 环境
@@ -47,12 +47,12 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       
-      - name: 安装依赖
+      - name: 安裝依賴
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
       
-      - name: 创建必要目录
+      - name: 建立必要目錄
         run: |
           mkdir -p data logs reports
       
@@ -81,7 +81,7 @@ jobs:
           GEMINI_MODEL_FALLBACK: ${{ vars.GEMINI_MODEL_FALLBACK || secrets.GEMINI_MODEL_FALLBACK || 'gemini-2.5-flash' }}
           GEMINI_REQUEST_DELAY: '3.0'
           
-          # AIHubMix（优先于 OPENAI_API_KEY，自动适配 base_url，推荐国内用户）
+          # AIHubMix（优先于 OPENAI_API_KEY，自动适配 base_url，推荐国内使用者）
           AIHUBMIX_KEY: ${{ secrets.AIHUBMIX_KEY }}
 
           # OpenAI 兼容 API（备选）
@@ -99,7 +99,7 @@ jobs:
           ANTHROPIC_API_KEYS: ${{ secrets.ANTHROPIC_API_KEYS }}
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL || secrets.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022' }}
 
-          # LLM 渠道模式（常见渠道名需显式映射，GitHub Actions 不会自动导入任意 Secret/Variable）
+          # LLM 渠道模式（常见渠道名需显式映射，GitHub Actions 不会自动匯入任意 Secret/Variable）
           LLM_PRIMARY_PROTOCOL: ${{ vars.LLM_PRIMARY_PROTOCOL || secrets.LLM_PRIMARY_PROTOCOL }}
           LLM_PRIMARY_BASE_URL: ${{ vars.LLM_PRIMARY_BASE_URL || secrets.LLM_PRIMARY_BASE_URL }}
           LLM_PRIMARY_API_KEY: ${{ secrets.LLM_PRIMARY_API_KEY }}
@@ -229,10 +229,10 @@ jobs:
           LLM_OLLAMA_EXTRA_HEADERS: ${{ vars.LLM_OLLAMA_EXTRA_HEADERS || secrets.LLM_OLLAMA_EXTRA_HEADERS }}
 
           # ==========================================
-          # 数据源
+          # 數據源
           # ==========================================
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-          # Longbridge OpenAPI（美股/港股实时行情字段补充；不设则仅 YFinance/AkShare，无 [Longbridge] 调用）
+          # Longbridge OpenAPI（美股/港股实时行情欄位补充；不设则仅 YFinance/AkShare，无 [Longbridge] 调用）
           LONGBRIDGE_APP_KEY: ${{ secrets.LONGBRIDGE_APP_KEY }}
           LONGBRIDGE_APP_SECRET: ${{ secrets.LONGBRIDGE_APP_SECRET }}
           LONGBRIDGE_ACCESS_TOKEN: ${{ secrets.LONGBRIDGE_ACCESS_TOKEN }}
@@ -246,7 +246,7 @@ jobs:
           LONGBRIDGE_PRINT_QUOTE_PACKAGES: ${{ vars.LONGBRIDGE_PRINT_QUOTE_PACKAGES || secrets.LONGBRIDGE_PRINT_QUOTE_PACKAGES }}
           
           # ==========================================
-          # 搜索服务
+          # 搜索服務
           # ==========================================
           ANSPIRE_API_KEYS: ${{ secrets.ANSPIRE_API_KEYS }} 
           ANSPIRE_LLM_MODEL: ${{ vars.ANSPIRE_LLM_MODEL || secrets.ANSPIRE_LLM_MODEL }}
@@ -278,7 +278,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_MESSAGE_THREAD_ID: ${{ secrets.TELEGRAM_MESSAGE_THREAD_ID }}
           
-          # 方式四：邮件
+          # 方式四：電郵
           EMAIL_SENDER: ${{ vars.EMAIL_SENDER || secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECEIVERS: ${{ vars.EMAIL_RECEIVERS || secrets.EMAIL_RECEIVERS }}
@@ -300,7 +300,7 @@ jobs:
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
           PUSHPLUS_TOPIC: ${{ vars.PUSHPLUS_TOPIC || secrets.PUSHPLUS_TOPIC }}
           
-          # 方式七：自定义 Webhook（钉钉、Bark、自建服务等）
+          # 方式七：自定义 Webhook（钉钉、Bark、自建服務等）
           CUSTOM_WEBHOOK_URLS: ${{ secrets.CUSTOM_WEBHOOK_URLS }}
           CUSTOM_WEBHOOK_BEARER_TOKEN: ${{ secrets.CUSTOM_WEBHOOK_BEARER_TOKEN }}
           CUSTOM_WEBHOOK_BODY_TEMPLATE: ${{ vars.CUSTOM_WEBHOOK_BODY_TEMPLATE || secrets.CUSTOM_WEBHOOK_BODY_TEMPLATE }}
@@ -347,7 +347,7 @@ jobs:
           MARKET_REVIEW_COLOR_SCHEME: ${{ vars.MARKET_REVIEW_COLOR_SCHEME || secrets.MARKET_REVIEW_COLOR_SCHEME || 'green_up' }}
           
           # ==========================================
-          # 运行配置 ⬅️ 新增！
+          # 執行配置 ⬅️ 新增！
           # ==========================================
           REPORT_TYPE: ${{ vars.REPORT_TYPE || secrets.REPORT_TYPE || 'simple' }}
           REPORT_LANGUAGE: ${{ vars.REPORT_LANGUAGE || secrets.REPORT_LANGUAGE || '' }}
@@ -358,36 +358,36 @@ jobs:
           TRADING_DAY_CHECK_ENABLED: ${{ vars.TRADING_DAY_CHECK_ENABLED || secrets.TRADING_DAY_CHECK_ENABLED || 'true' }}
           
           # ==========================================
-          # 系统配置
+          # 系統配置
           # ==========================================
           LOG_LEVEL: INFO
           MAX_WORKERS: ${{ vars.MAX_WORKERS || secrets.MAX_WORKERS || '1' }}
           # 筹码分布：默认 false（云端接口不稳定）；需启用时在 Settings → Variables 添加 ENABLE_CHIP_DISTRIBUTION=true
           ENABLE_CHIP_DISTRIBUTION: ${{ vars.ENABLE_CHIP_DISTRIBUTION || secrets.ENABLE_CHIP_DISTRIBUTION || 'false' }}
-          # 实时行情数据源优先级（腾讯有量比且稳定，推荐首选）
-          # 可选值: tencent, akshare_sina, efinance, akshare_em, tushare
+          # 实时行情數據源优先级（腾讯有量比且稳定，推荐首选）
+          # 可選值: tencent, akshare_sina, efinance, akshare_em, tushare
           # 如果有 Tushare Pro 高积分账号，可将 tushare 放在首位
           REALTIME_SOURCE_PRIORITY: ${{ vars.REALTIME_SOURCE_PRIORITY || 'tencent,akshare_sina,efinance,akshare_em' }}
           
         run: |
-          # 处理 LITELLM YAML 配置文件
+          # 處理 LITELLM YAML 配置文件
           if [ -n "$LITELLM_CONFIG_YAML" ] && [ -n "$LITELLM_CONFIG" ]; then
             echo "📝 使用 GitHub Actions Secrets/Variables 中的 LITELLM_CONFIG_YAML 配置"
-            # 确保目录存在
+            # 确保目錄存在
             mkdir -p "$(dirname "$LITELLM_CONFIG")"
             # 写入配置文件（覆盖已有文件）
             echo "$LITELLM_CONFIG_YAML" > "$LITELLM_CONFIG"
             echo "✅ LITELLM 配置文件已写入: $LITELLM_CONFIG"
           fi
 
-          # 判断运行模式
+          # 判断執行模式
           MODE="${{ github.event.inputs.mode || 'full' }}"
           
           echo "=========================================="
-          echo "🚀 A股自选股智能分析系统"
+          echo "🚀 A股自选股智能分析系統"
           echo "=========================================="
           echo "⏰ 时间: $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S')"
-          echo "🎯 运行模式: $MODE"
+          echo "🎯 執行模式: $MODE"
           echo "📊 自选股: $STOCK_LIST"
           echo "📝 报告类型: $REPORT_TYPE"
           echo ""
@@ -407,7 +407,7 @@ jobs:
           echo "  OpenAI API Key: $([ -n "$OPENAI_API_KEY" ] && echo '✅ 已配置' || echo '⚪ 未配置')"
           echo "  Anthropic Key:  $([ -n "$ANTHROPIC_API_KEY" ] && echo '✅ 已配置' || echo '⚪ 未配置')"
           echo ""
-          echo "【数据源】"
+          echo "【數據源】"
           echo "  Tushare Token: $([ -n "$TUSHARE_TOKEN" ] && echo '✅ 已配置' || echo '⚪ 未配置')"
           echo "  Longbridge: $([ -n "$LONGBRIDGE_APP_KEY" ] && [ -n "$LONGBRIDGE_APP_SECRET" ] && [ -n "$LONGBRIDGE_ACCESS_TOKEN" ] && echo '✅ 已配置（美股/港股行情补充）' || echo '⚪ 未配置（仅 YFinance 等，无长桥调用）')"
           echo ""
@@ -426,7 +426,7 @@ jobs:
               echo "  SearXNG Public Instances: ✅ 默认开启"
               ;;
             *)
-              echo "  SearXNG Public Instances: ✅ 已启用"
+              echo "  SearXNG Public Instances: ✅ 已啟用"
               ;;
           esac
           echo ""
@@ -443,18 +443,18 @@ jobs:
           echo "=========================================="
           echo ""
           
-          # 构建命令行参数
+          # 构建命令行參數
           FORCE_RUN_ARG=""
           if [ "${{ github.event.inputs.force_run }}" = "true" ]; then
             FORCE_RUN_ARG="--force-run"
-            echo "⚡ 已启用强制运行模式（跳过交易日检查）"
+            echo "⚡ 已啟用强制執行模式（略過交易日检查）"
           fi
 
-          # 定时任务默认只做个股分析（不分析大盘）
-          # 手动触发时可以通过 mode 参数选择
+          # 定时工作默认只做個股分析（不分析大盤）
+          # 手动触发时可以通过 mode 參數选择
           if [ -z "$MODE" ]; then
             MODE="stocks-only"
-            echo "📊 定时任务默认运行模式：个股分析"
+            echo "📊 定时工作默认執行模式：個股分析"
           fi
 
           # 执行分析
@@ -466,7 +466,7 @@ jobs:
             python main.py $FORCE_RUN_ARG
           fi
       
-      - name: 上传分析报告
+      - name: 上傳分析报告
         uses: actions/upload-artifact@v6
         if: always()
         with:
@@ -476,7 +476,7 @@ jobs:
             logs/
           retention-days: 30
       
-      - name: 显示运行结果
+      - name: 显示執行结果
         if: always()
         run: |
           echo ""
@@ -491,6 +491,6 @@ jobs:
           fi
           echo ""
           if [ -f "logs/stock_analysis_$(date +%Y%m%d).log" ]; then
-            echo "📜 最近日志（最后 30 行）:"
-            tail -30 logs/stock_analysis_*.log 2>/dev/null || echo "无日志"
+            echo "📜 最近日誌（最后 30 行）:"
+            tail -30 logs/stock_analysis_*.log 2>/dev/null || echo "无日誌"
           fi

@@ -245,8 +245,8 @@ class AgentSkillsEndpointTestCase(unittest.TestCase):
             list_skills=lambda: [
                 SimpleNamespace(
                     name="bull_trend",
-                    display_name="多头趋势",
-                    description="趋势跟随",
+                    display_name="多头趨勢",
+                    description="趨勢跟随",
                     user_invocable=True,
                     default_priority=20,
                     default_active=True,
@@ -277,8 +277,8 @@ class AgentSkillsEndpointTestCase(unittest.TestCase):
             list_skills=lambda: [
                 SimpleNamespace(
                     name="bull_trend",
-                    display_name="多头趋势",
-                    description="趋势跟随",
+                    display_name="多头趨勢",
+                    description="趨勢跟随",
                     user_invocable=True,
                     default_priority=20,
                     default_active=True,
@@ -299,8 +299,8 @@ class AgentSkillsEndpointTestCase(unittest.TestCase):
             [
                 {
                     "id": "bull_trend",
-                    "name": "多头趋势",
-                    "description": "趋势跟随",
+                    "name": "多头趨勢",
+                    "description": "趨勢跟随",
                 }
             ],
         )

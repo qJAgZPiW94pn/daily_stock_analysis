@@ -40,7 +40,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     name="贵州茅台",
                     report_type="simple",
                     sentiment_score=80,
-                    operation_advice="买入",
+                    operation_advice="買入",
                     trend_prediction="看多",
                     analysis_summary="test",
                     stop_loss=95.0,
@@ -152,7 +152,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         self.assertEqual(result.eval_status, "completed")
         self.assertEqual(result.code, "600519")
         self.assertEqual(result.analysis_date, date(2024, 1, 1))
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.operation_advice, "買入")
         self.assertEqual(result.position_recommendation, "long")
         self.assertEqual(result.direction_expected, "up")
 
@@ -261,7 +261,7 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q2",
             analysis_date=date(2024, 1, 10),
             created_at=datetime(2024, 1, 10, 0, 0, 0),
-            operation_advice="买入",
+            operation_advice="買入",
             trend_prediction="看多",
             start_close=100.0,
             forward_bars=[
@@ -293,7 +293,7 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q2",
             analysis_date=date(2024, 1, 10),
             created_at=datetime(2024, 1, 10, 0, 0, 0),
-            operation_advice="买入",
+            operation_advice="買入",
             trend_prediction="看多",
             start_close=100.0,
             forward_bars=[
@@ -338,7 +338,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     engine_version="v1",
                     eval_status="completed",
                     evaluated_at=datetime(2024, 1, 5, 0, 0, 0),
-                    operation_advice="买入",
+                    operation_advice="買入",
                     position_recommendation="long",
                     start_price=100.0,
                     end_close=96.0,
@@ -356,7 +356,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     engine_version="v2",
                     eval_status="completed",
                     evaluated_at=datetime(2024, 1, 6, 0, 0, 0),
-                    operation_advice="买入",
+                    operation_advice="買入",
                     position_recommendation="long",
                     start_price=100.0,
                     end_close=96.0,
@@ -453,7 +453,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     name="平安银行",
                     report_type="simple",
                     sentiment_score=30,
-                    operation_advice="卖出",
+                    operation_advice="賣出",
                     trend_prediction="看空",
                     analysis_summary="test2",
                     stop_loss=None,
@@ -506,11 +506,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q-market-review",
                     code="MARKET",
-                    name="大盘复盘",
+                    name="大盤复盘",
                     report_type="market_review",
                     sentiment_score=50,
                     operation_advice="查看复盘",
-                    trend_prediction="大盘复盘",
+                    trend_prediction="大盤复盘",
                     analysis_summary="market review summary",
                     stop_loss=None,
                     take_profit=None,

@@ -110,11 +110,11 @@ class TestCheckContentIntegrity(unittest.TestCase):
             name="贵州茅台",
             trend_prediction="看多",
             sentiment_score=70,
-            operation_advice="买入",
+            operation_advice="買入",
             analysis_summary="稳健",
             decision_type="buy",
             dashboard={
-                "core_conclusion": {"one_sentence": "可买入"},
+                "core_conclusion": {"one_sentence": "可買入"},
                 "intelligence": {"risk_alerts": []},
                 "battle_plan": {"sniper_points": {}},
             },
@@ -130,11 +130,11 @@ class TestCheckContentIntegrity(unittest.TestCase):
             name="贵州茅台",
             trend_prediction="看空",
             sentiment_score=35,
-            operation_advice="卖出",
+            operation_advice="賣出",
             analysis_summary="弱势",
             decision_type="sell",
             dashboard={
-                "core_conclusion": {"one_sentence": "建议卖出"},
+                "core_conclusion": {"one_sentence": "建议賣出"},
                 "intelligence": {"risk_alerts": []},
                 "battle_plan": {"sniper_points": {}},
             },
@@ -210,11 +210,11 @@ class TestCheckContentIntegrity(unittest.TestCase):
             name="贵州茅台",
             trend_prediction="看多",
             sentiment_score=70,
-            operation_advice="买入",
+            operation_advice="買入",
             analysis_summary="稳健",
             decision_type="buy",
             dashboard={
-                "core_conclusion": {"one_sentence": "可买入"},
+                "core_conclusion": {"one_sentence": "可買入"},
                 "intelligence": {"risk_alerts": []},
                 "battle_plan": {"sniper_points": {"stop_loss": "   "}},
             },
@@ -265,7 +265,7 @@ class TestApplyPlaceholderFill(unittest.TestCase):
             name="贵州茅台",
             trend_prediction="看多",
             sentiment_score=70,
-            operation_advice="买入",
+            operation_advice="買入",
             analysis_summary="稳健",
             decision_type="buy",
             dashboard={"battle_plan": {"sniper_points": {}}},
@@ -301,11 +301,11 @@ class TestApplyPlaceholderFill(unittest.TestCase):
             operation_advice="持有",
             analysis_summary="稳健",
             decision_type="hold",
-            risk_warning="注意融资",
+            risk_warning="注意融資",
             dashboard={"intelligence": {"risk_alerts": None}},
         )
         apply_placeholder_fill(result, ["dashboard.intelligence.risk_alerts"])
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["注意融资"])
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["注意融資"])
 
     def test_fills_risk_alerts_when_invalid_type(self) -> None:
         """Placeholder fills risk_alerts when value is non-list."""
@@ -332,11 +332,11 @@ class TestApplyPlaceholderFill(unittest.TestCase):
             operation_advice="持有",
             analysis_summary="稳健",
             decision_type="hold",
-            risk_warning=["回撤风险", "波动加大"],
+            risk_warning=["回撤風險", "波动加大"],
             dashboard={"intelligence": {"risk_alerts": ""}},
         )
         apply_placeholder_fill(result, ["dashboard.intelligence.risk_alerts"])
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["回撤风险", "波动加大"])
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["回撤風險", "波动加大"])
 
     def test_fills_risk_alerts_when_risk_warning_is_dict(self) -> None:
         """Placeholder serializes dict risk_warning into a string risk alert."""
@@ -364,7 +364,7 @@ class TestApplyPlaceholderFill(unittest.TestCase):
             name="贵州茅台",
             trend_prediction="看多",
             sentiment_score=70,
-            operation_advice="买入",
+            operation_advice="買入",
             analysis_summary="稳健",
             decision_type="buy",
             dashboard={"battle_plan": {"sniper_points": {"stop_loss": "   "}}},
@@ -382,7 +382,7 @@ class TestApplyPlaceholderFill(unittest.TestCase):
             name="贵州茅台",
             trend_prediction="看多",
             sentiment_score=70,
-            operation_advice="买入",
+            operation_advice="買入",
             analysis_summary="稳健",
             decision_type="buy",
             dashboard={"battle_plan": {"sniper_points": {"stop_loss": {}}}},
@@ -400,8 +400,8 @@ class TestApplyPlaceholderFill(unittest.TestCase):
             name="贵州茅台",
             trend_prediction="看多",
             sentiment_score=70,
-            operation_advice="买入",
-            analysis_summary="已有趋势摘要",
+            operation_advice="買入",
+            analysis_summary="已有趨勢摘要",
             risk_warning="跌破支撑需减仓",
             decision_type="buy",
             dashboard={
@@ -420,7 +420,7 @@ class TestApplyPlaceholderFill(unittest.TestCase):
             ],
         )
 
-        self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], "已有趋势摘要")
+        self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], "已有趨勢摘要")
         self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["跌破支撑需减仓"])
         self.assertEqual(result.dashboard["battle_plan"]["sniper_points"]["stop_loss"], "待补充")
 

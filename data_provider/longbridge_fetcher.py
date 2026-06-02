@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-LongbridgeFetcher - 长桥兜底数据源 (Priority 5)
+LongbridgeFetcher - 长桥兜底數據源 (Priority 5)
 ===================================
 
-数据来源：长桥 OpenAPI (https://open.longbridge.com)
-特点：覆盖美股 + 港股，可计算量比/换手率/PE 等 yfinance 缺失字段
-定位：美股/港股最后兜底数据源
+數據来源：长桥 OpenAPI (https://open.longbridge.com)
+特点：覆盖美股 + 港股，可计算量比/换手率/PE 等 yfinance 缺失欄位
+定位：美股/港股最后兜底數據源
 
 关键策略：
 1. 组合 quote + static_info 接口计算 turnover_rate / pe_ratio / total_mv
 2. 通过 history_candlesticks 计算 volume_ratio（近5日均量比）
-3. 懒加载 QuoteContext，首次调用时才建立连接
-4. static_info 进程内短缓存，减少重复请求（默认 24h，可调；见 LONGBRIDGE_STATIC_INFO_TTL_SECONDS）
+3. 懒加载 QuoteContext，首次调用时才建立連線
+4. static_info 程式内短快取，减少重复請求（默认 24h，可调；见 LONGBRIDGE_STATIC_INFO_TTL_SECONDS）
 
 凭证：`LONGBRIDGE_APP_KEY` / `LONGBRIDGE_APP_SECRET` / `LONGBRIDGE_ACCESS_TOKEN`。
-可选：`LONGBRIDGE_STATIC_INFO_TTL_SECONDS`；SDK `language` 取自 `REPORT_LANGUAGE`，`log_path` 为 `{LOG_DIR}/longbridge_sdk.log`；
+可選：`LONGBRIDGE_STATIC_INFO_TTL_SECONDS`；SDK `language` 取自 `REPORT_LANGUAGE`，`log_path` 为 `{LOG_DIR}/longbridge_sdk.log`；
 `LONGBRIDGE_HTTP_URL` / `LONGBRIDGE_QUOTE_WS_URL` / `LONGBRIDGE_TRADE_WS_URL` / `LONGBRIDGE_REGION` （见官方文档默认值）。
 """
 
@@ -103,7 +103,7 @@ def _sanitize_longbridge_env() -> None:
         val = os.environ.get(key)
         if val is not None and val.strip() == "":
             del os.environ[key]
-            logger.debug("[Longbridge] 删除空环境变量 %s", key)
+            logger.debug("[Longbridge] 刪除空环境變數 %s", key)
 
     # App default: quiet (false). Matches README / docs/full-guide / .env.example; SDK alone may default verbose.
     if "LONGBRIDGE_PRINT_QUOTE_PACKAGES" not in os.environ:
@@ -262,10 +262,10 @@ def _to_longbridge_symbol(stock_code: str) -> Optional[str]:
 
 class LongbridgeFetcher(BaseFetcher):
     """
-    长桥 OpenAPI 数据源实现
+    长桥 OpenAPI 數據源实现
 
     优先级: 5（最低，作为美股/港股最后兜底）
-    数据来源: Longbridge OpenAPI
+    數據来源: Longbridge OpenAPI
 
     通过组合多个 API 计算 yfinance 缺失的指标:
     - turnover_rate = volume / circulating_shares * 100
@@ -305,7 +305,7 @@ class LongbridgeFetcher(BaseFetcher):
             return
         self._cooldown_until = time.time() + cooldown_seconds
         logger.warning(
-            "[Longbridge] 检测到连接异常，进入 %ss 冷却期以避免频繁重连: %s",
+            "[Longbridge] 检测到連線异常，进入 %ss 冷却期以避免频繁重连: %s",
             cooldown_seconds,
             exc,
         )
@@ -316,7 +316,7 @@ class LongbridgeFetcher(BaseFetcher):
             return False
         if self._cooldown_until > time.time():
             logger.debug(
-                "[Longbridge] %s 冷却中，暂时跳过请求，剩余 %.1fs",
+                "[Longbridge] %s 冷却中，暂时略過請求，剩余 %.1fs",
                 capability or "request",
                 self._cooldown_until - time.time(),
             )
@@ -409,7 +409,7 @@ class LongbridgeFetcher(BaseFetcher):
                         access_token,
                         **extra_kw,
                     )
-                    logger.info("[Longbridge] Config.from_apikey() 创建成功")
+                    logger.info("[Longbridge] Config.from_apikey() 建立成功")
 
                 # Diagnostic logging
                 region = os.getenv("LONGBRIDGE_REGION") or os.getenv("LONGPORT_REGION") or "(auto)"
@@ -544,7 +544,7 @@ class LongbridgeFetcher(BaseFetcher):
 
         symbol = _to_longbridge_symbol(stock_code)
         if symbol is None:
-            logger.debug(f"[Longbridge] 无法转换代码: {stock_code}")
+            logger.debug(f"[Longbridge] 无法转换代碼: {stock_code}")
             return None
 
         ctx = self._get_ctx()

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Email 发送提醒服务
+Email 发送提醒服務
 
 职责：
-1. 通过 SMTP 发送 Email 消息
+1. 通过 SMTP 发送 Email 訊息
 """
 import logging
 from typing import Optional, List
@@ -23,7 +23,7 @@ from src.formatters import markdown_to_html_document
 logger = logging.getLogger(__name__)
 
 
-# SMTP 服务器配置（自动识别）
+# SMTP 服務器配置（自动识别）
 SMTP_CONFIGS = {
     # QQ邮箱
     "qq.com": {"server": "smtp.qq.com", "port": 465, "ssl": True},
@@ -66,7 +66,7 @@ class EmailSender:
         self._stock_email_groups = getattr(config, 'stock_email_groups', None) or []
         
     def _is_email_configured(self) -> bool:
-        """检查邮件配置是否完整（只需邮箱和授权码）"""
+        """检查電郵配置是否完整（只需邮箱和授權码）"""
         return bool(self._email_config['sender'] and self._email_config['password'])
     
     def get_receivers_for_stocks(self, stock_codes: List[str]) -> List[str]:
@@ -140,18 +140,18 @@ class EmailSender:
         timeout_seconds: Optional[float] = None,
     ) -> bool:
         """
-        通过 SMTP 发送邮件（自动识别 SMTP 服务器）
+        通过 SMTP 发送電郵（自动识别 SMTP 服務器）
         
         Args:
-            content: 邮件内容（支持 Markdown，会转换为 HTML）
-            subject: 邮件主题（可选，默认自动生成）
-            receivers: 收件人列表（可选，默认使用配置的 receivers）
+            content: 電郵内容（支援 Markdown，会转换为 HTML）
+            subject: 電郵主题（可選，默认自动生成）
+            receivers: 收件人列表（可選，默认使用配置的 receivers）
             
         Returns:
             是否发送成功
         """
         if not self._is_email_configured():
-            logger.warning("邮件配置不完整，跳过推送")
+            logger.warning("電郵配置不完整，略過推送")
             return False
         
         sender = self._email_config['sender']
@@ -168,7 +168,7 @@ class EmailSender:
             # 将 Markdown 转换为简单 HTML
             html_content = markdown_to_html_document(content)
             
-            # 构建邮件
+            # 构建電郵
             msg = MIMEMultipart('alternative')
             msg['Subject'] = Header(subject, 'utf-8')
             msg['From'] = self._format_sender_address(sender)
@@ -196,29 +196,29 @@ class EmailSender:
                 use_ssl = True
                 logger.warning(f"未知邮箱类型 {domain}，尝试通用配置: {smtp_server}:{smtp_port}")
             
-            # 根据配置选择连接方式
+            # 根据配置选择連線方式
             if use_ssl:
-                # SSL 连接（端口 465）
+                # SSL 連線（端口 465）
                 server = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=timeout_seconds or 30)
             else:
-                # TLS 连接（端口 587）
+                # TLS 連線（端口 587）
                 server = smtplib.SMTP(smtp_server, smtp_port, timeout=timeout_seconds or 30)
                 server.starttls()
             
             server.login(sender, password)
             server.send_message(msg)
             
-            logger.info(f"邮件发送成功，收件人: {receivers}")
+            logger.info(f"電郵发送成功，收件人: {receivers}")
             return True
             
         except smtplib.SMTPAuthenticationError:
-            logger.error("邮件发送失败：认证错误，请检查邮箱和授权码是否正确")
+            logger.error("電郵发送失败：認證錯誤，请检查邮箱和授權码是否正确")
             return False
         except smtplib.SMTPConnectError as e:
-            logger.error(f"邮件发送失败：无法连接 SMTP 服务器 - {e}")
+            logger.error(f"電郵发送失败：无法連線 SMTP 服務器 - {e}")
             return False
         except Exception as e:
-            logger.error(f"发送邮件失败: {e}")
+            logger.error(f"发送電郵失败: {e}")
             return False
         finally:
             self._close_server(server)
@@ -271,10 +271,10 @@ class EmailSender:
                 server.starttls()
             server.login(sender, password)
             server.send_message(msg)
-            logger.info("邮件（内联图片）发送成功，收件人: %s", receivers)
+            logger.info("電郵（内联图片）发送成功，收件人: %s", receivers)
             return True
         except Exception as e:
-            logger.error("邮件（内联图片）发送失败: %s", e)
+            logger.error("電郵（内联图片）发送失败: %s", e)
             return False
         finally:
             self._close_server(server)

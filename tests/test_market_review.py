@@ -129,8 +129,8 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                 notifier, send_notification=False, override_region="cn,us"
             )
 
-        self.assertIn("# A股大盘复盘\n\nCN body", result)
-        self.assertIn("# 美股大盘复盘\n\nUS body", result)
+        self.assertIn("# A股大盤复盘\n\nCN body", result)
+        self.assertIn("# 美股大盤复盘\n\nUS body", result)
         self.assertNotIn("港股", result)
         self.assertNotIn("HK", result)
 
@@ -156,8 +156,8 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                 notifier, send_notification=False, override_region="cn,hk"
             )
 
-        self.assertIn("# A股大盘复盘\n\nCN body", result)
-        self.assertIn("# 港股大盘复盘\n\nHK body", result)
+        self.assertIn("# A股大盤复盘\n\nCN body", result)
+        self.assertIn("# 港股大盤复盘\n\nHK body", result)
         self.assertNotIn("美股", result)
         self.assertNotIn("US Market", result)
 
@@ -169,8 +169,8 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
             DatabaseManager.reset_instance()
             try:
                 saved = market_review_module._persist_market_review_history(
-                    review_report="## 今日大盘\n\n复盘正文",
-                    markdown_report="# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文",
+                    review_report="## 今日大盤\n\n复盘正文",
+                    markdown_report="# 🎯 大盤复盘\n\n## 今日大盤\n\n复盘正文",
                     region="cn",
                     config=SimpleNamespace(report_language="zh"),
                     query_id="market-task-001",
@@ -184,10 +184,10 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                     ).first()
                     self.assertIsNotNone(row)
                     self.assertEqual(row.code, market_review_module.MARKET_REVIEW_HISTORY_CODE)
-                    self.assertEqual(row.name, "大盘复盘")
+                    self.assertEqual(row.name, "大盤复盘")
                     self.assertEqual(row.report_type, market_review_module.MARKET_REVIEW_REPORT_TYPE)
-                    self.assertEqual(row.news_content, "## 今日大盘\n\n复盘正文")
-                    self.assertIn("# 🎯 大盘复盘", row.raw_result)
+                    self.assertEqual(row.news_content, "## 今日大盤\n\n复盘正文")
+                    self.assertIn("# 🎯 大盤复盘", row.raw_result)
             finally:
                 DatabaseManager.reset_instance()
                 Config._instance = None

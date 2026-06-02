@@ -12,7 +12,7 @@ Output: apps/dsa-web/public/stocks.index.json
 Usage:
     python3 scripts/generate_index_from_csv.py              # 默认使用 Tushare
     python3 scripts/generate_index_from_csv.py --source akshare
-    python3 scripts/generate_index_from_csv.py --test       # 测试模式
+    python3 scripts/generate_index_from_csv.py --test       # 測試模式
 """
 
 import argparse
@@ -74,13 +74,13 @@ def load_csv_data(csv_path: Path) -> List[Dict[str, Any]]:
 
 def load_tushare_data(data_dir: Path) -> List[Dict[str, Any]]:
     """
-    从 Tushare CSV 文件加载三个市场的股票数据
+    从 Tushare CSV 文件加载三个市场的股票數據
 
     Args:
-        data_dir: 数据目录路径
+        data_dir: 數據目錄路徑
 
     Returns:
-        合并后的股票列表
+        合併后的股票列表
     """
     all_stocks = []
     market_files = {
@@ -94,7 +94,7 @@ def load_tushare_data(data_dir: Path) -> List[Dict[str, Any]]:
             print(f"[Warning] 未找到文件：{csv_file}")
             continue
 
-        print(f"  正在读取 {market_name} 市场数据：{csv_file.name}")
+        print(f"  正在读取 {market_name} 市场數據：{csv_file.name}")
 
         try:
             file_stocks = []
@@ -103,7 +103,7 @@ def load_tushare_data(data_dir: Path) -> List[Dict[str, Any]]:
                 reader = csv.DictReader(f)
 
                 for row in reader:
-                    # 传入市场参数以优化判断（对于特殊格式如 DUMMY）
+                    # 传入市场參數以最佳化判断（对于特殊格式如 DUMMY）
                     parsed = parse_stock_row(row, market_name)
                     if not parsed:
                         continue
@@ -137,7 +137,7 @@ def get_us_delist_priority(row: Dict[str, str]) -> int:
     """
     为复用 ticker 的美股记录生成去重优先级。
 
-    Tushare us_basic 导出的 delist_date 对当前记录并不总是稳定：
+    Tushare us_basic 匯出的 delist_date 对当前记录并不总是稳定：
     - 空字符串通常表示当前仍在使用的 ticker
     - ``NaT`` 多见于历史记录或日期占位值
     - 实际日期表示明确退市
@@ -147,7 +147,7 @@ def get_us_delist_priority(row: Dict[str, str]) -> int:
     2. delist_date 为 NaT
     3. delist_date 为实际日期
 
-    同优先级时保留 CSV 中最先出现的记录，避免在信息不足时随意切换名称。
+    同优先级时保留 CSV 中最先出现的记录，避免在資訊不足时随意切换名称。
     """
     delist_date = (row.get('delist_date') or '').strip()
     if not delist_date:
@@ -159,10 +159,10 @@ def get_us_delist_priority(row: Dict[str, str]) -> int:
 
 def load_akshare_data(logs_dir: Path) -> List[Dict[str, Any]]:
     """
-    从 AkShare CSV 文件加载股票数据
+    从 AkShare CSV 文件加载股票數據
 
     Args:
-        logs_dir: 日志目录路径
+        logs_dir: 日誌目錄路徑
 
     Returns:
         股票列表
@@ -175,7 +175,7 @@ def load_akshare_data(logs_dir: Path) -> List[Dict[str, Any]]:
 
     # 使用最新的 CSV 文件
     csv_file = sorted(csv_files)[-1]
-    print(f"  正在读取 AkShare 数据：{csv_file.name}")
+    print(f"  正在读取 AkShare 數據：{csv_file.name}")
 
     stocks = []
     with open(csv_file, 'r', encoding='utf-8-sig') as f:
@@ -260,8 +260,8 @@ def extract_symbol_from_ts_code(ts_code: str, market: str) -> Optional[str]:
     - 美股：AAPL → AAPL
 
     Args:
-        ts_code: TS代码
-        market: 市场代码
+        ts_code: TS代碼
+        market: 市场代碼
 
     Returns:
         displayCode 或 None
@@ -270,7 +270,7 @@ def extract_symbol_from_ts_code(ts_code: str, market: str) -> Optional[str]:
         return None
 
     if market == 'US':
-        # 美股无后缀，直接返回
+        # 美股无后缀，直接傳回
         return ts_code
 
     if '.' in ts_code:
@@ -284,12 +284,12 @@ def get_stock_name(row: Dict[str, str], market: str) -> Optional[str]:
     """
     获取股票名称
 
-    - A股/港股：使用 name 字段
-    - 美股：使用 enname 字段（英文名称）
+    - A股/港股：使用 name 欄位
+    - 美股：使用 enname 欄位（英文名称）
 
     Args:
-        row: CSV 行数据
-        market: 市场代码
+        row: CSV 行數據
+        market: 市场代碼
 
     Returns:
         股票名称或 None
@@ -306,19 +306,19 @@ def get_stock_name(row: Dict[str, str], market: str) -> Optional[str]:
 
 def parse_stock_row(row: Dict[str, str], preferred_market: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """
-    解析单行股票数据
+    解析单行股票數據
 
     - 美股 DUMMY 过滤（严格过滤）
     - 空值校验
     - 自动判断市场类型（当无法判断时使用 preferred_market）
-    - 返回统一格式的字典
+    - 傳回统一格式的字典
 
     Args:
-        row: CSV 行数据
+        row: CSV 行數據
         preferred_market: 当 ts_code 无法判断市场时使用（如美股 DUMMY 记录）
 
     Returns:
-        解析后的股票字典，无效数据返回 None
+        解析后的股票字典，无效數據傳回 None
     """
     ts_code = row.get('ts_code', '').strip()
 
@@ -329,11 +329,11 @@ def parse_stock_row(row: Dict[str, str], preferred_market: Optional[str] = None)
     market = determine_market(ts_code)
 
     # 如果 ts_code 没有后缀（无法准确判断），且提供了 preferred_market，则使用它
-    # 这主要用于处理美股的特殊格式（如 DUMMY 记录）
+    # 这主要用于處理美股的特殊格式（如 DUMMY 记录）
     if '.' not in ts_code and preferred_market:
         market = preferred_market
 
-    # 美股特殊处理：严格过滤 DUMMY 记录
+    # 美股特殊處理：严格过滤 DUMMY 记录
     if market == 'US':
         enname = row.get('enname', '').strip()
         if not enname or 'DUMMY' in enname.upper():
@@ -370,21 +370,21 @@ def determine_market(ts_code: str) -> str:
     if '.' in ts_code:
         # 有后缀的情况
         suffix = ts_code.split('.')[1]
-        # 检查是否为中国市场后缀
+        # 检查是否为中國市场后缀
         if suffix in ['SH', 'SZ']:
             return 'CN'
         elif suffix == 'HK':
             return 'HK'
         elif suffix == 'BJ':
             return 'BSE'
-        # 有后缀但不是中国市场后缀，检查是否为美股
+        # 有后缀但不是中國市场后缀，检查是否为美股
         # 美股可能有点号后缀（如 BRK.B, GOOG.A, AAPL.U）
         prefix = ts_code.split('.')[0]
         if prefix.isalpha():
             return 'US'
     else:
         # 无后缀的情况
-        # 纯字母代码为美股
+        # 纯字母代碼为美股
         if ts_code.isalpha():
             return 'US'
 
@@ -408,7 +408,7 @@ def generate_aliases(name: str, market: str) -> List[str]:
     # A股常见别名
     cn_alias_map = {
         '贵州茅台': ['茅台'],
-        '中国平安': ['平安'],
+        '中國平安': ['平安'],
         '平安银行': ['平银'],
         '招商银行': ['招行'],
         '五粮液': ['五粮'],
@@ -417,7 +417,7 @@ def generate_aliases(name: str, market: str) -> List[str]:
         '工商银行': ['工行'],
         '建设银行': ['建行'],
         '农业银行': ['农行'],
-        '中国银行': ['中行'],
+        '中國银行': ['中行'],
         '交通银行': ['交行'],
         '兴业银行': ['兴业'],
         '浦发银行': ['浦发'],
@@ -426,10 +426,10 @@ def generate_aliases(name: str, market: str) -> List[str]:
         '东方财富': ['东财'],
         '海康威视': ['海康'],
         '隆基绿能': ['隆基'],
-        '中国神华': ['神华'],
+        '中國神华': ['神华'],
         '长江电力': ['长电'],
-        '中国石化': ['石化'],
-        '中国石油': ['石油'],
+        '中國石化': ['石化'],
+        '中國石油': ['石油'],
     }
 
     # 港股常见别名
@@ -442,8 +442,8 @@ def generate_aliases(name: str, market: str) -> List[str]:
         '网易-S': ['网易', 'NetEase'],
         '百度集团-SW': ['百度', 'Baidu'],
         '中芯国际': ['中芯', 'SMIC'],
-        '中国移动': ['中移动', 'China Mobile'],
-        '中国海洋石油': ['中海油', 'CNOOC'],
+        '中國移动': ['中移动', 'China Mobile'],
+        '中國海洋石油': ['中海油', 'CNOOC'],
     }
 
     # 美股常见别名
@@ -481,7 +481,7 @@ def build_stock_index(stocks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     Build the stock index.
 
     Args:
-        stocks: Raw stock rows（已包含 market 字段）
+        stocks: Raw stock rows（已包含 market 欄位）
 
     Returns:
         Stock index entries
@@ -494,7 +494,7 @@ def build_stock_index(stocks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         name = stock['name']
         market = stock.get('market', 'CN')  # 优先使用已解析的市场，否则从 ts_code 判断
 
-        # 如果没有 market 字段，从 ts_code 判断
+        # 如果没有 market 欄位，从 ts_code 判断
         if market == 'CN' and '.' not in ts_code:
             market = determine_market(ts_code)
 
@@ -548,28 +548,28 @@ def compress_index(index: List[Dict[str, Any]]) -> List[List]:
 
 
 def main():
-    """主函数"""
+    """主函數"""
     parser = argparse.ArgumentParser(description='从 CSV 生成股票自动补全索引')
     parser.add_argument(
         '--source',
         choices=['tushare', 'akshare'],
         default='tushare',
-        help='数据源选择（默认: tushare）'
+        help='數據源选择（默认: tushare）'
     )
     parser.add_argument(
         '--test', '-t',
         action='store_true',
-        help='测试模式：只验证不写入文件'
+        help='測試模式：只验证不写入文件'
     )
     args = parser.parse_args()
 
     print("=" * 60)
     print("股票索引生成工具（从 CSV）")
     print("=" * 60)
-    print(f"数据源：{args.source}")
+    print(f"數據源：{args.source}")
 
-    # 加载数据
-    print("\n[1/5] 读取 CSV 数据...")
+    # 加载數據
+    print("\n[1/5] 读取 CSV 數據...")
     if args.source == 'tushare':
         data_dir = Path(__file__).parent.parent / 'data'
         stocks = load_tushare_data(data_dir)
@@ -577,38 +577,38 @@ def main():
         logs_dir = Path(__file__).parent.parent / 'logs'
         stocks = load_akshare_data(logs_dir)
     else:
-        print(f"[Error] 不支持的数据源：{args.source}")
+        print(f"[Error] 不支援的數據源：{args.source}")
         return 1
 
     if not stocks:
-        print("[Error] 未加载到任何股票数据")
+        print("[Error] 未加载到任何股票數據")
         return 1
 
     print(f"      共读取 {len(stocks)} 只股票")
 
     # 生成拼音提示
     if not PYPINYIN_AVAILABLE:
-        print("\n[提示] 安装 pypinyin 可获得拼音搜索功能：")
+        print("\n[提示] 安裝 pypinyin 可获得拼音搜索功能：")
         print("       pip install pypinyin")
 
-    print("\n[2/5] 生成索引数据...")
+    print("\n[2/5] 生成索引數據...")
     index = build_stock_index(stocks)
 
-    # 输出路径
+    # 输出路徑
     output_path = (
         Path(__file__).parent.parent / "apps" / "dsa-web" / "public" / "stocks.index.json"
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    print("\n[3/5] 压缩索引数据...")
+    print("\n[3/5] 压缩索引數據...")
     compressed = compress_index(index)
 
     if args.test:
-        print("\n[4/5] 测试模式：跳过写入文件")
-        print(f"      输出路径：{output_path}")
+        print("\n[4/5] 測試模式：略過写入文件")
+        print(f"      输出路徑：{output_path}")
 
-        # 验证数据
-        print("\n[5/5] 验证数据...")
+        # 验证數據
+        print("\n[5/5] 验证數據...")
         print(f"      压缩前：{len(index)} 条记录")
         print(f"      压缩后：{len(compressed)} 条记录")
 
@@ -638,7 +638,7 @@ def main():
             test_data = json.load(f)
             print(f"      验证通过：{len(test_data)} 条记录")
 
-    # 统计信息
+    # 统计資訊
     market_stats = {}
     for item in index:
         market = item['market']

@@ -4,8 +4,8 @@ Research command — deep research on a stock or market topic.
 
 Usage:
     /research 600519                        -> Deep research on Kweichow Moutai
-    /research 600519 近期业绩风险            -> Focused research with specific question
-    /research 新能源板块前景分析              -> Topic-based research
+    /research 600519 近期业绩風險            -> Focused research with specific question
+    /research 新能源板塊前景分析              -> Topic-based research
 """
 
 import logging
@@ -30,8 +30,8 @@ class ResearchCommand(BotCommand):
 
     Usage:
         /research 600519                    -> Deep research on a stock
-        /research 600519 业绩风险分析        -> Focused question
-        /research 新能源板块 发展前景         -> Sector research
+        /research 600519 业绩風險分析        -> Focused question
+        /research 新能源板塊 发展前景         -> Sector research
     """
 
     @property
@@ -54,8 +54,8 @@ class ResearchCommand(BotCommand):
         if not args:
             return BotResponse.text_response(
                 f"Usage: {self.usage}\n"
-                "Example: /research 600519 近期有哪些风险\n"
-                "Example: /research 新能源板块前景分析"
+                "Example: /research 600519 近期有哪些風險\n"
+                "Example: /research 新能源板塊前景分析"
             )
 
         config = get_config()
@@ -115,7 +115,7 @@ class ResearchCommand(BotCommand):
             if getattr(result, "timed_out", False):
                 logger.warning("[ResearchCommand] Deep research timed out after %ss", duration)
                 return BotResponse.text_response(
-                    f"⏳ 深度研究超时（{duration}s / {research_timeout}s），请稍后重试或缩小研究范围。"
+                    f"⏳ 深度研究逾時（{duration}s / {research_timeout}s），请稍后重试或缩小研究范围。"
                 )
 
             if result.success:

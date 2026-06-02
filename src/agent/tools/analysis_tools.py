@@ -244,7 +244,7 @@ def _handle_get_volume_analysis(stock_code: str, days: int = 30) -> dict:
         vol_trend = "放量" if vol_trend_pct > 20 else "缩量" if vol_trend_pct < -20 else "量能平稳"
     else:
         vol_trend_pct = 0
-        vol_trend = "数据不足"
+        vol_trend = "數據不足"
 
     # High-volume days (> 2x 20d avg)
     high_vol_days = int((volume > avg_vol_20 * 2).sum()) if avg_vol_20 > 0 else 0
@@ -449,7 +449,7 @@ def _handle_analyze_pattern(stock_code: str, days: int = 60) -> dict:
         if c[-1] > high_20d and (v is None or v[-1] > sum(v[n - 6:n - 1]) / 5 * 1.5):
             patterns_detected.append({
                 "pattern": "放量突破20日高点", "type": "bullish_breakout",
-                "day_offset": 0, "strength": "强", "desc": "收盘突破近20日最高，量能配合"
+                "day_offset": 0, "strength": "强", "desc": "收盤突破近20日最高，量能配合"
             })
 
     # Price in consolidation box (box oscillation)

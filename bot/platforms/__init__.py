@@ -4,11 +4,11 @@
 平台适配器模块
 ===================================
 
-包含各平台的 Webhook 处理和消息解析逻辑。
+包含各平台的 Webhook 處理和訊息解析逻辑。
 
-支持两种接入模式：
+支援两种接入模式：
 1. Webhook 模式：需要公网 IP，配置回调 URL
-2. Stream 模式：无需公网 IP，通过 WebSocket 长连接（钉钉、飞书支持）
+2. Stream 模式：無需公网 IP，通过 WebSocket 长連線（钉钉、飞书支援）
 """
 
 from bot.platforms.base import BotPlatform
@@ -19,7 +19,7 @@ ALL_PLATFORMS = {
     'dingtalk': DingtalkPlatform,
 }
 
-# 钉钉 Stream 模式（可选）
+# 钉钉 Stream 模式（可選）
 try:
     from bot.platforms.dingtalk_stream import (
         DingtalkStreamClient,
@@ -35,7 +35,7 @@ except ImportError:
     get_dingtalk_stream_client = lambda: None
     start_dingtalk_stream_background = lambda: False
 
-# 飞书 Stream 模式（可选）
+# 飞书 Stream 模式（可選）
 try:
     from bot.platforms.feishu_stream import (
         FeishuStreamClient,
