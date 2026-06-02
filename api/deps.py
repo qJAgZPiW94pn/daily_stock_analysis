@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-API 依賴注入模块
+API 依賴注入模組
 ===================================
 
 职责：
@@ -22,9 +22,9 @@ from src.services.system_config_service import SystemConfigService
 
 def get_db() -> Generator[Session, None, None]:
     """
-    获取資料庫 Session 依賴
+    獲取資料庫 Session 依賴
     
-    使用 FastAPI 依賴注入机制，确保請求结束后自动關閉 Session
+    使用 FastAPI 依賴注入機制，確保請求结束后自动關閉 Session
     
     Yields:
         Session: SQLAlchemy Session 对象
@@ -44,7 +44,7 @@ def get_db() -> Generator[Session, None, None]:
 
 def get_config_dep() -> Config:
     """
-    获取配置依賴
+    獲取配置依賴
     
     Returns:
         Config: 配置单例对象
@@ -54,7 +54,7 @@ def get_config_dep() -> Config:
 
 def get_database_manager() -> DatabaseManager:
     """
-    获取資料庫管理器依賴
+    獲取資料庫管理器依賴
     
     Returns:
         DatabaseManager: 資料庫管理器单例对象

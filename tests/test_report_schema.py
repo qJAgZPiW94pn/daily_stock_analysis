@@ -148,13 +148,13 @@ class TestAnalyzerSchemaFallback(unittest.TestCase):
                 },
                 "decision_stability": {
                     "applied": True,
-                    "reason": "回测验证",
+                    "reason": "回测驗證",
                 },
             },
         })
         result = analyzer._parse_response(response, "600519", "股票600519")
         self.assertEqual(result.dashboard["decision_stability"]["applied"], True)
-        self.assertEqual(result.dashboard["decision_stability"]["reason"], "回测验证")
+        self.assertEqual(result.dashboard["decision_stability"]["reason"], "回测驗證")
 
     def test_parse_text_response_honors_injected_runtime_report_language(self) -> None:
         """Fallback text parsing should use the analyzer's injected config, not the global singleton."""

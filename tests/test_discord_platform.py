@@ -21,7 +21,7 @@ def _make_platform(public_key: str) -> DiscordPlatform:
 
 
 def _current_timestamp() -> str:
-    """傳回当前 Unix 秒字符串，用于生成有效签名。"""
+    """傳回当前 Unix 秒字符串，用于生成有效簽名。"""
     return str(int(time.time()))
 
 
@@ -162,7 +162,7 @@ def test_invalid_public_key_configuration_is_rejected():
 
 
 def test_expired_timestamp_is_rejected():
-    """过期 timestamp（超出 ±5 分钟窗口）应被拒绝，防重放攻击。"""
+    """过期 timestamp（超出 ±5 分钟窗口）应被拒絕，防重放攻击。"""
     signing_key = SigningKey.generate()
     platform = _make_platform(signing_key.verify_key.encode().hex())
     payload = {"type": 1}
@@ -300,7 +300,7 @@ def test_send_followup_missing_token_returns_false():
 
 
 def test_non_numeric_timestamp_is_rejected():
-    """非数字 timestamp 应被拒绝。"""
+    """非数字 timestamp 应被拒絕。"""
     signing_key = SigningKey.generate()
     platform = _make_platform(signing_key.verify_key.encode().hex())
     payload = {"type": 1}
@@ -318,7 +318,7 @@ def test_non_numeric_timestamp_is_rejected():
 
 
 def test_boolean_option_true_emits_name():
-    """布尔 True 选项应输出 option name，而非字面 'true'。"""
+    """布尔 True 选项应輸出 option name，而非字面 'true'。"""
     platform = _make_platform("00" * 32)
     interaction_data = {
         "name": "analyze",

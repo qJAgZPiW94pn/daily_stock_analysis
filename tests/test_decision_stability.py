@@ -125,7 +125,7 @@ def test_downgrades_buy_mid_range_with_neutral_fund_flow() -> None:
     assert result.decision_type == "hold"
     assert result.sentiment_score <= 59
     assert result.operation_advice == "震荡观望"
-    assert "資金流不明确" in result.risk_warning
+    assert "資金流不明確" in result.risk_warning
 
 
 def test_downgrades_buy_when_capital_flow_is_unavailable() -> None:

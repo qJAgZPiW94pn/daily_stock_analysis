@@ -46,7 +46,7 @@ class _FailureFetcher(BaseFetcher):
 
     def _fetch_raw_data(self, stock_code: str, start_date: str, end_date: str) -> pd.DataFrame:
         raise DataFetchError(
-            "Eastmoney 历史K线接口失败: "
+            "Eastmoney 历史K线介面失败: "
             "endpoint=push2his.eastmoney.com/api/qt/stock/kline/get, "
             "category=remote_disconnect"
         )
@@ -78,8 +78,8 @@ class TestFetcherLogging(unittest.TestCase):
 
         log_text = "\n".join(captured.output)
         self.assertFalse(df.empty)
-        self.assertIn("[SuccessFetcher] 开始获取 600519 日线數據", log_text)
-        self.assertIn("[SuccessFetcher] 600519 获取成功:", log_text)
+        self.assertIn("[SuccessFetcher] 开始獲取 600519 日线數據", log_text)
+        self.assertIn("[SuccessFetcher] 600519 獲取成功:", log_text)
         self.assertIn("rows=2", log_text)
 
     def test_manager_logs_fallback_and_final_success(self):
@@ -91,10 +91,10 @@ class TestFetcherLogging(unittest.TestCase):
         log_text = "\n".join(captured.output)
         self.assertFalse(df.empty)
         self.assertEqual(source, "SuccessFetcher")
-        self.assertIn("[數據源尝试 1/2] [FailureFetcher] 获取 601006...", log_text)
+        self.assertIn("[數據源嘗試 1/2] [FailureFetcher] 獲取 601006...", log_text)
         self.assertIn("[數據源失败 1/2] [FailureFetcher] 601006:", log_text)
-        self.assertIn("[數據源切换] 601006: [FailureFetcher] -> [SuccessFetcher]", log_text)
-        self.assertIn("[數據源完成] 601006 使用 [SuccessFetcher] 获取成功:", log_text)
+        self.assertIn("[數據源切換] 601006: [FailureFetcher] -> [SuccessFetcher]", log_text)
+        self.assertIn("[數據源完成] 601006 使用 [SuccessFetcher] 獲取成功:", log_text)
 
     def test_manager_skips_builtin_fetchers_that_do_not_support_hk_daily(self):
         efinance = _RecordingFetcher("EfinanceFetcher", 0)
@@ -143,10 +143,10 @@ class TestFetcherLogging(unittest.TestCase):
                         fetcher.get_daily_data("601006", start_date="2026-01-07", end_date="2026-03-08")
 
         log_text = "\n".join(captured.output)
-        self.assertIn("Eastmoney 历史K线接口失败:", log_text)
+        self.assertIn("Eastmoney 历史K线介面失败:", log_text)
         self.assertIn("endpoint=push2his.eastmoney.com/api/qt/stock/kline/get", log_text)
         self.assertIn("category=remote_disconnect", log_text)
-        self.assertIn("[EfinanceFetcher] 601006 获取失败:", log_text)
+        self.assertIn("[EfinanceFetcher] 601006 獲取失败:", log_text)
 
 
 if __name__ == "__main__":

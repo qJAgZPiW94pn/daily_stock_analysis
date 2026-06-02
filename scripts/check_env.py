@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-A股自选股智能分析系統 - 环境验证測試
+A股自选股智能分析系統 - 環境驗證測試
 ===================================
 
-用于验证 .env 配置是否正确，包括：
+用于驗證 .env 配置是否正确，包括：
 1. 配置加载測試
 2. 資料庫查看
 3. 數據源測試
-4. LLM 调用測試
+4. LLM 呼叫測試
 5. 通知推送測試
 
 使用方法：
     python scripts/check_env.py              # 執行所有測試
     python scripts/check_env.py --db         # 仅查看資料庫
     python scripts/check_env.py --llm        # 仅測試 LLM
-    python scripts/check_env.py --fetch      # 仅測試數據获取
+    python scripts/check_env.py --fetch      # 仅測試數據獲取
     python scripts/check_env.py --notify     # 仅測試通知
 
 """
@@ -69,7 +69,7 @@ def check_config():
     from src.config import get_config
     config = get_config()
     
-    print_section("基础配置")
+    print_section("基礎配置")
     print(f"  股票列表: {config.stock_list}")
     print(f"  資料庫路徑: {config.database_path}")
     print(f"  最大並行数: {config.max_workers}")
@@ -84,17 +84,17 @@ def check_config():
     if config.gemini_api_key:
         print(f"    Key 前8位: {config.gemini_api_key[:8]}...")
     print(f"  Gemini 主模型: {config.gemini_model}")
-    print(f"  Gemini 备选模型: {config.gemini_model_fallback}")
+    print(f"  Gemini 備選模型: {config.gemini_model_fallback}")
     
     print(f"  企业微信 Webhook: {'已配置 ✓' if config.wechat_webhook_url else '未配置 ✗'}")
     
-    print_section("配置验证")
+    print_section("配置驗證")
     issues = config.validate_structured()
     _prefix = {"error": "  ✗", "warning": "  ⚠", "info": "  ·"}
     for issue in issues:
         print(f"{_prefix.get(issue.severity, '  ?')} [{issue.severity.upper()}] {issue.message}")
     if not any(i.severity in ("error", "warning") for i in issues):
-        print("  ✓ 关键配置项验证通过")
+        print("  ✓ 關鍵配置项驗證通过")
     
     return True
 
@@ -114,7 +114,7 @@ def view_database():
     # 使用独立的 session 查詢
     session = db.get_session()
     try:
-        # 统计資訊
+        # 統計資訊
         result = session.execute(text("""
             SELECT 
                 code,
@@ -181,8 +181,8 @@ def view_database():
 
 
 def check_data_fetch(stock_code: str = "600519"):
-    """測試數據获取"""
-    print_header("3. 數據获取測試")
+    """測試數據獲取"""
+    print_header("3. 數據獲取測試")
     
     from data_provider import DataFetcherManager
     
@@ -192,13 +192,13 @@ def check_data_fetch(stock_code: str = "600519"):
     for i, name in enumerate(manager.available_fetchers, 1):
         print(f"  {i}. {name}")
     
-    print_section(f"获取 {stock_code} 數據")
-    print(f"  正在获取（可能需要几秒钟）...")
+    print_section(f"獲取 {stock_code} 數據")
+    print(f"  正在獲取（可能需要几秒钟）...")
     
     try:
         df, source = manager.get_daily_data(stock_code, days=5)
         
-        print(f"  ✓ 获取成功")
+        print(f"  ✓ 獲取成功")
         print(f"    數據源: {source}")
         print(f"    记录数: {len(df)}")
         
@@ -211,13 +211,13 @@ def check_data_fetch(stock_code: str = "600519"):
         return True
         
     except Exception as e:
-        print(f"  ✗ 获取失败: {e}")
+        print(f"  ✗ 獲取失败: {e}")
         return False
 
 
 def check_llm():
-    """測試 LLM 调用"""
-    print_header("4. LLM (Gemini) 调用測試")
+    """測試 LLM 呼叫"""
+    print_header("4. LLM (Gemini) 呼叫測試")
     
     from src.analyzer import GeminiAnalyzer
     from src.config import get_config
@@ -227,19 +227,19 @@ def check_llm():
     
     print_section("模型配置")
     print(f"  主模型: {config.gemini_model}")
-    print(f"  备选模型: {config.gemini_model_fallback}")
+    print(f"  備選模型: {config.gemini_model_fallback}")
     
-    # 检查網路連線
-    print_section("網路連線检查")
+    # 檢查網路連線
+    print_section("網路連線檢查")
     try:
         import socket
         socket.setdefaulttimeout(10)
         socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("generativelanguage.googleapis.com", 443))
         print(f"  ✓ 可以連線到 Google API 服務器")
     except Exception as e:
-        print(f"  ✗ 无法連線到 Google API 服務器: {e}")
-        print(f"  提示: 请检查網路連線或配置代理")
-        print(f"  提示: 可以设置环境變數 HTTPS_PROXY=http://your-proxy:port")
+        print(f"  ✗ 無法連線到 Google API 服務器: {e}")
+        print(f"  提示: 请檢查網路連線或配置代理")
+        print(f"  提示: 可以设置環境變數 HTTPS_PROXY=http://your-proxy:port")
         return False
     
     analyzer = GeminiAnalyzer()
@@ -248,7 +248,7 @@ def check_llm():
     if analyzer.is_available():
         print(f"  ✓ 模型初始化成功")
     else:
-        print(f"  ✗ 模型初始化失败（请检查 API Key）")
+        print(f"  ✗ 模型初始化失败（请檢查 API Key）")
         return False
     
     # 构造測試上下文
@@ -275,7 +275,7 @@ def check_llm():
     
     print_section("发送測試請求")
     print(f"  測試股票: 贵州茅台 (600519)")
-    print(f"  正在调用 Gemini API（逾時: 60秒）...")
+    print(f"  正在呼叫 Gemini API（逾時: 60秒）...")
     
     start_time = time.time()
     
@@ -283,7 +283,7 @@ def check_llm():
         result = analyzer.analyze(test_context)
         
         elapsed = time.time() - start_time
-        print(f"\n  ✓ API 调用成功 (耗时: {elapsed:.2f}秒)")
+        print(f"\n  ✓ API 呼叫成功 (耗时: {elapsed:.2f}秒)")
         
         print_section("分析结果")
         print(f"  情绪評分: {result.sentiment_score}/100")
@@ -300,20 +300,20 @@ def check_llm():
         
     except Exception as e:
         elapsed = time.time() - start_time
-        print(f"\n  ✗ API 调用失败 (耗时: {elapsed:.2f}秒)")
+        print(f"\n  ✗ API 呼叫失败 (耗时: {elapsed:.2f}秒)")
         print(f"  錯誤: {e}")
         
-        # 提供更详细的錯誤提示
+        # 提供更詳細的錯誤提示
         error_str = str(e).lower()
         if 'timeout' in error_str or 'unavailable' in error_str:
-            print(f"\n  诊断: 網路逾時，可能原因:")
-            print(f"    1. 網路不通（需要代理访问 Google）")
+            print(f"\n  診斷: 網路逾時，可能原因:")
+            print(f"    1. 網路不通（需要代理訪問 Google）")
             print(f"    2. API 服務暂时不可用")
             print(f"    3. 請求量过大被限流")
         elif 'invalid' in error_str or 'api key' in error_str:
-            print(f"\n  诊断: API Key 可能无效")
+            print(f"\n  診斷: API Key 可能无效")
         elif 'model' in error_str:
-            print(f"\n  诊断: 模型名称可能不正确，尝试修改 .env 中的 GEMINI_MODEL")
+            print(f"\n  診斷: 模型名称可能不正确，嘗試修改 .env 中的 GEMINI_MODEL")
         
         return False
 
@@ -328,7 +328,7 @@ def check_notification():
     config = get_config()
     service = NotificationService()
     
-    print_section("配置检查")
+    print_section("配置檢查")
     if service.is_available():
         print(f"  ✓ 企业微信 Webhook 已配置")
         webhook_preview = config.wechat_webhook_url[:50] + "..." if len(config.wechat_webhook_url) > 50 else config.wechat_webhook_url
@@ -344,7 +344,7 @@ def check_notification():
 这是一条来自 **A股自选股智能分析系統** 的測試訊息。
 
 - 測試时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-- 測試目的: 验证企业微信 Webhook 配置
+- 測試目的: 驗證企业微信 Webhook 配置
 
 如果您收到此訊息，说明通知功能配置正确 ✓"""
     
@@ -354,21 +354,21 @@ def check_notification():
         success = service.send_to_wechat(test_message)
         
         if success:
-            print(f"  ✓ 訊息发送成功，请检查企业微信")
+            print(f"  ✓ 訊息发送成功，请檢查企业微信")
         else:
             print(f"  ✗ 訊息发送失败")
         
         return success
         
     except Exception as e:
-        print(f"  ✗ 发送异常: {e}")
+        print(f"  ✗ 发送例外: {e}")
         return False
 
 
 def run_all_tests():
     """執行所有測試"""
     print("\n" + "🚀" * 20)
-    print("  A股自选股智能分析系統 - 环境验证")
+    print("  A股自选股智能分析系統 - 環境驗證")
     print("  " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     print("🚀" * 20)
     
@@ -388,11 +388,11 @@ def run_all_tests():
         print(f"  ✗ 資料庫測試失败: {e}")
         results['資料庫'] = False
     
-    # 3. 數據获取（略過，避免太慢）
-    # results['數據获取'] = check_data_fetch()
+    # 3. 數據獲取（略過，避免太慢）
+    # results['數據獲取'] = check_data_fetch()
     
     # 4. LLM 測試（可選）
-    # results['LLM调用'] = check_llm()
+    # results['LLM呼叫'] = check_llm()
     
     # 汇总
     print_header("測試结果汇总")
@@ -400,8 +400,8 @@ def run_all_tests():
         status = "✓ 通过" if passed else "✗ 失败"
         print(f"  {status}: {name}")
     
-    print(f"\n提示: 使用 --llm 參數单独測試 LLM 调用")
-    print(f"提示: 使用 --fetch 參數单独測試數據获取")
+    print(f"\n提示: 使用 --llm 參數单独測試 LLM 呼叫")
+    print(f"提示: 使用 --fetch 參數单独測試數據獲取")
     print(f"提示: 使用 --notify 參數单独測試通知推送")
 
 
@@ -441,13 +441,13 @@ def query_stock_data(stock_code: str, days: int = 10):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='A股自选股智能分析系統 - 环境验证測試',
+        description='A股自选股智能分析系統 - 環境驗證測試',
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     
     parser.add_argument('--db', action='store_true', help='查看資料庫内容')
-    parser.add_argument('--llm', action='store_true', help='測試 LLM 调用')
-    parser.add_argument('--fetch', action='store_true', help='測試數據获取')
+    parser.add_argument('--llm', action='store_true', help='測試 LLM 呼叫')
+    parser.add_argument('--fetch', action='store_true', help='測試數據獲取')
     parser.add_argument('--notify', action='store_true', help='測試通知推送')
     parser.add_argument('--config', action='store_true', help='查看配置')
     parser.add_argument('--stock', type=str, help='查詢指定股票數據，如 --stock 600519')
@@ -455,7 +455,7 @@ def main():
     
     args = parser.parse_args()
     
-    # 如果没有指定任何參數，執行基础測試
+    # 如果没有指定任何參數，執行基礎測試
     if not any([args.db, args.llm, args.fetch, args.notify, args.config, args.stock, args.all]):
         run_all_tests()
         return 0

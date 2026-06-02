@@ -18,27 +18,27 @@ market_regimes: [trending_down, sideways]
 instructions: |
   **缩量回踩（Shrink Volume Pullback Strategy）**
 
-  入场判定标准：
+  入场判定標準：
 
-  1. **前提条件**（关联理念2：趨勢交易）：
+  1. **前提條件**（關聯理念2：趨勢交易）：
      - 股票必须处于上升趨勢（MA5 > MA10 > MA20）。
      - 使用 `analyze_trend` 确认多头排列。
 
-  2. **回踩检测**（关联理念4：买点偏好）：
+  2. **回踩检测**（關聯理念4：买点偏好）：
      - 使用 `get_daily_history` 和 `get_realtime_quote`。
      - 价格回踩至 MA5 附近（误差 1% 以内）或 MA10 附近（误差 2% 以内）。
      - 回调期间成交量 < 5 日均量的 70%（缩量特征）。
-     - `analyze_trend` → volume_status 应显示缩量。
+     - `analyze_trend` → volume_status 应顯示缩量。
 
-  3. **反弹信号**（关联理念1：严进策略）：
+  3. **反弹信号**（關聯理念1：严进策略）：
      - 当前价格守住均线支撑位。
-     - MA5 乖离率 < 2% — 最佳買入区间。
+     - MA5 乖离率 < 2% — 最佳買入區間。
 
-  4. **确认条件**（关联理念5：風險排查）：
+  4. **确认條件**（關聯理念5：風險排查）：
      - `search_stock_news` 无利空訊息。
      - 筹码分布健康（获利比例 50-80%）。
 
-  評分调整：
+  評分調整：
   - 缩量回踩 MA5：sentiment_score +10
   - 缩量回踩 MA10 且量能 < 0.6 倍均量：sentiment_score +8
   - 理想买点设在 MA5 水平，次优买点设在 MA10。

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-data_provider/yfinance_fetcher 中港股指數获取逻辑的单元測試
+data_provider/yfinance_fetcher 中港股指數獲取邏輯的单元測試
 
 使用 unittest.mock 模拟 yfinance API 回應，覆盖：
-- _get_hk_main_indices 港股指數批量获取
+- _get_hk_main_indices 港股指數批量獲取
 - 港股指數 Yahoo Finance 符号映射正确性
-- 部分/全部失败的降级场景
+- 部分/全部失败的降級場景
 """
 import sys
 import os
@@ -13,11 +13,11 @@ import unittest
 from unittest.mock import MagicMock, patch
 import pandas as pd
 
-# 在匯入 data_provider 前 mock 可能缺失的依賴，避免环境差异导致測試无法執行
+# 在匯入 data_provider 前 mock 可能缺失的依賴，避免環境差异导致測試無法執行
 if 'fake_useragent' not in sys.modules:
     sys.modules['fake_useragent'] = MagicMock()
 
-# 确保能匯入项目模块
+# 確保能匯入项目模組
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
@@ -35,7 +35,7 @@ def _make_mock_hist(close: float, prev_close: float, high: float = None, low: fl
 
 
 def _make_mock_yf(hist_df: pd.DataFrame):
-    """构造模拟的 yf 模块，Ticker().history() 傳回给定 DataFrame"""
+    """构造模拟的 yf 模組，Ticker().history() 傳回给定 DataFrame"""
     mock_ticker = MagicMock()
     mock_ticker.history.return_value = hist_df
     mock_yf = MagicMock()
@@ -44,7 +44,7 @@ def _make_mock_yf(hist_df: pd.DataFrame):
 
 
 class TestHkIndexSymbolMapping(unittest.TestCase):
-    """验证港股指數 Yahoo Finance 符号映射的正确性"""
+    """驗證港股指數 Yahoo Finance 符号映射的正确性"""
 
     def setUp(self):
         from data_provider.yfinance_fetcher import YfinanceFetcher
@@ -59,7 +59,7 @@ class TestHkIndexSymbolMapping(unittest.TestCase):
 
         self.fetcher._get_hk_main_indices(mock_yf)
 
-        # 收集所有 Ticker() 调用的參數
+        # 收集所有 Ticker() 呼叫的參數
         ticker_calls = [call.args[0] for call in mock_yf.Ticker.call_args_list]
 
         self.assertIn('^HSI', ticker_calls, '恒生指數应使用 ^HSI')
@@ -67,7 +67,7 @@ class TestHkIndexSymbolMapping(unittest.TestCase):
         self.assertIn('^HSCE', ticker_calls, '国企指數应使用 ^HSCE，而非 ^HSCEI')
 
     def test_hk_indices_mapping_no_invalid_symbols(self):
-        """确保不再使用已知錯誤的旧映射符号"""
+        """確保不再使用已知錯誤的旧映射符号"""
         mock_yf = MagicMock()
         mock_ticker = MagicMock()
         mock_ticker.history.return_value = pd.DataFrame()
@@ -82,7 +82,7 @@ class TestHkIndexSymbolMapping(unittest.TestCase):
 
 
 class TestGetHkMainIndices(unittest.TestCase):
-    """_get_hk_main_indices 港股指數批量获取測試"""
+    """_get_hk_main_indices 港股指數批量獲取測試"""
 
     def setUp(self):
         from data_provider.yfinance_fetcher import YfinanceFetcher
@@ -111,7 +111,7 @@ class TestGetHkMainIndices(unittest.TestCase):
             self.assertIn('amplitude', item)
 
     def test_returns_correct_computed_values(self):
-        """验证漲跌幅和振幅的计算结果"""
+        """驗證漲跌幅和振幅的计算结果"""
         mock_hist = _make_mock_hist(
             close=20000.0, prev_close=19800.0, high=20200.0, low=19700.0
         )
@@ -159,7 +159,7 @@ class TestGetHkMainIndices(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_handles_ticker_exception(self):
-        """Ticker.history 抛异常时略過该指數，不整体失败"""
+        """Ticker.history 抛例外时略過该指數，不整体失败"""
         mock_ticker = MagicMock()
         mock_ticker.history.side_effect = Exception("Network error")
         mock_yf = MagicMock()

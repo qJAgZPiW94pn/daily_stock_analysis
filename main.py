@@ -5,20 +5,20 @@ A股自选股智能分析系統 - 主调度程式
 ===================================
 
 职责：
-1. 协调各模块完成股票分析流程
-2. 实现低並行的執行緒池调度
-3. 全局异常處理，确保单股失败不影响整体
+1. 协调各模組完成股票分析流程
+2. 實現低並行的執行緒池调度
+3. 全局例外處理，確保单股失败不影响整体
 4. 提供命令行入口
 
 使用方式：
     python main.py              # 正常執行
     python main.py --debug      # 调试模式
-    python main.py --dry-run    # 仅获取數據不分析
+    python main.py --dry-run    # 仅獲取數據不分析
 
 交易理念（已融入分析）：
 - 严进策略：不追高，乖离率 > 5% 不買入
 - 趨勢交易：只做 MA5>MA10>MA20 多头排列
-- 效率优先：关注筹码集中度好的股票
+- 效率優先：关注筹码集中度好的股票
 - 买点偏好：缩量回踩 MA5/MA10 支撑
 """
 from __future__ import annotations
@@ -33,10 +33,10 @@ from src.config import setup_env
 _INITIAL_PROCESS_ENV = dict(os.environ)
 setup_env()
 
-# 代理配置 - 通过 USE_PROXY 环境變數控制，默认關閉
-# GitHub Actions 环境自动略過代理配置
+# 代理配置 - 通过 USE_PROXY 環境變數控制，預設關閉
+# GitHub Actions 環境自动略過代理配置
 if os.getenv("GITHUB_ACTIONS") != "true" and os.getenv("USE_PROXY", "false").lower() == "true":
-    # 本機开发环境，启用代理（可在 .env 中配置 PROXY_HOST 和 PROXY_PORT）
+    # 本機开发環境，启用代理（可在 .env 中配置 PROXY_HOST 和 PROXY_PORT）
     proxy_host = os.getenv("PROXY_HOST", "127.0.0.1")
     proxy_port = os.getenv("PROXY_PORT", "10809")
     proxy_url = f"http://{proxy_host}:{proxy_port}"
@@ -75,7 +75,7 @@ def _read_active_env_values() -> Optional[Dict[str, str]]:
     try:
         values = dotenv_values(env_path)
     except Exception as exc:  # pragma: no cover - defensive branch
-        logger.warning("读取配置文件 %s 失败，繼續沿用当前环境變數: %s", env_path, exc)
+        logger.warning("讀取配置文件 %s 失败，繼續沿用当前環境變數: %s", env_path, exc)
         return None
 
     return {
@@ -148,9 +148,9 @@ def _setup_runtime_logging(log_dir: str, debug: bool = False) -> bool:
         return True
     except OSError as exc:
         logger.warning(
-            "文件日誌初始化失败，已降级为控制台日誌输出；日誌目錄 %r 当前不可写或不可建立: %s。"
-            "官方 Docker 镜像啟動入口会自动修复默认挂载目錄權限；若仍失败，"
-            "请检查是否使用了 --user、只读挂载、rootless Docker 或 NFS 等限制写入的环境。",
+            "文件日誌初始化失败，已降級为控制台日誌輸出；日誌目錄 %r 当前不可写或不可建立: %s。"
+            "官方 Docker 镜像啟動入口会自动修复預設挂载目錄權限；若仍失败，"
+            "请檢查是否使用了 --user、只读挂载、rootless Docker 或 NFS 等限制写入的環境。",
             log_dir,
             exc,
         )
@@ -227,10 +227,10 @@ def parse_arguments() -> argparse.Namespace:
 示例:
   python main.py                    # 正常執行
   python main.py --debug            # 调试模式
-  python main.py --dry-run          # 仅获取數據，不进行 AI 分析
+  python main.py --dry-run          # 仅獲取數據，不進行 AI 分析
   python main.py --stocks 600519,000001  # 指定分析特定股票
   python main.py --no-notify        # 不发送推送通知
-  python main.py --check-notify     # 检查通知配置，不发送通知
+  python main.py --check-notify     # 檢查通知配置，不发送通知
   python main.py --single-notify    # 启用单股推送模式（每分析完一只立即推送）
   python main.py --schedule         # 启用定时工作模式
   python main.py --market-review    # 仅執行大盤复盘
@@ -240,13 +240,13 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--debug',
         action='store_true',
-        help='启用调试模式，输出详细日誌'
+        help='启用调试模式，輸出詳細日誌'
     )
 
     parser.add_argument(
         '--dry-run',
         action='store_true',
-        help='仅获取數據，不进行 AI 分析'
+        help='仅獲取數據，不進行 AI 分析'
     )
 
     parser.add_argument(
@@ -264,7 +264,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--check-notify',
         action='store_true',
-        help='只读检查通知渠道配置，不发送通知'
+        help='只读檢查通知渠道配置，不发送通知'
     )
 
     parser.add_argument(
@@ -277,19 +277,19 @@ def parse_arguments() -> argparse.Namespace:
         '--workers',
         type=int,
         default=None,
-        help='並行執行緒数（默认使用配置值）'
+        help='並行執行緒数（預設使用配置值）'
     )
 
     parser.add_argument(
         '--schedule',
         action='store_true',
-        help='启用定时工作模式，每日定时执行'
+        help='启用定时工作模式，每日定时執行'
     )
 
     parser.add_argument(
         '--no-run-immediately',
         action='store_true',
-        help='定时工作啟動时不立即执行一次'
+        help='定时工作啟動时不立即執行一次'
     )
 
     parser.add_argument(
@@ -307,7 +307,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--force-run',
         action='store_true',
-        help='略過交易日检查，强制执行全量分析（Issue #373）'
+        help='略過交易日檢查，強制執行全量分析（Issue #373）'
     )
 
     parser.add_argument(
@@ -319,33 +319,33 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--webui-only',
         action='store_true',
-        help='仅啟動 Web 服務，不执行自动分析'
+        help='仅啟動 Web 服務，不執行自动分析'
     )
 
     parser.add_argument(
         '--serve',
         action='store_true',
-        help='啟動 FastAPI 后端服務（同时执行分析工作）'
+        help='啟動 FastAPI 后端服務（同时執行分析工作）'
     )
 
     parser.add_argument(
         '--serve-only',
         action='store_true',
-        help='仅啟動 FastAPI 后端服務，不自动执行分析'
+        help='仅啟動 FastAPI 后端服務，不自动執行分析'
     )
 
     parser.add_argument(
         '--port',
         type=int,
         default=8000,
-        help='FastAPI 服務端口（默认 8000）'
+        help='FastAPI 服務端口（預設 8000）'
     )
 
     parser.add_argument(
         '--host',
         type=str,
         default='0.0.0.0',
-        help='FastAPI 服務监听地址（默认 0.0.0.0）'
+        help='FastAPI 服務监听地址（預設 0.0.0.0）'
     )
 
     parser.add_argument(
@@ -358,7 +358,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--backtest',
         action='store_true',
-        help='執行回测（对历史分析结果进行评估）'
+        help='執行回测（对历史分析结果進行評估）'
     )
 
     parser.add_argument(
@@ -372,13 +372,13 @@ def parse_arguments() -> argparse.Namespace:
         '--backtest-days',
         type=int,
         default=None,
-        help='回测评估窗口（交易日数，默认使用配置）'
+        help='回测評估窗口（交易日数，預設使用配置）'
     )
 
     parser.add_argument(
         '--backtest-force',
         action='store_true',
-        help='强制回测（即使已有回测结果也重新计算）'
+        help='強制回测（即使已有回测结果也重新计算）'
     )
 
     return parser.parse_args()
@@ -438,7 +438,7 @@ def _run_market_review_with_shared_lock(
 
     lock_token = try_acquire_market_review_lock(config)
     if lock_token is None:
-        logger.warning("大盤复盘正在执行中，略過本次大盤复盘")
+        logger.warning("大盤复盘正在執行中，略過本次大盤复盘")
         return None
 
     try:
@@ -453,9 +453,9 @@ def run_full_analysis(
     stock_codes: Optional[List[str]] = None
 ):
     """
-    执行完整的分析流程（個股 + 大盤复盘）
+    執行完整的分析流程（個股 + 大盤复盘）
 
-    这是定时工作调用的主函數
+    这是定时工作呼叫的主函數
     """
     # Import pipeline modules outside the broad try/except so that import-time
     # failures propagate to the caller instead of being silently swallowed.
@@ -474,7 +474,7 @@ def run_full_analysis(
         )
         if should_skip:
             logger.info(
-                "今日所有相关市场均为非交易日，略過执行。可使用 --force-run 强制执行。"
+                "今日所有相關市场均为非交易日，略過執行。可使用 --force-run 強制執行。"
             )
             return
         if set(filtered_codes) != set(effective_codes):
@@ -523,7 +523,7 @@ def run_full_analysis(
             and not args.no_market_review
             and effective_region != ''
         ):
-            logger.info(f"等待 {analysis_delay} 秒后执行大盤复盘（避免API限流）...")
+            logger.info(f"等待 {analysis_delay} 秒后執行大盤复盘（避免API限流）...")
             time.sleep(analysis_delay)
 
         # 2. 執行大盤复盘（如果启用且不是仅個股模式）
@@ -566,7 +566,7 @@ def run_full_analysis(
                     else:
                         logger.warning("合併推送失败")
 
-        # 输出摘要
+        # 輸出摘要
         if results:
             logger.info("\n===== 分析结果摘要 =====")
             for r in sorted(results, key=lambda x: x.sentiment_score, reverse=True):
@@ -576,7 +576,7 @@ def run_full_analysis(
                     f"評分 {r.sentiment_score} | {r.trend_prediction}"
                 )
 
-        logger.info("\n工作执行完成")
+        logger.info("\n工作執行完成")
 
         # === 新增：生成飞书云文档 ===
         try:
@@ -641,7 +641,7 @@ def run_full_analysis(
             logger.warning(f"自动回测失败（已忽略）: {e}")
 
     except Exception as e:
-        logger.exception(f"分析流程执行失败: {e}")
+        logger.exception(f"分析流程執行失败: {e}")
 
 
 def start_api_server(host: str, port: int, config: Config) -> None:
@@ -714,7 +714,7 @@ def _resolve_scheduled_stock_codes(stock_codes: Optional[List[str]]) -> Optional
     """Scheduled runs should always read the latest persisted watchlist."""
     if stock_codes is not None:
         logger.warning(
-            "定时模式下检测到 --stocks 參數；计划执行将忽略啟動时股票快照，并在每次執行前重新读取最新的 STOCK_LIST。"
+            "定时模式下检测到 --stocks 參數；计划執行将忽略啟動时股票快照，并在每次執行前重新讀取最新的 STOCK_LIST。"
         )
     return None
 
@@ -763,7 +763,7 @@ def main() -> int:
     # 解析命令行參數
     args = parse_arguments()
 
-    # 在配置加载前先初始化 bootstrap 日誌，确保早期失败也能落盘
+    # 在配置加载前先初始化 bootstrap 日誌，確保早期失败也能落盘
     try:
         _setup_bootstrap_logging(debug=args.debug)
     except Exception as exc:
@@ -774,18 +774,18 @@ def main() -> int:
         )
         logger.warning("Bootstrap 日誌初始化失败，已回退到 stderr: %s", exc)
 
-    # 加载配置（在 bootstrap logging 之后执行，确保异常有日誌）
+    # 加载配置（在 bootstrap logging 之后執行，確保例外有日誌）
     try:
         config = get_config()
     except Exception as exc:
         logger.exception("加载配置失败: %s", exc)
         return 1
 
-    # 配置日誌（输出到控制台和文件）
+    # 配置日誌（輸出到控制台和文件）
     try:
         _setup_runtime_logging(config.log_dir, debug=args.debug)
     except Exception as exc:
-        logger.exception("切换到配置日誌目錄失败: %s", exc)
+        logger.exception("切換到配置日誌目錄失败: %s", exc)
         return 1
 
     logger.info("=" * 60)
@@ -793,7 +793,7 @@ def main() -> int:
     logger.info(f"執行时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logger.info("=" * 60)
 
-    # 验证配置
+    # 驗證配置
     warnings = config.validate()
     for warning in warnings:
         logger.warning(warning)
@@ -820,14 +820,14 @@ def main() -> int:
     if args.webui_only:
         args.serve_only = True
 
-    # 兼容旧版 WEBUI_ENABLED 环境變數
+    # 相容旧版 WEBUI_ENABLED 環境變數
     if config.webui_enabled and not (args.serve or args.serve_only):
         args.serve = True
 
     # === 啟動 Web 服務 (如果启用) ===
     start_serve = (args.serve or args.serve_only) and os.getenv("GITHUB_ACTIONS") != "true"
 
-    # 兼容旧版 WEBUI_HOST/WEBUI_PORT：如果使用者未通过 --host/--port 指定，则使用旧變數
+    # 相容旧版 WEBUI_HOST/WEBUI_PORT：如果使用者未通过 --host/--port 指定，则使用旧變數
     if start_serve:
         if args.host == '0.0.0.0' and os.getenv('WEBUI_HOST'):
             args.host = os.getenv('WEBUI_HOST')
@@ -847,11 +847,11 @@ def main() -> int:
     if bot_clients_started:
         start_bot_stream_clients(config)
 
-    # === 仅 Web 服務模式：不自动执行分析 ===
+    # === 仅 Web 服務模式：不自动執行分析 ===
     if args.serve_only:
         logger.info("模式: 仅 Web 服務")
         logger.info(f"Web 服務執行中: http://{args.host}:{args.port}")
-        logger.info("通过 /api/v1/analysis/analyze 接口触发分析")
+        logger.info("通过 /api/v1/analysis/analyze 介面触发分析")
         logger.info(f"API 文档: http://{args.host}:{args.port}/docs")
         logger.info("按 Ctrl+C 退出...")
         try:
@@ -896,7 +896,7 @@ def main() -> int:
                     getattr(config, 'market_review_region', 'cn') or 'cn', open_markets
                 )
                 if effective_region == '':
-                    logger.info("今日大盤复盘相关市场均为非交易日，略過执行。可使用 --force-run 强制执行。")
+                    logger.info("今日大盤复盘相關市场均为非交易日，略過執行。可使用 --force-run 強制執行。")
                     return 0
 
             logger.info("模式: 仅大盤复盘")
@@ -916,7 +916,7 @@ def main() -> int:
         # 模式2: 定时工作模式
         if args.schedule or config.schedule_enabled:
             logger.info("模式: 定时工作")
-            logger.info(f"每日执行时间: {config.schedule_time}")
+            logger.info(f"每日執行时间: {config.schedule_time}")
 
             # Determine whether to run immediately:
             # Command line arg --no-run-immediately overrides config if present.
@@ -925,7 +925,7 @@ def main() -> int:
             if getattr(args, 'no_run_immediately', False):
                 should_run_immediately = False
 
-            logger.info(f"啟動时立即执行: {should_run_immediately}")
+            logger.info(f"啟動时立即執行: {should_run_immediately}")
 
             from src.scheduler import run_with_schedule
             scheduled_stock_codes = _resolve_scheduled_stock_codes(stock_codes)
@@ -970,7 +970,7 @@ def main() -> int:
         else:
             logger.info("配置为不立即執行分析 (RUN_IMMEDIATELY=false)")
 
-        logger.info("\n程式执行完成")
+        logger.info("\n程式執行完成")
 
         # 如果启用了服務且是非定时工作模式，保持程式執行
         keep_running = start_serve and not (args.schedule or config.schedule_enabled)
@@ -989,7 +989,7 @@ def main() -> int:
         return 130
 
     except Exception as e:
-        logger.exception(f"程式执行失败: {e}")
+        logger.exception(f"程式執行失败: {e}")
         return 1
 
 

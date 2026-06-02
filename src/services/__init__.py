@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-服務层模块初始化
+服務层模組初始化
 ===================================
 
 职责：
 1. 声明可匯出的服務类（延遲匯入，避免啟動时拉入 LLM 等重依賴）
 
 使用方式：
-    直接从子模块匯入，例如:
+    直接从子模組匯入，例如:
     from src.services.history_service import HistoryService
 """
 
 
 def __getattr__(name: str):
-    """延遲匯入：仅在通过 src.services.X 访问时才加载对应子模块。"""
+    """延遲匯入：仅在通过 src.services.X 訪問时才加载对应子模組。"""
     _lazy_map = {
         "AnalysisService": "src.services.analysis_service",
         "BacktestService": "src.services.backtest_service",

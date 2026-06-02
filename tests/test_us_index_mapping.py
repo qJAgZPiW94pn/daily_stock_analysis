@@ -6,7 +6,7 @@ import unittest
 import sys
 import os
 
-# 确保能匯入 data_provider 模块（直接匯入避免加载重量级依賴）
+# 確保能匯入 data_provider 模組（直接匯入避免加载重量级依賴）
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_provider')))
 
 from us_index_mapping import (

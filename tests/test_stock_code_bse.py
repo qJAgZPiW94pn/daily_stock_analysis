@@ -104,7 +104,7 @@ class TestNormalizeStockCode(unittest.TestCase):
         self.assertEqual(normalize_stock_code("0700.hk"), "HK00700")
 
     def test_hk_prefix_is_zero_padded(self):
-        """HK 前缀的短数字格式应补足到 5 位，便于后续快取与去重。"""
+        """HK 前綴的短数字格式应补足到 5 位，便于后续快取与去重。"""
         self.assertEqual(normalize_stock_code("hk1810"), "HK01810")
         self.assertEqual(normalize_stock_code("HK700"), "HK00700")
 

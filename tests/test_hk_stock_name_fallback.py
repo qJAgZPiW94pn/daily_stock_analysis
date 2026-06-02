@@ -104,10 +104,10 @@ class TestHKRealtimeFallback(unittest.TestCase):
 
     @patch("data_provider.akshare_fetcher.get_realtime_circuit_breaker")
     def test_em_failure_falls_back_to_spot(self, mock_cb):
-        """stock_hk_spot_em 抛异常时应 fallback 到 stock_hk_spot 并傳回名称。"""
+        """stock_hk_spot_em 抛例外时应 fallback 到 stock_hk_spot 并傳回名称。"""
         mock_cb.return_value = _DummyCircuitBreaker()
         ak_mock = MagicMock()
-        ak_mock.stock_hk_spot_em.side_effect = Exception("接口异常：數據源不可用")
+        ak_mock.stock_hk_spot_em.side_effect = Exception("介面例外：數據源不可用")
         ak_mock.stock_hk_spot.return_value = _make_spot_df()
 
         with patch.dict(sys.modules, {"akshare": ak_mock}):
@@ -120,11 +120,11 @@ class TestHKRealtimeFallback(unittest.TestCase):
 
     @patch("data_provider.akshare_fetcher.get_realtime_circuit_breaker")
     def test_both_fail_returns_none(self, mock_cb):
-        """stock_hk_spot_em 和 stock_hk_spot 都失败时傳回 None，不抛异常。"""
+        """stock_hk_spot_em 和 stock_hk_spot 都失败时傳回 None，不抛例外。"""
         mock_cb.return_value = _DummyCircuitBreaker()
         ak_mock = MagicMock()
-        ak_mock.stock_hk_spot_em.side_effect = Exception("东方财富接口逾時")
-        ak_mock.stock_hk_spot.side_effect = Exception("新浪接口逾時")
+        ak_mock.stock_hk_spot_em.side_effect = Exception("东方财富介面逾時")
+        ak_mock.stock_hk_spot.side_effect = Exception("新浪介面逾時")
 
         with patch.dict(sys.modules, {"akshare": ak_mock}):
             quote = self.fetcher._get_hk_realtime_quote("HK00700")
@@ -147,7 +147,7 @@ class TestHKRealtimeFallback(unittest.TestCase):
 
     @patch("data_provider.akshare_fetcher.get_realtime_circuit_breaker")
     def test_circuit_breaker_open_returns_none(self, mock_cb):
-        """熔断狀態下直接傳回 None。"""
+        """熔斷狀態下直接傳回 None。"""
         cb = _DummyCircuitBreaker()
         cb.is_available = lambda source: False
         mock_cb.return_value = cb

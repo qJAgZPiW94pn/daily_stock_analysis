@@ -55,7 +55,7 @@
 
 | 類型 | 支援 |
 |------|------|
-| AI 模型 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[AIHubMix](https://aihubmix.com/?aff=CfMq)、Gemini、OpenAI 兼容、DeepSeek、通義千問、Claude、Ollama 本機模型等 |
+| AI 模型 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[AIHubMix](https://aihubmix.com/?aff=CfMq)、Gemini、OpenAI 相容、DeepSeek、通義千問、Claude、Ollama 本機模型等 |
 | 行情數據 | [TickFlow](https://tickflow.org/auth/register?ref=WDSGSPS5XC)、AkShare、Tushare、Pytdx、Baostock、YFinance、Longbridge |
 | 新聞搜尋 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis)、[Tavily](https://tavily.com/)、[Bocha](https://open.bocha.cn/)、[Brave](https://brave.com/search/api/)、[MiniMax](https://platform.minimaxi.com/)、SearXNG |
 | 社交輿情 | [Stock Sentiment API](https://api.adanos.org/docs)（Reddit / X / Polymarket，僅美股，可選） |
@@ -86,8 +86,8 @@
 | `AIHUBMIX_KEY` | [AIHubMix](https://aihubmix.com/?aff=CfMq) API Key，一 Key 切換使用全系模型，本項目可享 10% 優惠 | **推薦** |
 | `GEMINI_API_KEY` | Google Gemini API Key | 可選 |
 | `ANTHROPIC_API_KEY` | Anthropic Claude API Key | 可選 |
-| `OPENAI_API_KEY` | OpenAI 兼容 API Key（支援 DeepSeek、通義千問等） | 可選 |
-| `OPENAI_BASE_URL` / `OPENAI_MODEL` | 使用 OpenAI 兼容服務時填寫 | 可選 |
+| `OPENAI_API_KEY` | OpenAI 相容 API Key（支援 DeepSeek、通義千問等） | 可選 |
+| `OPENAI_BASE_URL` / `OPENAI_MODEL` | 使用 OpenAI 相容服務時填寫 | 可選 |
 
 > Ollama 更適合本機 / Docker 部署，GitHub Actions 推薦使用雲端 API。
 
@@ -102,7 +102,7 @@
 | `SLACK_BOT_TOKEN` + `SLACK_CHANNEL_ID` | Slack Bot |
 | `EMAIL_SENDER` + `EMAIL_PASSWORD` | 郵件推送 |
 
-更多渠道、簽名校驗、分組郵件、Markdown 轉圖片等配置見 [通知渠道詳細配置](./full-guide.md#通知渠道详细配置)。
+更多渠道、簽名校驗、分組郵件、Markdown 轉圖片等配置見 [通知渠道詳細配置](./full-guide.md#通知渠道詳細配置)。
 
 **自選股配置（必填）**
 
@@ -124,7 +124,7 @@
 | `MINIMAX_API_KEYS` | [MiniMax](https://platform.minimaxi.com/)：結構化搜尋結果 | 可選 |
 | `SEARXNG_BASE_URLS` | SearXNG 自建實例：無配額兜底，適合私有部署 | 可選 |
 
-更多搜尋源、社交輿情和降級規則見 [搜尋服務配置](./full-guide.md#搜索服務配置)。
+更多搜尋源、社交輿情和降級規則見 [搜尋服務配置](./full-guide.md#搜尋服務配置)。
 
 #### 3. 啟用 Actions
 
@@ -227,7 +227,7 @@ python main.py --webui-only
 - 支援多輪追問、會話匯出、發送到通知渠道和後台執行
 - 支援自訂策略文件與多 Agent 編排（實驗性）
 
-> Agent 具體參數、`skill` 命名兼容、多 Agent 模式和預算護欄見 [完整指南](./full-guide.md#本機-webui-管理界面) 與 [LLM 配置指南](./LLM_CONFIG_GUIDE.md)。
+> Agent 具體參數、`skill` 命名相容、多 Agent 模式和預算護欄見 [完整指南](./full-guide.md#本機-webui-管理界面) 與 [LLM 配置指南](./LLM_CONFIG_GUIDE.md)。
 
 ## 🧩 相關項目 (Related Projects)
 
@@ -236,7 +236,7 @@ python main.py --webui-only
 | 項目 | 定位 |
 |------|------|
 | [AlphaSift](https://github.com/ZhuLinsen/alphasift) | 多因子選股與全市場掃描，用於從股票池中整理候選標的 |
-| [AlphaEvo](https://github.com/ZhuLinsen/alphaevo) | 策略回測與自我進化，用於驗證策略規則，並透過迭代探索策略參數與組合 |
+| [AlphaEvo](https://github.com/ZhuLinsen/alphaevo) | 策略回測與自我進化，用於驗證策略規則，並透過反覆探索策略參數與組合 |
 
 ## 📬 聯繫與合作
 

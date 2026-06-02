@@ -4,26 +4,26 @@
 
 ## 🐛 报告 Bug
 
-1. 先搜索 [Issues](https://github.com/ZhuLinsen/daily_stock_analysis/issues) 确认議題未被报告
+1. 先搜尋 [Issues](https://github.com/ZhuLinsen/daily_stock_analysis/issues) 确认議題未被报告
 2. 使用 Bug Report 模板建立新 Issue
-3. 提供详细的复现步骤和环境資訊
+3. 提供詳細的复现步骤和環境資訊
 
 ## 💡 功能建议
 
-1. 先搜索 Issues 确认建议未被提出
+1. 先搜尋 Issues 确认建议未被提出
 2. 使用 Feature Request 模板建立新 Issue
-3. 详细描述你的使用场景和期望功能
+3. 詳細描述你的使用場景和期望功能
 
 ## 🔧 提交代碼
 
-### 开发环境
+### 开发環境
 
 ```bash
 # 克隆倉庫
 git clone https://github.com/ZhuLinsen/daily_stock_analysis.git
 cd daily_stock_analysis
 
-# 建立虚拟环境
+# 建立虚拟環境
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 # venv\Scripts\activate   # Windows
@@ -31,7 +31,7 @@ source venv/bin/activate  # Linux/Mac
 # 安裝依賴
 pip install -r requirements.txt
 
-# 配置环境變數
+# 配置環境變數
 cp .env.example .env
 ```
 
@@ -43,9 +43,9 @@ cp .env.example .env
 4. 推送分支：`git push origin feature/your-feature`
 5. 建立 Pull Request
 
-### Commit 规范
+### Commit 規範
 
-使用 [Conventional Commits](https://www.conventionalcommits.org/) 规范：
+使用 [Conventional Commits](https://www.conventionalcommits.org/) 規範：
 
 ```
 feat: 新功能
@@ -54,36 +54,36 @@ docs: 文档更新
 style: 代碼格式（不影响功能）
 refactor: 重构
 perf: 效能最佳化
-test: 測試相关
-chore: 构建/工具相关
+test: 測試相關
+chore: 构建/工具相關
 ```
 
 示例：
 ```
 feat: 添加钉钉机器人支援
-fix: 修复 429 限流重试逻辑
+fix: 修复 429 限流重試邏輯
 docs: 更新 README 部署说明
 ```
 
-### 代碼规范
+### 代碼規範
 
 - Python 代碼遵循 PEP 8
 - 函數和类需要添加 docstring
-- 重要逻辑添加注释
-- 新功能需要更新相关文档
+- 重要邏輯添加注释
+- 新功能需要更新相關文档
 
-### CI 自动检查
+### CI 自动檢查
 
-提交 PR 后，CI 会自动執行以下检查：
+提交 PR 后，CI 会自动執行以下檢查：
 
-| 检查项 | 说明 | 必须通过 |
+| 檢查项 | 说明 | 必须通过 |
 |--------|------|:--------:|
 | backend-gate | `scripts/ci_gate.sh`（py_compile + flake8 严重錯誤 + 本機核心脚本 + offline pytest） | ✅ |
-| docker-build | Docker 镜像构建与关键模块匯入 smoke | ✅ |
-| web-gate | 前端变更时执行 `npm run lint` + `npm run build` | ✅（触发时） |
-| network-smoke | 定时/手动执行 `pytest -m network` + `scripts/test.sh quick`（非阻断） | ❌（观测项） |
+| docker-build | Docker 镜像构建与關鍵模組匯入 smoke | ✅ |
+| web-gate | 前端变更时執行 `npm run lint` + `npm run build` | ✅（触发时） |
+| network-smoke | 定时/手动執行 `pytest -m network` + `scripts/test.sh quick`（非阻断） | ❌（观测项） |
 
-**本機執行检查：**
+**本機執行檢查：**
 
 ```bash
 # backend gate（推荐）
@@ -98,7 +98,7 @@ npm run lint
 npm run build
 ```
 
-## 📋 优先贡献方向
+## 📋 優先贡献方向
 
 查看 [Roadmap](README.md#-roadmap) 了解当前需要的功能：
 

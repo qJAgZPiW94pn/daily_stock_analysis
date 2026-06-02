@@ -1,8 +1,8 @@
-# Tushare 股票列表获取工具使用说明
+# Tushare 股票列表獲取工具使用说明
 
 ## 功能概述
 
-从 Tushare Pro 获取 A股、港股、美股列表資訊，保存为 CSV 文件到本機。
+从 Tushare Pro 獲取 A股、港股、美股列表資訊，保存为 CSV 文件到本機。
 
 ## 快速开始
 
@@ -14,7 +14,7 @@
 TUSHARE_TOKEN=你的tushare_token
 ```
 
-> 获取 Token：访问 [Tushare Pro](https://tushare.pro/weborder/#/login) 注册并获取
+> 獲取 Token：訪問 [Tushare Pro](https://tushare.pro/weborder/#/login) 注册并獲取
 
 ### 2. 執行脚本
 
@@ -22,7 +22,7 @@ TUSHARE_TOKEN=你的tushare_token
 python3 scripts/fetch_tushare_stock_list.py
 ```
 
-### 3. 查看输出
+### 3. 查看輸出
 
 數據将保存到 `data/` 目錄：
 
@@ -36,21 +36,21 @@ data/
 
 ## 功能特性
 
-✅ **自动分页**：美股數據自动分页读取（每页5000条）
-✅ **智能限流**：每次請求之间随机休息5-10秒
+✅ **自动分页**：美股數據自动分页讀取（每页5000条）
+✅ **智能限流**：每次請求之间隨機休息5-10秒
 ✅ **錯誤處理**：单个市场失败不影响其他市场
-✅ **进度提示**：实时显示读取进度
-✅ **自动文档**：生成详细的數據说明文档
+✅ **进度提示**：实时顯示讀取进度
+✅ **自动文档**：生成詳細的數據说明文档
 
 ## 市场说明
 
-| 市场 | 接口 | 积分要求 | 數據量 |
+| 市场 | 介面 | 积分要求 | 數據量 |
 |------|------|----------|--------|
 | A股 | stock_basic | 2000积分 | ~5000只 |
 | 港股 | hk_basic | 2000积分 | ~2000只 |
 | 美股 | us_basic | 120试用/5000正式 | ~10000只 |
 
-## 输出文件格式
+## 輸出文件格式
 
 ### A股（stock_list_a.csv）
 
@@ -79,16 +79,16 @@ BABA,阿里巴巴,Alibaba Group,ADR,20140919,...
 
 ## 使用示例
 
-### Python 读取數據
+### Python 讀取數據
 
 ```python
 import pandas as pd
 
-# 读取 A股
+# 讀取 A股
 a_stocks = pd.read_csv('data/stock_list_a.csv')
 print(f"A股数量: {len(a_stocks)}")
 
-# 筛选主板股票
+# 篩選主板股票
 main_board = a_stocks[a_stocks['market'] == '主板']
 print(f"主板数量: {len(main_board)}")
 
@@ -99,7 +99,7 @@ print(stock[['name', 'industry', 'list_date']])
 
 ### 更新自动补全索引
 
-获取數據后，可以更新自动补全索引：
+獲取數據后，可以更新自动补全索引：
 
 ```bash
 # 将 Tushare CSV 數據生成为前端自动补全索引
@@ -109,7 +109,7 @@ python3 scripts/generate_index_from_csv.py         # 确认后生成
 
 ## 注意事项
 
-1. **积分要求**：确保账号积分足够（A股/港股2000，美股120试用）
+1. **积分要求**：確保账号积分足够（A股/港股2000，美股120试用）
 2. **請求限制**：注意 API 的每分钟請求次数限制
 3. **數據更新**：建议每月更新一次數據
 4. **網路連線**：需要稳定的網路連線
@@ -123,21 +123,21 @@ python3 scripts/generate_index_from_csv.py         # 确认后生成
 **A**:
 - A股/港股需要2000积分
 - 美股120积分试用，5000积分正式權限
-- 访问 https://tushare.pro 查看积分获取办法
+- 訪問 https://tushare.pro 查看积分獲取办法
 
-### Q: 读取失败怎么办？
+### Q: 讀取失败怎么办？
 **A**:
-1. 检查網路連線
-2. 检查 Token 是否正确
+1. 檢查網路連線
+2. 檢查 Token 是否正确
 3. 查看账号积分是否足够
-4. 当前脚本不会自动重试；单次請求失败后会输出錯誤并结束，请排查原因后重新執行
+4. 当前脚本不会自动重試；单次請求失败后会輸出錯誤并结束，请排查原因后重新執行
 
 ### Q: 數據更新频率？
-**A**: 建议每月更新一次，或根据需求调整
+**A**: 建议每月更新一次，或根据需求調整
 
-## 相关链接
+## 相關链接
 
 - [Tushare 官网](https://tushare.pro)
 - [Tushare 文档](https://tushare.pro/document/2)
-- [积分获取办法](https://tushare.pro/document/1)
+- [积分獲取办法](https://tushare.pro/document/1)
 - [API 數據调试](https://tushare.pro/document/2)

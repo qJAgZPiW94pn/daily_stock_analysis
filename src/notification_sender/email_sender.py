@@ -66,7 +66,7 @@ class EmailSender:
         self._stock_email_groups = getattr(config, 'stock_email_groups', None) or []
         
     def _is_email_configured(self) -> bool:
-        """检查電郵配置是否完整（只需邮箱和授權码）"""
+        """檢查電郵配置是否完整（只需邮箱和授權码）"""
         return bool(self._email_config['sender'] and self._email_config['password'])
     
     def get_receivers_for_stocks(self, stock_codes: List[str]) -> List[str]:
@@ -143,9 +143,9 @@ class EmailSender:
         通过 SMTP 发送電郵（自动识别 SMTP 服務器）
         
         Args:
-            content: 電郵内容（支援 Markdown，会转换为 HTML）
-            subject: 電郵主题（可選，默认自动生成）
-            receivers: 收件人列表（可選，默认使用配置的 receivers）
+            content: 電郵内容（支援 Markdown，会轉換为 HTML）
+            subject: 電郵主题（可選，預設自动生成）
+            receivers: 收件人列表（可選，預設使用配置的 receivers）
             
         Returns:
             是否发送成功
@@ -165,7 +165,7 @@ class EmailSender:
                 date_str = datetime.now().strftime('%Y-%m-%d')
                 subject = f"📈 股票智能分析报告 - {date_str}"
             
-            # 将 Markdown 转换为简单 HTML
+            # 将 Markdown 轉換为簡單 HTML
             html_content = markdown_to_html_document(content)
             
             # 构建電郵
@@ -190,11 +190,11 @@ class EmailSender:
                 use_ssl = smtp_config['ssl']
                 logger.info(f"自动识别邮箱类型: {domain} -> {smtp_server}:{smtp_port}")
             else:
-                # 未知邮箱，尝试通用配置
+                # 未知邮箱，嘗試通用配置
                 smtp_server = f"smtp.{domain}"
                 smtp_port = 465
                 use_ssl = True
-                logger.warning(f"未知邮箱类型 {domain}，尝试通用配置: {smtp_server}:{smtp_port}")
+                logger.warning(f"未知邮箱类型 {domain}，嘗試通用配置: {smtp_server}:{smtp_port}")
             
             # 根据配置选择連線方式
             if use_ssl:
@@ -212,10 +212,10 @@ class EmailSender:
             return True
             
         except smtplib.SMTPAuthenticationError:
-            logger.error("電郵发送失败：認證錯誤，请检查邮箱和授權码是否正确")
+            logger.error("電郵发送失败：認證錯誤，请檢查邮箱和授權码是否正确")
             return False
         except smtplib.SMTPConnectError as e:
-            logger.error(f"電郵发送失败：无法連線 SMTP 服務器 - {e}")
+            logger.error(f"電郵发送失败：無法連線 SMTP 服務器 - {e}")
             return False
         except Exception as e:
             logger.error(f"发送電郵失败: {e}")

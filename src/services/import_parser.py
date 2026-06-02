@@ -168,7 +168,7 @@ def parse_import_from_bytes(data: bytes, filename: Optional[str] = None) -> List
             if looks_like_zip:
                 hint = (
                     "請確認：(1) 文件为 .xlsx 格式；(2) 工作表不为空；(3) 文件未损坏。"
-                    "若为 .xls 格式，请另存为 .xlsx 后重试。"
+                    "若为 .xls 格式，请另存为 .xlsx 后重試。"
                 )
                 raise ValueError(f"Excel 解析失败: {e}。{hint}") from e
             # For extension-only mismatch (e.g. csv named .xlsx), fallback to text parsing.
@@ -176,7 +176,7 @@ def parse_import_from_bytes(data: bytes, filename: Optional[str] = None) -> List
 
     # .xls not supported
     if ext == ".xls":
-        raise ValueError("仅支援 .xlsx 格式，请将 .xls 另存为 .xlsx 后重试")
+        raise ValueError("仅支援 .xlsx 格式，请将 .xls 另存为 .xlsx 后重試")
 
     # CSV / text
     for encoding in ("utf-8", "gbk"):
@@ -186,7 +186,7 @@ def parse_import_from_bytes(data: bytes, filename: Optional[str] = None) -> List
         except UnicodeDecodeError:
             continue
     else:
-        raise ValueError("无法识别文件编码，请使用 UTF-8 或 GBK")
+        raise ValueError("無法识别文件編碼，请使用 UTF-8 或 GBK")
 
     # Single-column (one value per line): bypass pandas to avoid sep=None inference issues
     # e.g. "00700\n600519" or "code\n00700" - pandas with sep=None can produce wrong results
@@ -212,7 +212,7 @@ def parse_import_from_bytes(data: bytes, filename: Optional[str] = None) -> List
             return _parse_dataframe(df)
     except pd.errors.ParserError as e:
         raise ValueError(
-            f"CSV 解析失败：请检查分隔符是否一致、列数是否匹配。"
+            f"CSV 解析失败：请檢查分隔符是否一致、列数是否匹配。"
             f"常见原因：引号未闭合、某行列数与其他行不一致。原始錯誤: {e}"
         ) from e
     except Exception:

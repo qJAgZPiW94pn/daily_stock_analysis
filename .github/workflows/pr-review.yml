@@ -1,4 +1,4 @@
-# PR 自动审查 - 语法检查 + AI 语义审查
+# PR 自动审查 - 语法檢查 + AI 语义审查
 # 当有 PR 建立或更新时自动触发
 
 name: PR Review
@@ -38,9 +38,9 @@ permissions:
   issues: write
 
 jobs:
-  # ==================== 安全检查（检测敏感文件修改）====================
+  # ==================== 安全檢查（检测敏感文件修改）====================
   security-check:
-    name: 🔒 安全检查
+    name: 🔒 安全檢查
     runs-on: ubuntu-latest
     outputs:
       safe_to_run: ${{ steps.check_sensitive.outputs.safe_to_run }}
@@ -53,10 +53,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       
-      - name: 🔄 获取 base 分支
+      - name: 🔄 獲取 base 分支
         run: git fetch origin ${{ github.base_ref || 'main' }}:refs/remotes/origin/${{ github.base_ref || 'main' }}
       
-      - name: 🔒 检查敏感文件修改
+      - name: 🔒 檢查敏感文件修改
         id: check_sensitive
         run: |
           BASE_REF="${{ github.base_ref || 'main' }}"
@@ -70,7 +70,7 @@ jobs:
             echo "$SENSITIVE_FILES" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "已标记为敏感变更，请重点人工复核；自动流程繼續执行。" >> $GITHUB_STEP_SUMMARY
+            echo "已标记为敏感变更，请重点人工复核；自动流程繼續執行。" >> $GITHUB_STEP_SUMMARY
             echo "sensitive_files_changed=true" >> $GITHUB_OUTPUT
             echo "safe_to_run=true" >> $GITHUB_OUTPUT
           else
@@ -79,9 +79,9 @@ jobs:
             echo "safe_to_run=true" >> $GITHUB_OUTPUT
           fi
 
-  # ==================== 静态检查（先于 AI 审查）====================
+  # ==================== 静态檢查（先于 AI 审查）====================
   auto-check:
-    name: 🔍 静态检查
+    name: 🔍 静态檢查
     runs-on: ubuntu-latest
     needs: [security-check]
     if: needs.security-check.outputs.safe_to_run == 'true'
@@ -97,7 +97,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       
-      - name: 🔄 获取 base 分支
+      - name: 🔄 獲取 base 分支
         run: git fetch origin ${{ github.base_ref || 'main' }}:refs/remotes/origin/${{ github.base_ref || 'main' }}
       
       - name: 🐍 设置 Python
@@ -111,7 +111,7 @@ jobs:
           pip install --upgrade pip
           pip install flake8
       
-      - name: 📋 检查变更文件
+      - name: 📋 檢查变更文件
         id: check_files
         run: |
           BASE_REF="${{ github.base_ref || 'main' }}"
@@ -134,12 +134,12 @@ jobs:
             echo "EOF" >> $GITHUB_ENV
           fi
       
-      - name: 🐍 Python 语法检查
+      - name: 🐍 Python 语法檢查
         id: syntax
         if: steps.check_files.outputs.has_py_changes == 'true'
         run: |
-          echo "## 🐍 语法检查" >> $GITHUB_STEP_SUMMARY
-          echo "检查文件: $CHANGED_FILES"
+          echo "## 🐍 语法檢查" >> $GITHUB_STEP_SUMMARY
+          echo "檢查文件: $CHANGED_FILES"
           
           ERRORS=""
           SYNTAX_OK="true"
@@ -161,10 +161,10 @@ jobs:
             echo "✅ 所有文件语法正确" >> $GITHUB_STEP_SUMMARY
           fi
       
-      - name: 🔎 Flake8 检查（严重錯誤）
+      - name: 🔎 Flake8 檢查（严重錯誤）
         if: steps.check_files.outputs.has_py_changes == 'true'
         run: |
-          echo "## 🔎 代碼质量检查" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔎 代碼质量檢查" >> $GITHUB_STEP_SUMMARY
           RESULT=$(flake8 $CHANGED_FILES --select=E9,F63,F7,F82 --format='%(path)s:%(row)d: %(code)s %(text)s' 2>/dev/null || true)
           if [ -n "$RESULT" ]; then
             echo "⚠️ 发现以下議題：" >> $GITHUB_STEP_SUMMARY
@@ -176,15 +176,15 @@ jobs:
             echo "✅ 未发现严重代碼議題" >> $GITHUB_STEP_SUMMARY
           fi
       
-      - name: 📊 变更统计
+      - name: 📊 变更統計
         run: |
           BASE_REF="${{ github.base_ref || 'main' }}"
-          echo "## 📊 变更统计" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 变更統計" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           STATS=$(git diff --stat origin/$BASE_REF...HEAD 2>/dev/null | tail -1)
           echo "$STATS" >> $GITHUB_STEP_SUMMARY
 
-  # ==================== AI 代碼审查（依賴静态检查通过）====================
+  # ==================== AI 代碼审查（依賴静态檢查通过）====================
   ai-review:
     name: 🤖 AI 代碼审查
     runs-on: ubuntu-latest
@@ -196,7 +196,7 @@ jobs:
       vars.ENABLE_AI_REVIEW != 'false'
     
     steps:
-      # 先检出主分支（获取最新的 .github/scripts）
+      # 先检出主分支（獲取最新的 .github/scripts）
       - name: 📥 检出主分支脚本
         uses: actions/checkout@v5
         with:
@@ -214,7 +214,7 @@ jobs:
           fetch-depth: 0
           path: pr-code
       
-      - name: 🔄 获取 base 分支
+      - name: 🔄 獲取 base 分支
         working-directory: pr-code
         run: git fetch origin ${{ github.base_ref || 'main' }}:refs/remotes/origin/${{ github.base_ref || 'main' }}
       
@@ -251,7 +251,7 @@ jobs:
           path: pr-code/ai_review_result.txt
           if-no-files-found: ignore
 
-  # ==================== PR 標籤自动分类 ====================
+  # ==================== PR 標籤自动分類 ====================
   labeler:
     name: 🏷️ 自动標籤
     runs-on: ubuntu-latest
@@ -330,7 +330,7 @@ jobs:
               }
             }
 
-  # ==================== 自动評論检查结果 ====================
+  # ==================== 自动評論檢查结果 ====================
   comment:
     name: 💬 审查报告
     runs-on: ubuntu-latest
@@ -399,7 +399,7 @@ jobs:
             | 📊 变更文件 | ${changedFiles} 个 |
             | ➕ 新增行数 | ${additions} 行 |
             | ➖ 刪除行数 | ${deletions} 行 |
-            | 🔍 静态检查 | ${checkStatus} |
+            | 🔍 静态檢查 | ${checkStatus} |
             | 🧠 AI 审查 | ${aiStatus} |
 
             ### 📁 修改的文件
@@ -429,7 +429,7 @@ jobs:
             report += `
             ---
 
-            > 💡 **提示**: 请确保代碼已通过本機測試，并遵循项目代碼规范。
+            > 💡 **提示**: 请確保代碼已通过本機測試，并遵循项目代碼規範。
             `;
             
             if (botComment) {

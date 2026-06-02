@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票數據相关模型
+股票數據相關模型
 ===================================
 
 职责：
@@ -87,7 +87,7 @@ class ExtractItem(BaseModel):
 class ExtractFromImageResponse(BaseModel):
     """图片股票代碼提取回應"""
 
-    codes: List[str] = Field(..., description="提取的股票代碼（已去重，向后兼容）")
+    codes: List[str] = Field(..., description="提取的股票代碼（已去重，向后相容）")
     items: List[ExtractItem] = Field(default_factory=list, description="提取结果明细（代碼+名称+置信度）")
     raw_text: Optional[str] = Field(None, description="原始 LLM 回應（调试用）")
 

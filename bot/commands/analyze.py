@@ -4,7 +4,7 @@
 股票分析命令
 ===================================
 
-分析指定股票，调用 AI 生成分析报告。
+分析指定股票，呼叫 AI 生成分析报告。
 """
 
 import re
@@ -46,13 +46,13 @@ class AnalyzeCommand(BotCommand):
         return "/analyze <股票代碼> [full]"
     
     def validate_args(self, args: List[str]) -> Optional[str]:
-        """验证參數"""
+        """驗證參數"""
         if not args:
-            return "请输入股票代碼"
+            return "请輸入股票代碼"
         
         code = args[0].upper()
 
-        # 验证股票代碼格式
+        # 驗證股票代碼格式
         # A股：6位数字
         # 港股：HK+5位数字
         # 美股：1-5个大写字母+.+2个后缀字母
@@ -66,17 +66,17 @@ class AnalyzeCommand(BotCommand):
         return None
     
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行分析命令"""
+        """執行分析命令"""
         code = canonical_stock_code(args[0])
         
-        # 检查是否需要完整报告（默认精简，传 full/完整/详细 切换）
+        # 檢查是否需要完整报告（預設精简，传 full/完整/詳細 切換）
         report_type = "simple"
-        if len(args) > 1 and args[1].lower() in ["full", "完整", "详细"]:
+        if len(args) > 1 and args[1].lower() in ["full", "完整", "詳細"]:
             report_type = "full"
         logger.info(f"[AnalyzeCommand] 分析股票: {code}, 报告类型: {report_type}")
         
         try:
-            # 调用分析服務
+            # 呼叫分析服務
             from src.services.task_service import get_task_service
             from src.enums import ReportType
             
@@ -103,5 +103,5 @@ class AnalyzeCommand(BotCommand):
                 return BotResponse.error_response(f"提交分析工作失败: {error}")
                 
         except Exception as e:
-            logger.error(f"[AnalyzeCommand] 执行失败: {e}")
+            logger.error(f"[AnalyzeCommand] 執行失败: {e}")
             return BotResponse.error_response(f"分析失败: {str(e)[:100]}")

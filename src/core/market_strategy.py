@@ -58,13 +58,13 @@ CN_BLUEPRINT = MarketStrategyBlueprint(
     principles=[
         "先看指數方向，再看量能结构，最后看板塊持续性。",
         "结论必须映射到仓位、节奏与風險控制动作。",
-        "判断使用当日數據与近3日新闻，不臆测未验证資訊。",
+        "判斷使用当日數據与近3日新闻，不臆测未驗證資訊。",
     ],
     dimensions=[
         StrategyDimension(
             name="趨勢结构",
-            objective="判断市场处于上升、震荡还是防守阶段。",
-            checkpoints=["上证/深证/创业板是否同向", "放量上涨或缩量下跌是否成立", "关键支撑阻力是否被突破"],
+            objective="判斷市场处于上升、震荡还是防守阶段。",
+            checkpoints=["上证/深证/创业板是否同向", "放量上涨或缩量下跌是否成立", "關鍵支撑阻力是否被突破"],
         ),
         StrategyDimension(
             name="資金情绪",
@@ -80,7 +80,7 @@ CN_BLUEPRINT = MarketStrategyBlueprint(
     action_framework=[
         "进攻：指數共振上行 + 成交额放大 + 主线强化。",
         "均衡：指數分化或缩量震荡，控制仓位并等待确认。",
-        "防守：指數转弱 + 领跌扩散，优先风控与减仓。",
+        "防守：指數转弱 + 领跌扩散，優先风控与减仓。",
     ],
 )
 
@@ -136,18 +136,18 @@ HK_BLUEPRINT = MarketStrategyBlueprint(
     principles=[
         "先看恒指/恒科/国企指數方向，再看南向資金情绪，最后看板塊持续性。",
         "结论必须映射到仓位、节奏与風險控制动作。",
-        "判断使用当日數據与近3日新闻，不臆测未验证資訊。",
+        "判斷使用当日數據与近3日新闻，不臆测未驗證資訊。",
     ],
     dimensions=[
         StrategyDimension(
             name="趨勢结构",
-            objective="判断市场处于上升、震荡还是防守阶段。",
-            checkpoints=["恒指/恒科/国企指數是否同向", "放量上涨或缩量下跌是否成立", "关键支撑阻力是否被突破"],
+            objective="判斷市场处于上升、震荡还是防守阶段。",
+            checkpoints=["恒指/恒科/国企指數是否同向", "放量上涨或缩量下跌是否成立", "關鍵支撑阻力是否被突破"],
         ),
         StrategyDimension(
             name="資金情绪",
             objective="识别南向資金風險偏好与情绪温度。",
-            checkpoints=["南向資金净流入方向与规模", "港元汇率与内地政策含义", "市场广度与龙头集中度"],
+            checkpoints=["南向資金净流入方向与規模", "港元汇率与内地政策含义", "市场廣度与龙头集中度"],
         ),
         StrategyDimension(
             name="主线板塊",
@@ -158,7 +158,7 @@ HK_BLUEPRINT = MarketStrategyBlueprint(
     action_framework=[
         "进攻：恒指共振上行 + 南向資金持续流入 + 主线强化。",
         "均衡：指數分化或缩量震荡，控制仓位并等待确认。",
-        "防守：指數转弱 + 波动率上升，优先风控与减仓。",
+        "防守：指數转弱 + 波动率上升，優先风控与减仓。",
     ],
 )
 

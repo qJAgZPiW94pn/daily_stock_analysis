@@ -8,7 +8,7 @@
 1. 美股指數代碼映射（如 SPX -> ^GSPC）
 2. 美股股票代碼识别（AAPL、TSLA 等）
 
-美股指數在 Yahoo Finance 中需使用 ^ 前缀，与股票代碼不同。
+美股指數在 Yahoo Finance 中需使用 ^ 前綴，与股票代碼不同。
 """
 
 import re
@@ -17,7 +17,7 @@ import re
 _US_STOCK_PATTERN = re.compile(r'^[A-Z]{1,5}(\.[A-Z])?$')
 
 
-# 使用者输入 -> (Yahoo Finance 符号, 中文名称)
+# 使用者輸入 -> (Yahoo Finance 符号, 中文名称)
 US_INDEX_MAPPING = {
     # 标普 500
     'SPX': ('^GSPC', '标普500指數'),
@@ -45,7 +45,7 @@ US_INDEX_MAPPING = {
 
 def is_us_index_code(code: str) -> bool:
     """
-    判断代碼是否为美股指數符号。
+    判斷代碼是否为美股指數符号。
 
     Args:
         code: 股票/指數代碼，如 'SPX', 'DJI'
@@ -64,10 +64,10 @@ def is_us_index_code(code: str) -> bool:
 
 def is_us_stock_code(code: str) -> bool:
     """
-    判断代碼是否为美股股票符号（排除美股指數）。
+    判斷代碼是否为美股股票符号（排除美股指數）。
 
     美股股票代碼为 1-5 个大写字母，可選 .X 后缀如 BRK.B。
-    美股指數（SPX、DJI 等）明确排除。
+    美股指數（SPX、DJI 等）明確排除。
 
     Args:
         code: 股票代碼，如 'AAPL', 'TSLA', 'BRK.B'
@@ -96,10 +96,10 @@ def is_us_stock_code(code: str) -> bool:
 
 def get_us_index_yf_symbol(code: str) -> tuple:
     """
-    获取美股指數的 Yahoo Finance 符号与中文名称。
+    獲取美股指數的 Yahoo Finance 符号与中文名称。
 
     Args:
-        code: 使用者输入，如 'SPX', '^GSPC', 'DJI'
+        code: 使用者輸入，如 'SPX', '^GSPC', 'DJI'
 
     Returns:
         (yf_symbol, chinese_name) 元组，未找到时傳回 (None, None)。

@@ -57,7 +57,7 @@ class StrategiesCommand(BotCommand):
 
             all_skills = sm.list_skills()
             if not all_skills:
-                return BotResponse.text_response("📋 暂无可用策略。请检查 strategies/ 目錄。")
+                return BotResponse.text_response("📋 暂无可用策略。请檢查 strategies/ 目錄。")
 
             skills = all_skills
             if show_active_only:
@@ -100,4 +100,4 @@ class StrategiesCommand(BotCommand):
         except Exception as e:
             logger.error(f"Strategies command failed: {e}")
             logger.exception("Strategies error details:")
-            return BotResponse.text_response(f"⚠️ 获取策略列表失败: {str(e)}")
+            return BotResponse.text_response(f"⚠️ 獲取策略列表失败: {str(e)}")

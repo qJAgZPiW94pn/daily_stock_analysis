@@ -34,7 +34,7 @@ class TelegramSender:
         }
     
     def _is_telegram_configured(self) -> bool:
-        """检查 Telegram 配置是否完整"""
+        """檢查 Telegram 配置是否完整"""
         return bool(self._telegram_config['bot_token'] and self._telegram_config['chat_id'])
    
     def send_to_telegram(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
@@ -186,7 +186,7 @@ class TelegramSender:
         timeout_seconds: Optional[float] = None,
     ) -> bool:
         """Retry Telegram send without parse_mode when Markdown parsing fails."""
-        logger.info("Telegram Markdown 解析失败，尝试使用纯文本格式重新发送...")
+        logger.info("Telegram Markdown 解析失败，嘗試使用纯文本格式重新发送...")
         plain_payload = dict(payload)
         plain_payload.pop('parse_mode', None)
         plain_payload['text'] = text
@@ -284,12 +284,12 @@ class TelegramSender:
             logger.error("Telegram 图片发送失败: %s", response.text[:200])
             return False
         except Exception as e:
-            logger.error("Telegram 图片发送异常: %s", e)
+            logger.error("Telegram 图片发送例外: %s", e)
             return False
 
     def _convert_to_telegram_markdown(self, text: str) -> str:
         """
-        将标准 Markdown 转换为 Telegram 支援的格式
+        将標準 Markdown 轉換为 Telegram 支援的格式
         
         Telegram Markdown 限制：
         - 不支援 # 标题
@@ -301,7 +301,7 @@ class TelegramSender:
         # 移除 # 标题标记（Telegram 不支援）
         result = re.sub(r'^#{1,6}\s+', '', result, flags=re.MULTILINE)
         
-        # 转换 **bold** 为 *bold*
+        # 轉換 **bold** 为 *bold*
         result = re.sub(r'\*\*(.+?)\*\*', r'*\1*', result)
         
         # Escape special characters for Telegram Markdown, but preserve link syntax [text](url)

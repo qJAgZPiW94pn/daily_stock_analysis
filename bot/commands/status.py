@@ -4,7 +4,7 @@
 狀態命令
 ===================================
 
-显示系統執行狀態和配置資訊。
+顯示系統執行狀態和配置資訊。
 """
 
 import platform
@@ -20,7 +20,7 @@ class StatusCommand(BotCommand):
     """
     狀態命令
     
-    显示系統執行狀態，包括：
+    顯示系統執行狀態，包括：
     - 服務狀態
     - 配置資訊
     - 可用功能
@@ -36,14 +36,14 @@ class StatusCommand(BotCommand):
     
     @property
     def description(self) -> str:
-        return "显示系統狀態"
+        return "顯示系統狀態"
     
     @property
     def usage(self) -> str:
         return "/status"
     
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行狀態命令"""
+        """執行狀態命令"""
         from src.config import get_config
         
         config = get_config()
@@ -51,7 +51,7 @@ class StatusCommand(BotCommand):
         # 收集狀態資訊
         status_info = self._collect_status(config)
         
-        # 格式化输出
+        # 格式化輸出
         text = self._format_status(status_info, message.platform)
         
         return BotResponse.markdown_response(text)
@@ -65,7 +65,7 @@ class StatusCommand(BotCommand):
             "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
             "platform": platform.system(),
             "stock_count": len(config.stock_list),
-            "stock_list": config.stock_list[:5],  # 只显示前5个
+            "stock_list": config.stock_list[:5],  # 只顯示前5个
         }
         
         # AI 配置狀態
@@ -103,7 +103,7 @@ class StatusCommand(BotCommand):
             and (has_direct_env_model or (llm_model_list and primary_model_reachable))
         )
         
-        # 搜索服務狀態
+        # 搜尋服務狀態
         status["search_bocha"] = len(config.bocha_api_keys) > 0
         status["search_tavily"] = len(config.tavily_api_keys) > 0
         status["search_brave"] = len(config.brave_api_keys) > 0
@@ -180,7 +180,7 @@ class StatusCommand(BotCommand):
                 for name, enabled in status["ai_legacy_keys"].items()
             ),
             "",
-            "**🔍 搜索服務**",
+            "**🔍 搜尋服務**",
             f"• Bocha: {icon(status['search_bocha'])}",
             f"• Tavily: {icon(status['search_tavily'])}",
             f"• Brave: {icon(status['search_brave'])}",

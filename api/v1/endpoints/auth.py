@@ -224,12 +224,12 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
             if not password:
                 return JSONResponse(
                     status_code=400,
-                    content={"error": "password_required", "message": "请输入要设置的管理员密碼"},
+                    content={"error": "password_required", "message": "请輸入要设置的管理员密碼"},
                 )
             if password != confirm:
                 return JSONResponse(
                     status_code=400,
-                    content={"error": "password_mismatch", "message": "两次输入的密碼不一致"},
+                    content={"error": "password_mismatch", "message": "两次輸入的密碼不一致"},
                 )
             if has_stored_password():
                 return JSONResponse(
@@ -263,7 +263,7 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
                 if not current_password:
                     return JSONResponse(
                         status_code=400,
-                        content={"error": "current_required", "message": "重新开启認證前请输入当前密碼"},
+                        content={"error": "current_required", "message": "重新开启認證前请輸入当前密碼"},
                     )
                 ip = get_client_ip(request)
                 if not check_rate_limit(ip):
@@ -290,7 +290,7 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
                 if not current_password:
                     return JSONResponse(
                         status_code=400,
-                        content={"error": "current_required", "message": "關閉認證前请输入当前密碼"},
+                        content={"error": "current_required", "message": "關閉認證前请輸入当前密碼"},
                     )
                 ip = get_client_ip(request)
                 if not check_rate_limit(ip):
@@ -371,7 +371,7 @@ async def auth_login(request: Request, body: LoginRequest):
     if not password:
         return JSONResponse(
             status_code=400,
-            content={"error": "password_required", "message": "请输入密碼"},
+            content={"error": "password_required", "message": "请輸入密碼"},
         )
 
     ip = get_client_ip(request)
@@ -443,12 +443,12 @@ async def auth_change_password(body: ChangePasswordRequest):
     if not current:
         return JSONResponse(
             status_code=400,
-            content={"error": "current_required", "message": "请输入当前密碼"},
+            content={"error": "current_required", "message": "请輸入当前密碼"},
         )
     if new_pwd != new_confirm:
         return JSONResponse(
             status_code=400,
-            content={"error": "password_mismatch", "message": "两次输入的新密碼不一致"},
+            content={"error": "password_mismatch", "message": "两次輸入的新密碼不一致"},
         )
 
     err = change_password(current, new_pwd)

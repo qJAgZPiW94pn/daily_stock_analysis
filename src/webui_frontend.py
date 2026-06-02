@@ -34,7 +34,7 @@ _BUILD_INPUT_DIRS = ("src", "public")
 
 
 def _is_truthy_env(var_name: str, default: str = "true") -> bool:
-    """解析常见的环境變數真值/假值表达（大小写不敏感）。"""
+    """解析常见的環境變數真值/假值表达（大小写不敏感）。"""
     value = os.getenv(var_name, default).strip().lower()
     return value not in _FALSEY_ENV_VALUES
 
@@ -107,14 +107,14 @@ def _needs_frontend_build(frontend_dir: Path, force_build: bool) -> tuple[bool, 
 def _run_frontend_commands(commands: Sequence[Sequence[str]], frontend_dir: Path) -> bool:
     try:
         for command in commands:
-            logger.info("执行前端命令: %s", " ".join(command))
+            logger.info("執行前端命令: %s", " ".join(command))
             subprocess.run(command, cwd=frontend_dir, check=True)
         logger.info("前端静态资源构建完成")
         return True
     except subprocess.CalledProcessError as exc:
         cmd_display = " ".join(exc.cmd) if isinstance(exc.cmd, (list, tuple)) else str(exc.cmd)
         logger.error(
-            "前端命令执行失败（exit_code=%s）: %s",
+            "前端命令執行失败（exit_code=%s）: %s",
             getattr(exc, "returncode", "N/A"),
             cmd_display,
         )
@@ -128,10 +128,10 @@ def _manual_build_command(frontend_dir: Path) -> str:
 
 
 def _has_static_assets(static_dir: Path) -> bool:
-    """检查 static/assets/ 是否存在且包含 CSS/JS 文件。
+    """檢查 static/assets/ 是否存在且包含 CSS/JS 文件。
 
-    index.html 存在但 assets/ 为空或缺失时，浏览器无法加载样式与脚本，
-    会导致页面元素异常放大、布局错乱（纯裸 HTML 渲染）。
+    index.html 存在但 assets/ 为空或缺失时，浏览器無法加载样式与脚本，
+    会导致页面元素例外放大、布局错乱（纯裸 HTML 渲染）。
     """
     assets_dir = static_dir / "assets"
     if not assets_dir.is_dir():
@@ -146,13 +146,13 @@ def _has_static_assets(static_dir: Path) -> bool:
 
 
 def _warn_if_assets_missing(artifact_index: Path, frontend_dir: Path) -> None:
-    """当 index.html 存在但 assets/ 缺失时，发出页面显示异常警告。"""
+    """当 index.html 存在但 assets/ 缺失时，发出页面顯示例外警告。"""
     static_dir = artifact_index.parent
     assets_dir = static_dir / "assets"
     if not _has_static_assets(static_dir):
         logger.warning(
             "检测到 %s 但 %s 目錄不存在或无 CSS/JS 文件，"
-            "WebUI 将因缺少样式与脚本而显示异常（元素过大、布局错乱）",
+            "WebUI 将因缺少样式与脚本而顯示例外（元素过大、布局错乱）",
             artifact_index,
             assets_dir,
         )
@@ -161,7 +161,7 @@ def _warn_if_assets_missing(artifact_index: Path, frontend_dir: Path) -> None:
             _manual_build_command(frontend_dir),
         )
         logger.warning(
-            "Docker 使用者请执行: docker-compose -f ./docker/docker-compose.yml build --no-cache"
+            "Docker 使用者请執行: docker-compose -f ./docker/docker-compose.yml build --no-cache"
         )
 
 
@@ -202,13 +202,13 @@ def prepare_webui_frontend_assets() -> bool:
 
     package_json = frontend_dir / "package.json"
     if not package_json.exists():
-        logger.warning("未找到前端项目，无法自动构建: %s", package_json)
-        logger.warning("可先手动检查前端目錄或關閉 WEBUI_AUTO_BUILD")
+        logger.warning("未找到前端项目，無法自动构建: %s", package_json)
+        logger.warning("可先手动檢查前端目錄或關閉 WEBUI_AUTO_BUILD")
         return False
 
     npm_path = shutil.which("npm")
     if not npm_path:
-        logger.warning("未检测到 npm，无法自动构建前端")
+        logger.warning("未检测到 npm，無法自动构建前端")
         logger.warning("请先手动构建前端静态资源: %s", _manual_build_command(frontend_dir))
         return False
 
@@ -228,7 +228,7 @@ def prepare_webui_frontend_assets() -> bool:
         commands.append([npm_path, "run", "build"])
 
     logger.info(
-        "前端构建检查结果: needs_install=%s, needs_build=%s, artifact=%s",
+        "前端构建檢查结果: needs_install=%s, needs_build=%s, artifact=%s",
         needs_install,
         needs_build,
         artifact_index,

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票數據接口
+股票數據介面
 ===================================
 
 职责：
 1. POST /api/v1/stocks/extract-from-image 从图片提取股票代碼
 2. POST /api/v1/stocks/parse-import 解析 CSV/Excel/剪贴板
-3. GET /api/v1/stocks/{code}/quote 实时行情接口
-4. GET /api/v1/stocks/{code}/history 历史行情接口
+3. GET /api/v1/stocks/{code}/quote 实时行情介面
+4. GET /api/v1/stocks/{code}/history 历史行情介面
 """
 
 import logging
@@ -62,7 +62,7 @@ def extract_from_image(
     """
     从上傳的图片中提取股票代碼（使用 Vision LLM）。
 
-    表单欄位请使用 file 上傳图片。优先级：Gemini / Anthropic / OpenAI（首个可用）。
+    表单欄位请使用 file 上傳图片。優先级：Gemini / Anthropic / OpenAI（首个可用）。
     """
     if not file or not file.filename:
         raise HTTPException(
@@ -76,12 +76,12 @@ def extract_from_image(
             status_code=400,
             detail={
                 "error": "unsupported_type",
-                "message": f"不支援的类型: {content_type}。允许: {ALLOWED_MIME_STR}",
+                "message": f"不支援的类型: {content_type}。允許: {ALLOWED_MIME_STR}",
             },
         )
 
     try:
-        # 先读取限定大小，再检查是否还有剩余（语义清晰：超出则拒绝）
+        # 先讀取限定大小，再檢查是否还有剩余（语义清晰：超出则拒絕）
         data = file.file.read(MAX_SIZE_BYTES)
         if file.file.read(1):
             raise HTTPException(
@@ -94,10 +94,10 @@ def extract_from_image(
     except HTTPException:
         raise
     except Exception as e:
-        logger.warning(f"读取上傳文件失败: {e}")
+        logger.warning(f"讀取上傳文件失败: {e}")
         raise HTTPException(
             status_code=400,
-            detail={"error": "read_failed", "message": "读取上傳文件失败"},
+            detail={"error": "read_failed", "message": "讀取上傳文件失败"},
         )
 
     try:
@@ -138,7 +138,7 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
 
     - multipart/form-data + file: 上傳文件
     - application/json + {"text": "..."}: 粘贴文本
-    - 优先使用 file，若同时提供则忽略 text
+    - 優先使用 file，若同时提供则忽略 text
     """
     content_type = (request.headers.get("content-type") or "").lower()
 
@@ -207,7 +207,7 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
             )
             raise HTTPException(
                 status_code=400,
-                detail={"error": "read_failed", "message": "读取文件失败"},
+                detail={"error": "read_failed", "message": "讀取文件失败"},
             )
         filename = getattr(file, "filename", None) or ""
         try:
@@ -247,14 +247,14 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
         404: {"description": "股票不存在", "model": ErrorResponse},
         500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
-    summary="获取股票实时行情",
-    description="获取指定股票的最新行情數據"
+    summary="獲取股票实时行情",
+    description="獲取指定股票的最新行情數據"
 )
 def get_stock_quote(stock_code: str) -> StockQuote:
     """
-    获取股票实时行情
+    獲取股票实时行情
     
-    获取指定股票的最新行情數據
+    獲取指定股票的最新行情數據
     
     Args:
         stock_code: 股票代碼（如 600519、00700、AAPL）
@@ -268,7 +268,7 @@ def get_stock_quote(stock_code: str) -> StockQuote:
     try:
         service = StockService()
         
-        # 使用 def 而非 async def，FastAPI 自动在執行緒池中执行
+        # 使用 def 而非 async def，FastAPI 自动在執行緒池中執行
         result = service.get_realtime_quote(stock_code)
         
         if result is None:
@@ -298,12 +298,12 @@ def get_stock_quote(stock_code: str) -> StockQuote:
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"获取实时行情失败: {e}", exc_info=True)
+        logger.error(f"獲取实时行情失败: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
             detail={
                 "error": "internal_error",
-                "message": f"获取实时行情失败: {str(e)}"
+                "message": f"獲取实时行情失败: {str(e)}"
             }
         )
 
@@ -316,23 +316,23 @@ def get_stock_quote(stock_code: str) -> StockQuote:
         422: {"description": "不支援的周期參數", "model": ErrorResponse},
         500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
-    summary="获取股票历史行情",
-    description="获取指定股票的历史 K 线數據"
+    summary="獲取股票历史行情",
+    description="獲取指定股票的历史 K 线數據"
 )
 def get_stock_history(
     stock_code: str,
     period: str = Query("daily", description="K 线周期", pattern="^(daily|weekly|monthly)$"),
-    days: int = Query(30, ge=1, le=365, description="获取天数")
+    days: int = Query(30, ge=1, le=365, description="獲取天数")
 ) -> StockHistoryResponse:
     """
-    获取股票历史行情
+    獲取股票历史行情
     
-    获取指定股票的历史 K 线數據
+    獲取指定股票的历史 K 线數據
     
     Args:
         stock_code: 股票代碼
         period: K 线周期 (daily/weekly/monthly)
-        days: 获取天数
+        days: 獲取天数
         
     Returns:
         StockHistoryResponse: 历史行情數據
@@ -340,14 +340,14 @@ def get_stock_history(
     try:
         service = StockService()
         
-        # 使用 def 而非 async def，FastAPI 自动在執行緒池中执行
+        # 使用 def 而非 async def，FastAPI 自动在執行緒池中執行
         result = service.get_history_data(
             stock_code=stock_code,
             period=period,
             days=days
         )
         
-        # 转换为回應模型
+        # 轉換为回應模型
         data = [
             KLineData(
                 date=item.get("date"),
@@ -379,11 +379,11 @@ def get_stock_history(
             }
         )
     except Exception as e:
-        logger.error(f"获取历史行情失败: {e}", exc_info=True)
+        logger.error(f"獲取历史行情失败: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
             detail={
                 "error": "internal_error",
-                "message": f"获取历史行情失败: {str(e)}"
+                "message": f"獲取历史行情失败: {str(e)}"
             }
         )

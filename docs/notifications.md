@@ -1,6 +1,6 @@
 # 通知能力基线
 
-本文档记录通知能力 P0-P7 终态：渠道、配置 key、GitHub Actions 映射、Web 设置元數據、CLI 诊断口径、Web 一键測試、自定义 Webhook Body 模板语义、通知路由策略、降噪机制、聚合报告失败隔离、ntfy / Gotify 一等渠道、WebPush / Apprise 评估，以及本機 / Docker / GitHub Actions / Desktop 场景化配置说明。P0 只做基线与只读诊断；P1 增加 Web 单渠道真实測試；P2 产品化现有 Body 模板；P3 增加 report / alert / system_error 路由；P4 增加程式内降噪；P5 强化測試诊断和聚合报告逐渠道失败隔离；P6-A 新增 ntfy；P6-C 新增 Gotify；P6-D 只评估 WebPush / Apprise；P7 收口文档与 Actions env 对照表自動化，不新增執行时依賴、配置入口、per-URL 模板、跨程式持久化、真实每日摘要或重试循环。
+本文档记录通知能力 P0-P7 终态：渠道、配置 key、GitHub Actions 映射、Web 设置元數據、CLI 診斷口径、Web 一键測試、自定义 Webhook Body 模板语义、通知路由策略、降噪機制、聚合报告失败隔離、ntfy / Gotify 一等渠道、WebPush / Apprise 評估，以及本機 / Docker / GitHub Actions / Desktop 場景化配置说明。P0 只做基线与只读診斷；P1 增加 Web 单渠道真实測試；P2 产品化现有 Body 模板；P3 增加 report / alert / system_error 路由；P4 增加程式内降噪；P5 强化測試診斷和聚合报告逐渠道失败隔離；P6-A 新增 ntfy；P6-C 新增 Gotify；P6-D 只評估 WebPush / Apprise；P7 收口文档与 Actions env 对照表自動化，不新增執行时依賴、配置入口、per-URL 模板、跨程式持久化、真实每日摘要或重試循环。
 
 ## 渠道基线
 
@@ -17,26 +17,26 @@
 | Server酱3 | 静态配置 | `SERVERCHAN3_SENDKEY` | - | 手机 App 推送 |
 | 自定义 Webhook | 静态配置 | `CUSTOM_WEBHOOK_URLS` | `CUSTOM_WEBHOOK_BEARER_TOKEN`, `CUSTOM_WEBHOOK_BODY_TEMPLATE`, `WEBHOOK_VERIFY_SSL` | 支援多个 URL，逗号分隔 |
 | Discord | 静态配置 | `DISCORD_WEBHOOK_URL` 或 `DISCORD_BOT_TOKEN` + `DISCORD_MAIN_CHANNEL_ID` | `DISCORD_INTERACTIONS_PUBLIC_KEY` | Webhook 与 Bot 均可启用发送 |
-| Slack | 静态配置 | `SLACK_WEBHOOK_URL` 或 `SLACK_BOT_TOKEN` + `SLACK_CHANNEL_ID` | - | Bot 优先用于文本与图片同频道发送 |
+| Slack | 静态配置 | `SLACK_WEBHOOK_URL` 或 `SLACK_BOT_TOKEN` + `SLACK_CHANNEL_ID` | - | Bot 優先用于文本与图片同频道发送 |
 | AstrBot | 静态配置 | `ASTRBOT_URL` | `ASTRBOT_TOKEN`, `WEBHOOK_VERIFY_SSL` | `ASTRBOT_TOKEN` 可選 |
-| `UNKNOWN` | 兜底枚举 | - | - | 仅为未知渠道兜底，不由静态环境變數启用 |
-| 钉钉会话 | 執行时上下文 | - | - | 从来源訊息上下文提取，无法仅由 `.env` 静态判断 |
-| 飞书会话 | 執行时上下文 | - | - | 从来源訊息上下文提取，无法仅由 `.env` 静态判断 |
+| `UNKNOWN` | 兜底枚举 | - | - | 仅为未知渠道兜底，不由静态環境變數启用 |
+| 钉钉會話 | 執行时上下文 | - | - | 从来源訊息上下文提取，無法仅由 `.env` 静态判斷 |
+| 飞书會話 | 執行时上下文 | - | - | 从来源訊息上下文提取，無法仅由 `.env` 静态判斷 |
 
-## Minimal / Advanced 分层
+## Minimal / Advanced 分層
 
 - Minimal key：足以启用一个通知渠道的最小配置。
 - Advanced key：只影响認證、安全、格式、執行緒、群組、证书校验或展示行为，不能单独启用渠道。
 - P3 的 `NOTIFICATION_*_CHANNELS` 属于 Advanced key：只收窄已啟用渠道，不会单独启用渠道。
 - P4 的 `NOTIFICATION_DEDUP_TTL_SECONDS`、`NOTIFICATION_COOLDOWN_SECONDS`、`NOTIFICATION_QUIET_HOURS`、`NOTIFICATION_TIMEZONE`、`NOTIFICATION_MIN_SEVERITY`、`NOTIFICATION_DAILY_DIGEST_ENABLED` 属于 Advanced key：只影响已啟用静态渠道的发送策略，不会单独启用渠道。
-- `REPORT_SHOW_LLM_MODEL` 是报告展示开关：默认 `true` 时在通知报告底部显示本次分析使用的 LLM 模型，设为 `false` 时隐藏。该參數仅影响报告渲染，不会更改執行时的 provider/model/Base URL、LiteLLM 路由、模型保存、迁移或清理逻辑；回退方式为改回 `true` 或刪除该變數。
-- `WEBHOOK_VERIFY_SSL` 是读取该配置的 webhook-style HTTPS 通知請求共用的证书校验开关。
-- WebPush、Apprise、更细粒度路由、跨程式降噪和真实每日摘要暂不进入執行时实现；相关配置如未来引入，应先更新本文档、`.env.example`、Web 元數據与回归測試。
+- `REPORT_SHOW_LLM_MODEL` 是报告展示开关：預設 `true` 时在通知报告底部顯示本次分析使用的 LLM 模型，设为 `false` 时隱藏。该參數仅影响报告渲染，不会更改執行时的 provider/model/Base URL、LiteLLM 路由、模型保存、迁移或清理邏輯；回退方式为改回 `true` 或刪除该變數。
+- `WEBHOOK_VERIFY_SSL` 是讀取该配置的 webhook-style HTTPS 通知請求共用的证书校验开关。
+- WebPush、Apprise、更细粒度路由、跨程式降噪和真实每日摘要暂不进入執行时實現；相關配置如未来引入，应先更新本文档、`.env.example`、Web 元數據与迴歸測試。
 - Bark 保持 custom webhook 基线，不新增 `BARK_*` 一等配置。
 
 ## GitHub Actions 映射
 
-倉庫自带 `.github/workflows/daily_analysis.yml` 只显式匯入固定變數名。P0/P3/P4/P6 已把 Body 模板、安全项、PushPlus topic、路由、降噪、ntfy 和 Gotify 等通知 key 纳入默认 workflow。下面的表格由 `scripts/generate_notification_actions_env_table.py` 从 workflow `env:` 和通知诊断元數據生成，避免手写对照表和真实 Actions 映射繼續漂移。
+倉庫自带 `.github/workflows/daily_analysis.yml` 只显式匯入固定變數名。P0/P3/P4/P6 已把 Body 模板、安全项、PushPlus topic、路由、降噪、ntfy 和 Gotify 等通知 key 纳入預設 workflow。下面的表格由 `scripts/generate_notification_actions_env_table.py` 从 workflow `env:` 和通知診斷元數據生成，避免手写对照表和真实 Actions 映射繼續漂移。
 
 <!-- notification-actions-env-table:start -->
 
@@ -87,37 +87,37 @@
 
 <!-- notification-actions-env-table:end -->
 
-默认 workflow 仍不映射 `MARKDOWN_TO_IMAGE_CHANNELS` 与 `MERGE_EMAIL_NOTIFICATION`。它们是发送形态或聚合行为开关，不是渠道凭证；在 Actions 中自动开始读取同名 Secret/Variable 会引入额外行为变化。
+預設 workflow 仍不映射 `MARKDOWN_TO_IMAGE_CHANNELS` 与 `MERGE_EMAIL_NOTIFICATION`。它们是发送形态或聚合行为开关，不是渠道凭证；在 Actions 中自动开始讀取同名 Secret/Variable 会引入额外行为变化。
 
-## CLI 诊断
+## CLI 診斷
 
 ```bash
 python main.py --check-notify
 ```
 
-该命令只读配置，不发送通知，不写入 `.env`。它会在配置加载和日誌初始化后立即执行，完成后直接退出，不再进入 Web、调度、大盤复盘或默认分析流程。
+该命令只读配置，不发送通知，不写入 `.env`。它会在配置加载和日誌初始化后立即執行，完成后直接退出，不再进入 Web、调度、大盤复盘或預設分析流程。
 
-- 傳回码 `0`：没有 error 级诊断。
+- 傳回码 `0`：没有 error 级診斷。
 - 傳回码 `1`：存在 error，例如 0 个静态通知渠道已配置，或成对 key 只配置了一半。
 
 ## Web 一键測試
 
-Web 设置页的“通知渠道”分类提供单渠道測試入口。測試会使用当前页面草稿值合成临时配置，发送一条真实測試通知，但不会保存 `.env`，也不会修改執行时全局配置。
+Web 设置页的“通知渠道”分類提供单渠道測試入口。測試会使用当前页面草稿值合成暫時配置，发送一条真实測試通知，但不会保存 `.env`，也不会修改執行时全局配置。
 
-- 測試范围：13 个静态通知渠道，不包含 `UNKNOWN` 和執行时上下文渠道。
+- 測試範圍：13 个静态通知渠道，不包含 `UNKNOWN` 和執行时上下文渠道。
 - 普通渠道：傳回单次发送结果、耗时和通用錯誤码。
 - 自定义 Webhook：按 URL 顺序傳回 attempts，展示每个 URL 的成功/失败、HTTP 狀態、耗时和錯誤码；多个 URL 部分成功时，顶层 message 会标出成功数 / 总数。
 - 傳回结果会脱敏 token、secret、password、Bearer、完整 webhook query 和疑似 path token。
-- 配置缺失或发送失败傳回 `success=false`，不会影响已保存配置和默认分析流程。
+- 配置缺失或发送失败傳回 `success=false`，不会影响已保存配置和預設分析流程。
 
 ## 自定义 Webhook Body 模板
 
-`CUSTOM_WEBHOOK_BODY_TEMPLATE` 是自定义 Webhook 的全局 JSON body 模板。配置后，它会先于 URL 自动识别生效，因此会覆盖 Bark、Slack、Discord、钉钉等自动 payload。未配置时仍使用原有 URL 自动识别；渲染后不是合法 JSON object 时会记录錯誤并回退默认 payload，不中断主通知流程。
+`CUSTOM_WEBHOOK_BODY_TEMPLATE` 是自定义 Webhook 的全局 JSON body 模板。配置后，它会先于 URL 自动识别生效，因此会覆盖 Bark、Slack、Discord、钉钉等自动 payload。未配置时仍使用原有 URL 自动识别；渲染后不是合法 JSON object 时会记录錯誤并回退預設 payload，不中断主通知流程。
 
 可用占位符：
 
-- `$content_json`：JSON 转义后的通知正文，推荐默认使用。
-- `$title_json`：JSON 转义后的通知标题，推荐默认使用。
+- `$content_json`：JSON 转义后的通知正文，推荐預設使用。
+- `$title_json`：JSON 转义后的通知标题，推荐預設使用。
 - `$content` / `$title`：原始字符串，不做 JSON 转义。正文含双引号、反斜杠或换行时可能导致 JSON 无效并触发 fallback。
 
 通用 webhook 示例：
@@ -136,20 +136,20 @@ CUSTOM_WEBHOOK_URLS=https://api.day.app/YOUR_BARK_KEY
 CUSTOM_WEBHOOK_BODY_TEMPLATE={"title":$title_json,"body":$content_json,"group":"stock"}
 ```
 
-AstrBot 已是一等通知渠道，优先使用 `ASTRBOT_URL` 和可選的 `ASTRBOT_TOKEN`。只有需要把 AstrBot 兼容端点放入 `CUSTOM_WEBHOOK_URLS` 时，才使用 custom webhook 模板，例如：
+AstrBot 已是一等通知渠道，優先使用 `ASTRBOT_URL` 和可選的 `ASTRBOT_TOKEN`。只有需要把 AstrBot 相容端点放入 `CUSTOM_WEBHOOK_URLS` 时，才使用 custom webhook 模板，例如：
 
 ```env
 CUSTOM_WEBHOOK_BODY_TEMPLATE={"content":$content_json}
 ```
 
-ntfy 已是一等通知渠道，优先使用 `NTFY_URL` 和可選的 `NTFY_TOKEN`。`NTFY_URL` 表示完整 topic endpoint，例如 `https://ntfy.sh/my-topic` 或 `https://self-hosted:port/my-topic`；系統会解析最后一个 path segment 作为 topic，并向 server root 发送 JSON publish：
+ntfy 已是一等通知渠道，優先使用 `NTFY_URL` 和可選的 `NTFY_TOKEN`。`NTFY_URL` 表示完整 topic endpoint，例如 `https://ntfy.sh/my-topic` 或 `https://self-hosted:port/my-topic`；系統会解析最后一个 path segment 作为 topic，并向 server root 发送 JSON publish：
 
 ```env
 NTFY_URL=https://ntfy.sh/my-topic
 NTFY_TOKEN=
 ```
 
-Gotify 已是一等通知渠道，优先使用 `GOTIFY_URL` 和 `GOTIFY_TOKEN`。`GOTIFY_URL` 表示 Gotify server base URL，可包含反向代理 path prefix，但不包含 `/message`；系統发送时会拼接固定 `/message` API，并通过 `X-Gotify-Key` Header 发送 application token。`NTFY_URL` 是完整 topic endpoint，而 `GOTIFY_URL` 是 server base URL，这是两个服務 API 设计差异导致的刻意选择：
+Gotify 已是一等通知渠道，優先使用 `GOTIFY_URL` 和 `GOTIFY_TOKEN`。`GOTIFY_URL` 表示 Gotify server base URL，可包含反向代理 path prefix，但不包含 `/message`；系統发送时会拼接固定 `/message` API，并通过 `X-Gotify-Key` Header 发送 application token。`NTFY_URL` 是完整 topic endpoint，而 `GOTIFY_URL` 是 server base URL，这是两个服務 API 設計差异导致的刻意选择：
 
 ```env
 GOTIFY_URL=https://gotify.example
@@ -157,12 +157,12 @@ GOTIFY_TOKEN=app-token
 ```
 
 ```env
-# 反向代理 path prefix 示例；实际請求会发送到 https://example.com/gotify/message
+# 反向代理 path prefix 示例；實際請求会发送到 https://example.com/gotify/message
 GOTIFY_URL=https://example.com/gotify
 GOTIFY_TOKEN=app-token
 ```
 
-NapCat / OneBot HTTP API 需要按实际 endpoint 和目标类型调整。下面只是常见 body 形态示例，`user_id`、`group_id`、URL 路徑和鉴权方式都应以你的 NapCat 配置为准：
+NapCat / OneBot HTTP API 需要按實際 endpoint 和目标类型調整。下面只是常见 body 形态示例，`user_id`、`group_id`、URL 路徑和鉴权方式都应以你的 NapCat 配置为准：
 
 ```env
 # 私聊：CUSTOM_WEBHOOK_URLS=http://127.0.0.1:3000/send_private_msg
@@ -188,24 +188,24 @@ P3 新增三类通知路由配置：
 
 - 留空或未配置：保持旧行为，发送到所有已配置静态渠道。
 - 非空：只发送到路由列表与已配置渠道的交集；交集为空时不会 fallback 到全渠道。
-- `send_to_context()` 不受路由限制，机器人会话上下文仍会收到触发工作的回复。
+- `send_to_context()` 不受路由限制，机器人會話上下文仍会收到触发工作的回复。
 - 路由过滤发生在 Markdown 转图片前，`MARKDOWN_TO_IMAGE_CHANNELS` 只对路由后的渠道子集生效。
 - `MERGE_EMAIL_NOTIFICATION` 不需要额外配置；只要 `email` 仍在 report 路由后的渠道中，现有合併電郵行为保持不变。
 - `--check-notify` 会把未知渠道值报为 error，把合法但未启用的路由目标报为 warning。
 
-## 聚合报告失败隔离
+## 聚合报告失败隔離
 
-P5 强化聚合报告通知路徑的失败边界：`_send_notifications()` 在 report 路由过滤后对每个静态通知渠道单独发送。某个渠道抛异常会记录日誌并视为该渠道失败，但不会略過后续渠道，也不会中断分析主流程。
+P5 强化聚合报告通知路徑的失败邊界：`_send_notifications()` 在 report 路由过滤后对每个静态通知渠道单独发送。某个渠道抛例外会记录日誌并视为该渠道失败，但不会略過后续渠道，也不会中断分析主流程。
 
-- 電郵按 receiver group 单独隔离；某个收件人分组失败时，后续分组仍会繼續发送。
-- 任一静态渠道发送成功时，P4 降噪 reservation 会写入正式记录；全部静态渠道失败或抛异常时，会释放 reservation。
-- `send_to_context()` 仍独立于静态渠道 route 和降噪记录，用于回复触发工作的 Bot 会话上下文。
+- 電郵按 receiver group 单独隔離；某个收件人分組失败时，后续分組仍会繼續发送。
+- 任一静态渠道发送成功时，P4 降噪 reservation 会写入正式记录；全部静态渠道失败或抛例外时，会释放 reservation。
+- `send_to_context()` 仍独立于静态渠道 route 和降噪记录，用于回复触发工作的 Bot 會話上下文。
 
-## 通知降噪机制
+## 通知降噪機制
 
-P4 新增程式内降噪，只影响静态配置渠道，不影响 `send_to_context()` 的机器人触发会话回执。默认所有配置關閉，未设置时保持旧行为。
+P4 新增程式内降噪，只影响静态配置渠道，不影响 `send_to_context()` 的机器人触发會話回执。預設所有配置關閉，未设置时保持旧行为。
 
-| 配置 key | 默认值 | 说明 |
+| 配置 key | 預設值 | 说明 |
 | --- | --- | --- |
 | `NOTIFICATION_DEDUP_TTL_SECONDS` | `0` | 同一稳定去重 key 在 TTL 内只发送一次；`0` 關閉 |
 | `NOTIFICATION_COOLDOWN_SECONDS` | `0` | 同一冷却 key 在窗口内限频；`0` 關閉 |
@@ -214,65 +214,65 @@ P4 新增程式内降噪，只影响静态配置渠道，不影响 `send_to_cont
 | `NOTIFICATION_MIN_SEVERITY` | 空 | `info`, `warning`, `error`, `critical`；留空不过滤 |
 | `NOTIFICATION_DAILY_DIGEST_ENABLED` | `false` | 预留配置；当前不会发送每日摘要或持久化摘要内容 |
 
-严重级别默认值：
+严重級別預設值：
 
 - `report`：`info`
 - `alert`：`warning`
 - `system_error`：`error`
 - 未知或未设置路由：`info`
 
-实现边界：
+實現邊界：
 
 - 去重 / 冷却狀態是当前 Python 程式内 dict，适用于 `main.py` 单程式和 `--serve` 单 worker。
-- `uvicorn --workers N`、多容器或多台机器场景下狀態不共享，降噪为 per-worker 近似生效。
+- `uvicorn --workers N`、多容器或多台机器場景下狀態不共享，降噪为 per-worker 近似生效。
 - pipeline 单股和聚合报告路徑使用稳定 key，避免报告内生成时间变化击穿去重；其他未显式传入 `dedup_key` 的 report 通知按内容 hash 去重。
-- 未显式传入 `cooldown_key` 的调用按路由和严重级别共享默认冷却槽位，例如 report / info 的普通通知会共用同一个槽位。
+- 未显式传入 `cooldown_key` 的呼叫按路由和严重級別共享預設冷却槽位，例如 report / info 的普通通知会共用同一个槽位。
 - 同一程式内相同 key 的並行发送会先占用短生命周期 in-flight 槽位，避免突发重复发送；静态渠道全部失败时释放该槽位，不写入正式去重 / 冷却狀態。
-- 降噪判断异常时 fail-open：记录日誌并繼續发送静态渠道。
-- `NOTIFICATION_TIMEZONE` 留空时使用 `datetime.now().astimezone()` 解析到的執行时本機时区；Actions / Docker 场景建议显式配置 `NOTIFICATION_TIMEZONE` 以避免时区歧义。
+- 降噪判斷例外时 fail-open：记录日誌并繼續发送静态渠道。
+- `NOTIFICATION_TIMEZONE` 留空时使用 `datetime.now().astimezone()` 解析到的執行时本機时区；Actions / Docker 場景建议显式配置 `NOTIFICATION_TIMEZONE` 以避免时区歧义。
 
-## WebPush / Apprise 评估
+## WebPush / Apprise 評估
 
-P6-D 只做设计评估，不新增依賴、`.env` 配置或執行时通知路徑。结论是两者都不适合在本轮直接混入渠道实现 PR。
+P6-D 只做設計評估，不新增依賴、`.env` 配置或執行时通知路徑。结论是两者都不适合在本轮直接混入渠道實現 PR。
 
-WebPush 后续如要实现，需要先单独设计订阅生命周期与安全边界：
+WebPush 后续如要實現，需要先单独設計订阅生命周期与安全邊界：
 
-- 需要 Web 前端注册 Service Worker；Service Worker / `PushManager.subscribe()` 依賴 secure context，生产环境通常必须走 HTTPS，本機开发可使用 localhost。
+- 需要 Web 前端注册 Service Worker；Service Worker / `PushManager.subscribe()` 依賴 secure context，生产環境通常必须走 HTTPS，本機开发可使用 localhost。
 - 需要 VAPID 公私钥；订阅时要下发 public key，服務端发送时要持有 private key 并保护好密钥轮换策略。
 - 需要浏览器權限交互，订阅必须由使用者手势触发，不能在后台静默开启。
 - `PushSubscription` 包含 endpoint 和加密 key，endpoint 属于 capability URL，应按 secret 處理并脱敏展示。
 - 需要持久化订阅、處理订阅失效和设备解绑；当前 `.env` / 单程式配置模型不适合直接塞多个使用者/设备订阅。
-- 提交、刪除、更新订阅的 API 要有認證和 CSRF 防护，不能只靠前端隐藏入口。
+- 提交、刪除、更新订阅的 API 要有認證和 CSRF 防护，不能只靠前端隱藏入口。
 
-Apprise 后续如要引入，应先作为可選依賴评估，而不是默认依賴：
+Apprise 后续如要引入，应先作为可選依賴評估，而不是預設依賴：
 
 - Apprise 是通用通知库，覆盖面广，但会与当前已有 WeChat、Telegram、Discord、Slack、ntfy、Gotify、Pushover 等一等渠道重叠。
-- 需要评估依賴体积、安裝失败路徑、Docker 镜像膨胀、GitHub Actions 依賴快取和可選 extras 策略。
+- 需要評估依賴体积、安裝失败路徑、Docker 镜像膨胀、GitHub Actions 依賴快取和可選 extras 策略。
 - secret 传递不能直接暴露完整 Apprise URL；需要统一脱敏、Web 測試目标遮罩和錯誤日誌过滤。
-- 发送失败应隔离在 Apprise 渠道内，不能影响已有渠道的失败隔离语义。
+- 发送失败应隔離在 Apprise 渠道内，不能影响已有渠道的失败隔離语义。
 - 如果采用 Apprise，建议先新增单独 experimental channel 或 CLI-only spike，再决定是否纳入 Web 设置页和 Actions env。
 
 ## 本機配置
 
-本機執行优先使用项目根目錄 `.env`。复制 `.env.example` 后填写至少一个 minimal key 即可启用对应静态通知渠道；advanced key 只改变認證、安全、格式、路由或降噪行为，不会单独启用渠道。
+本機執行優先使用项目根目錄 `.env`。复制 `.env.example` 后填写至少一个 minimal key 即可启用对应静态通知渠道；advanced key 只改变認證、安全、格式、路由或降噪行为，不会单独启用渠道。
 
 ```bash
 python main.py --check-notify
 ```
 
-`--check-notify` 是只读诊断：不发送通知、不写 `.env`、不进入分析流程。配置好 WebUI 后，也可以在系統设置页用单渠道測試发送真实測試訊息；该測試只使用页面草稿临时配置，不保存 `.env`。
+`--check-notify` 是只读診斷：不发送通知、不写 `.env`、不进入分析流程。配置好 WebUI 后，也可以在系統设置页用单渠道測試发送真实測試訊息；该測試只使用页面草稿暫時配置，不保存 `.env`。
 
 ## Docker
 
-Docker 场景可通过 `--env-file .env` / Compose `env_file` 注入執行时环境變數，也可以挂载 `.env` 让 Web 设置页和后端读写同一份配置文件。只注入环境變數但不挂载 `.env` 时，Web 设置页保存后的值在容器重啟后可能被部署环境再次覆盖。
+Docker 場景可通过 `--env-file .env` / Compose `env_file` 注入執行时環境變數，也可以挂载 `.env` 让 Web 设置页和后端读写同一份配置文件。只注入環境變數但不挂载 `.env` 时，Web 设置页保存后的值在容器重啟后可能被部署環境再次覆盖。
 
-降噪静默时段建议显式配置 `NOTIFICATION_TIMEZONE`，避免容器默认时区与预期不一致。自签名内网 webhook 可临时使用 `WEBHOOK_VERIFY_SSL=false`，但不要在公网链路關閉证书校验。
+降噪静默时段建议显式配置 `NOTIFICATION_TIMEZONE`，避免容器預設时区与预期不一致。自簽名内网 webhook 可暫時使用 `WEBHOOK_VERIFY_SSL=false`，但不要在公网鏈路關閉证书校验。
 
 ## GitHub Actions
 
-默认 `daily_analysis.yml` 只读取表格中显式映射的 Secret / Variable。新增 repository Secret 或 Variable 后，只有變數名已经出现在 workflow `env:` 中才会进入執行程式；`STOCK_GROUP_N` / `EMAIL_GROUP_N` 这类任意编号變數不会自动匯入。
+預設 `daily_analysis.yml` 只讀取表格中显式映射的 Secret / Variable。新增 repository Secret 或 Variable 后，只有變數名已經出现在 workflow `env:` 中才会进入執行程式；`STOCK_GROUP_N` / `EMAIL_GROUP_N` 这类任意编号變數不会自动匯入。
 
-Secret 适合 token、password、webhook URL 等敏感项；Variable 适合 `WECHAT_MSG_TYPE`、`EMAIL_SENDER_NAME`、路由、降噪窗口和时区这类非敏感行为配置。`MARKDOWN_TO_IMAGE_CHANNELS` 与 `MERGE_EMAIL_NOTIFICATION` 默认不映射，如需在自己的 fork 中使用，应显式修改 workflow 并补充对应測試。
+Secret 适合 token、password、webhook URL 等敏感项；Variable 适合 `WECHAT_MSG_TYPE`、`EMAIL_SENDER_NAME`、路由、降噪窗口和时区这类非敏感行为配置。`MARKDOWN_TO_IMAGE_CHANNELS` 与 `MERGE_EMAIL_NOTIFICATION` 預設不映射，如需在自己的 fork 中使用，应显式修改 workflow 并补充对应測試。
 
 ## Desktop
 

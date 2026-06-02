@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Daily Stock Analysis API",
-    "description": "A股/港股/美股自选股智能分析系統 API\n\n## 功能模块\n- 股票分析：触发 AI 智能分析\n- 历史记录：查詢历史分析报告\n- 股票數據：获取行情數據\n\n## 認證方式\n当前版本暂无認證要求",
+    "description": "A股/港股/美股自选股智能分析系統 API\n\n## 功能模組\n- 股票分析：触发 AI 智能分析\n- 历史记录：查詢历史分析报告\n- 股票數據：獲取行情數據\n\n## 認證方式\n当前版本暂无認證要求",
     "version": "1.0.0",
     "contact": {
       "name": "Daily Stock Analysis Team"
@@ -17,19 +17,19 @@
   "tags": [
     {
       "name": "Health",
-      "description": "健康检查接口"
+      "description": "健康檢查介面"
     },
     {
       "name": "Analysis",
-      "description": "股票分析相关接口"
+      "description": "股票分析相關介面"
     },
     {
       "name": "History",
-      "description": "历史记录相关接口"
+      "description": "历史记录相關介面"
     },
     {
       "name": "SystemConfig",
-      "description": "系統配置管理接口"
+      "description": "系統配置管理介面"
     }
   ],
   "paths": {
@@ -60,8 +60,8 @@
         "tags": [
           "Health"
         ],
-        "summary": "健康检查",
-        "description": "用于负载均衡器或監控系統检查服務狀態",
+        "summary": "健康檢查",
+        "description": "用于负载均衡器或監控系統檢查服務狀態",
         "operationId": "healthCheck",
         "responses": {
           "200": {
@@ -134,7 +134,7 @@
             }
           },
           "409": {
-            "description": "股票正在分析中，拒绝重复提交",
+            "description": "股票正在分析中，拒絕重复提交",
             "content": {
               "application/json": {
                 "schema": {
@@ -161,14 +161,14 @@
         "tags": [
           "Analysis"
         ],
-        "summary": "获取分析工作列表",
-        "description": "获取当前所有分析工作，支援按狀態筛选。傳回进行中和最近完成的工作。",
+        "summary": "獲取分析工作列表",
+        "description": "獲取当前所有分析工作，支援按狀態篩選。傳回進行中和最近完成的工作。",
         "operationId": "getAnalysisTasks",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "description": "筛选狀態：pending, processing, completed, failed（支援逗号分隔多个）",
+            "description": "篩選狀態：pending, processing, completed, failed（支援逗号分隔多个）",
             "schema": {
               "type": "string",
               "example": "pending,processing"
@@ -206,7 +206,7 @@
           "Analysis"
         ],
         "summary": "工作狀態 SSE 流",
-        "description": "通过 Server-Sent Events 实时推送工作狀態变化。\n\n## 事件类型\n- `connected`: 連線成功\n- `task_created`: 新工作建立\n- `task_started`: 工作开始执行\n- `task_completed`: 工作完成\n- `task_failed`: 工作失败\n- `heartbeat`: 心跳（每 30 秒）",
+        "description": "通过 Server-Sent Events 实时推送工作狀態变化。\n\n## 事件类型\n- `connected`: 連線成功\n- `task_created`: 新工作建立\n- `task_started`: 工作开始執行\n- `task_completed`: 工作完成\n- `task_failed`: 工作失败\n- `heartbeat`: 心跳（每 30 秒）",
         "operationId": "taskStream",
         "responses": {
           "200": {
@@ -228,14 +228,14 @@
         "tags": [
           "History"
         ],
-        "summary": "获取历史分析列表",
-        "description": "分页获取历史分析记录摘要，支援按股票代碼和日期范围筛选",
+        "summary": "獲取历史分析列表",
+        "description": "分页獲取历史分析记录摘要，支援按股票代碼和日期範圍篩選",
         "operationId": "getHistoryList",
         "parameters": [
           {
             "name": "stock_code",
             "in": "query",
-            "description": "股票代碼筛选",
+            "description": "股票代碼篩選",
             "schema": {
               "type": "string"
             }
@@ -299,8 +299,8 @@
         "tags": [
           "History"
         ],
-        "summary": "获取历史报告详情",
-        "description": "根据 query_id 获取完整的历史分析报告",
+        "summary": "獲取历史报告详情",
+        "description": "根据 query_id 獲取完整的历史分析报告",
         "operationId": "getHistoryDetail",
         "parameters": [
           {
@@ -342,8 +342,8 @@
         "tags": [
           "History"
         ],
-        "summary": "获取历史报告关联新闻",
-        "description": "根据 query_id 获取关联的新闻情报列表（为空也傳回 200）",
+        "summary": "獲取历史报告關聯新闻",
+        "description": "根据 query_id 獲取關聯的新闻情报列表（为空也傳回 200）",
         "operationId": "getHistoryNews",
         "parameters": [
           {
@@ -396,14 +396,14 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "获取系統配置",
-        "description": "读取当前系統配置并傳回分类后的欄位列表。敏感欄位傳回真实值，前端自行控制显示/隐藏。",
+        "summary": "獲取系統配置",
+        "description": "讀取当前系統配置并傳回分類后的欄位列表。敏感欄位傳回真实值，前端自行控制顯示/隱藏。",
         "operationId": "getSystemConfig",
         "parameters": [
           {
             "name": "include_schema",
             "in": "query",
-            "description": "是否携带欄位元數據（默认 true）",
+            "description": "是否携带欄位元數據（預設 true）",
             "schema": {
               "type": "boolean",
               "default": true
@@ -412,7 +412,7 @@
         ],
         "responses": {
           "200": {
-            "description": "配置读取成功",
+            "description": "配置讀取成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -432,7 +432,7 @@
             }
           },
           "500": {
-            "description": "读取失败",
+            "description": "讀取失败",
             "content": {
               "application/json": {
                 "schema": {
@@ -651,7 +651,7 @@
           "SystemConfig"
         ],
         "summary": "校验配置",
-        "description": "仅校验提交内容，不写入 .env。用于前端保存前预检查。",
+        "description": "仅校验提交内容，不写入 .env。用于前端保存前预檢查。",
         "operationId": "validateSystemConfig",
         "requestBody": {
           "required": true,
@@ -692,12 +692,12 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "获取配置欄位元數據",
-        "description": "傳回配置分类、欄位类型、校验规则和 UI 控件建议，用于前端动态渲染。",
+        "summary": "獲取配置欄位元數據",
+        "description": "傳回配置分類、欄位类型、校验規則和 UI 控件建议，用于前端动态渲染。",
         "operationId": "getSystemConfigSchema",
         "responses": {
           "200": {
-            "description": "元數據读取成功",
+            "description": "元數據讀取成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -707,7 +707,7 @@
             }
           },
           "500": {
-            "description": "元數據读取失败",
+            "description": "元數據讀取失败",
             "content": {
               "application/json": {
                 "schema": {
@@ -787,7 +787,7 @@
           "force_refresh": {
             "type": "boolean",
             "default": false,
-            "description": "是否强制刷新（忽略快取）"
+            "description": "是否強制刷新（忽略快取）"
           },
           "async_mode": {
             "type": "boolean",
@@ -1009,7 +1009,7 @@
           "started_at": {
             "type": "string",
             "format": "date-time",
-            "description": "开始执行时间"
+            "description": "开始執行时间"
           },
           "completed_at": {
             "type": "string",
@@ -1232,7 +1232,7 @@
             "properties": {
               "analysis_summary": {
                 "type": "string",
-                "description": "关键结论"
+                "description": "關鍵结论"
               },
               "operation_advice": {
                 "type": "string",
@@ -1385,7 +1385,7 @@
               "backtest",
               "uncategorized"
             ],
-            "description": "分类"
+            "description": "分類"
           },
           "data_type": {
             "type": "string",
@@ -1434,7 +1434,7 @@
           },
           "validation": {
             "type": "object",
-            "description": "校验规则定义（min/max/regex/enum/custom）"
+            "description": "校验規則定义（min/max/regex/enum/custom）"
           },
           "display_order": {
             "type": "integer"
@@ -1453,7 +1453,7 @@
       },
       "SystemConfigCategorySchema": {
         "type": "object",
-        "description": "配置分类元數據",
+        "description": "配置分類元數據",
         "properties": {
           "category": {
             "type": "string"
@@ -1503,7 +1503,7 @@
       },
       "SystemConfigItem": {
         "type": "object",
-        "description": "系統配置项（含脱敏显示值）",
+        "description": "系統配置项（含脱敏顯示值）",
         "properties": {
           "key": {
             "type": "string"
@@ -1532,7 +1532,7 @@
       },
       "SystemConfigResponse": {
         "type": "object",
-        "description": "系統配置读取回應",
+        "description": "系統配置讀取回應",
         "properties": {
           "config_version": {
             "type": "string",

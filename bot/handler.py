@@ -28,7 +28,7 @@ _platform_instances: Dict[str, 'BotPlatform'] = {}
 
 def get_platform(platform_name: str) -> Optional['BotPlatform']:
     """
-    获取平台适配器实例
+    獲取平台適配器实例
 
     使用快取避免重复建立。
 
@@ -36,7 +36,7 @@ def get_platform(platform_name: str) -> Optional['BotPlatform']:
         platform_name: 平台名称
 
     Returns:
-        平台适配器实例，或 None
+        平台適配器实例，或 None
     """
     if platform_name not in _platform_instances:
         platform_class = ALL_PLATFORMS.get(platform_name)
@@ -64,14 +64,14 @@ def handle_webhook(
         platform_name: 平台名称 (feishu, dingtalk, wecom, telegram)
         headers: HTTP 請求头
         body: 請求体原始字节
-        query_params: URL 查詢參數（用于某些平台的验证）
+        query_params: URL 查詢參數（用于某些平台的驗證）
 
     Returns:
         WebhookResponse 回應对象
     """
     logger.info(f"[BotHandler] 收到 {platform_name} Webhook 請求")
 
-    # 检查机器人功能是否启用
+    # 檢查机器人功能是否启用
     from src.config import get_config
     config = get_config()
 
@@ -79,7 +79,7 @@ def handle_webhook(
         logger.info("[BotHandler] 机器人功能未启用")
         return WebhookResponse.success()
 
-    # 获取平台适配器
+    # 獲取平台適配器
     platform = get_platform(platform_name)
     if not platform:
         return WebhookResponse.error(f"Unknown platform: {platform_name}", 400)
@@ -96,9 +96,9 @@ def handle_webhook(
     # 處理 Webhook
     message, immediate_response = platform.handle_webhook(headers, body, data)
 
-    # 如果是验证/錯誤回應且没有訊息需要處理，直接傳回
+    # 如果是驗證/錯誤回應且没有訊息需要處理，直接傳回
     if immediate_response and not message:
-        logger.info("[BotHandler] 傳回验证回應")
+        logger.info("[BotHandler] 傳回驗證回應")
         return immediate_response
 
     # 延遲回應（如 Discord type 5）：立即傳回 ACK，后台處理命令
@@ -171,7 +171,7 @@ async def handle_webhook_async(
     message, immediate_response = platform.handle_webhook(headers, body, data)
 
     if immediate_response and not message:
-        logger.info("[BotHandler] 傳回验证回應")
+        logger.info("[BotHandler] 傳回驗證回應")
         return immediate_response
 
     if immediate_response and message:

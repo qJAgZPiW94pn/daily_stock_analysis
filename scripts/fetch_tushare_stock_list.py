@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Tushare 股票列表获取脚本
+Tushare 股票列表獲取脚本
 
-从 Tushare Pro 获取 A股、港股、美股列表資訊，保存为 CSV 文件
+从 Tushare Pro 獲取 A股、港股、美股列表資訊，保存为 CSV 文件
 
 使用方法：
     python3 scripts/fetch_tushare_stock_list.py
 
-环境要求：
+環境要求：
     - 需要在 .env 中配置 TUSHARE_TOKEN
     - 需要安裝 tushare: pip install tushare
     - 账号积分要求：
         * A股/港股：2000积分
         * 美股：120积分试用，5000积分正式權限
 
-输出文件：
+輸出文件：
     - data/stock_list_a.csv      A股列表
     - data/stock_list_hk.csv     港股列表
     - data/stock_list_us.csv     美股列表
@@ -40,7 +40,7 @@ try:
     import tushare as ts
 except ImportError:
     print("[錯誤] 未安裝 tushare 库")
-    print("请执行: pip install tushare")
+    print("请執行: pip install tushare")
     sys.exit(1)
 
 
@@ -49,14 +49,14 @@ load_dotenv()
 
 TUSHARE_TOKEN = os.getenv('TUSHARE_TOKEN')
 OUTPUT_DIR = Path(__file__).parent.parent / "data"
-PAGE_SIZE = 5000  # 美股每页读取数量（API 最大6000，设置5000留余量）
+PAGE_SIZE = 5000  # 美股每页讀取数量（API 最大6000，设置5000留余量）
 SLEEP_MIN = 5     # 最小睡眠时间（秒）
 SLEEP_MAX = 10    # 最大睡眠时间（秒）
 
 
 def get_tushare_api() -> Optional[ts.pro_api]:
     """
-    获取 Tushare API 实例
+    獲取 Tushare API 实例
 
     Returns:
         Tushare API 实例，失败傳回 None
@@ -74,7 +74,7 @@ def get_tushare_api() -> Optional[ts.pro_api]:
         return api
     except Exception as e:
         print(f"[錯誤] Tushare API 連線失败: {e}")
-        print("请检查：")
+        print("请檢查：")
         print("  1. TUSHARE_TOKEN 是否正确")
         print("  2. 账号积分是否足够（A股/港股需要2000积分）")
         return None
@@ -82,7 +82,7 @@ def get_tushare_api() -> Optional[ts.pro_api]:
 
 def random_sleep(min_seconds: int = SLEEP_MIN, max_seconds: int = SLEEP_MAX):
     """
-    随机睡眠，避免频繁請求
+    隨機睡眠，避免頻繁請求
 
     Args:
         min_seconds: 最小睡眠时间
@@ -95,9 +95,9 @@ def random_sleep(min_seconds: int = SLEEP_MIN, max_seconds: int = SLEEP_MAX):
 
 def fetch_a_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     """
-    获取 A股列表
+    獲取 A股列表
 
-    接口：stock_basic
+    介面：stock_basic
     限量：单次最多6000行（覆盖全市场A股）
 
     Args:
@@ -106,10 +106,10 @@ def fetch_a_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     Returns:
         A股數據 DataFrame，失败傳回 None
     """
-    print("\n[1/3] 正在获取 A股列表...")
+    print("\n[1/3] 正在獲取 A股列表...")
 
     try:
-        # 获取所有正常上市的股票
+        # 獲取所有正常上市的股票
         df = api.stock_basic(
             exchange='',        # 空：全部交易所
             list_status='L',    # L: 上市, D: 退市, P: 暂停上市
@@ -117,7 +117,7 @@ def fetch_a_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
         )
 
         if df is not None and len(df) > 0:
-            print(f"✓ A股列表获取成功，共 {len(df)} 只股票")
+            print(f"✓ A股列表獲取成功，共 {len(df)} 只股票")
             print("  - 交易所分布：")
             for exchange, count in df['exchange'].value_counts().items():
                 print(f"    {exchange}: {count} 只")
@@ -127,15 +127,15 @@ def fetch_a_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
             return None
 
     except Exception as e:
-        print(f"[錯誤] 获取 A股列表失败: {e}")
+        print(f"[錯誤] 獲取 A股列表失败: {e}")
         return None
 
 
 def fetch_hk_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     """
-    获取港股列表
+    獲取港股列表
 
-    接口：hk_basic
+    介面：hk_basic
     限量：单次可提取全部在交易的港股
 
     Args:
@@ -144,31 +144,31 @@ def fetch_hk_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     Returns:
         港股數據 DataFrame，失败傳回 None
     """
-    print("\n[2/3] 正在获取港股列表...")
+    print("\n[2/3] 正在獲取港股列表...")
 
     try:
-        # 获取所有正常上市的港股
+        # 獲取所有正常上市的港股
         df = api.hk_basic(
             list_status='L'    # L: 上市, D: 退市
         )
 
         if df is not None and len(df) > 0:
-            print(f"✓ 港股列表获取成功，共 {len(df)} 只股票")
+            print(f"✓ 港股列表獲取成功，共 {len(df)} 只股票")
             return df
         else:
             print("[錯誤] 港股數據为空")
             return None
 
     except Exception as e:
-        print(f"[錯誤] 获取港股列表失败: {e}")
+        print(f"[錯誤] 獲取港股列表失败: {e}")
         return None
 
 
 def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     """
-    获取美股列表（分页读取）
+    獲取美股列表（分页讀取）
 
-    接口：us_basic
+    介面：us_basic
     限量：单次最大6000，需要分页提取
 
     Args:
@@ -177,7 +177,7 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     Returns:
         美股數據 DataFrame，失败傳回 None
     """
-    print("\n[3/3] 正在获取美股列表（分页读取）...")
+    print("\n[3/3] 正在獲取美股列表（分页讀取）...")
 
     all_data = []
     offset = 0
@@ -193,29 +193,29 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
             )
 
             if df is None or len(df) == 0:
-                print(f"  ✓ 第 {page} 页无數據，读取完成")
+                print(f"  ✓ 第 {page} 页无數據，讀取完成")
                 break
 
             all_data.append(df)
-            print(f"  ✓ 第 {page} 页获取 {len(df)} 只股票")
+            print(f"  ✓ 第 {page} 页獲取 {len(df)} 只股票")
 
-            # 如果傳回數據少于页大小，说明已经到最后一页
+            # 如果傳回數據少于页大小，说明已經到最后一页
             if len(df) < PAGE_SIZE:
                 break
 
             offset += PAGE_SIZE
             page += 1
 
-            # 随机休息（最后一页不需要休息）
+            # 隨機休息（最后一页不需要休息）
             random_sleep()
 
         if all_data:
             result_df = pd.concat(all_data, ignore_index=True)
-            print(f"✓ 美股列表获取成功，共 {len(result_df)} 只股票（{page} 页）")
+            print(f"✓ 美股列表獲取成功，共 {len(result_df)} 只股票（{page} 页）")
 
-            # 按分类统计
+            # 按分類統計
             if 'classify' in result_df.columns:
-                print("  - 分类分布：")
+                print("  - 分類分布：")
                 for classify, count in result_df['classify'].value_counts().items():
                     print(f"    {classify}: {count} 只")
 
@@ -225,7 +225,7 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
             return None
 
     except Exception as e:
-        print(f"[錯誤] 获取美股列表失败: {e}")
+        print(f"[錯誤] 獲取美股列表失败: {e}")
         return None
 
 
@@ -292,8 +292,8 @@ def generate_data_documentation(
 
 ## A股數據（stock_list_a.csv）
 
-### 數據接口
-- **接口名称**：`stock_basic`
+### 數據介面
+- **介面名称**：`stock_basic`
 - **數據權限**：2000积分起，每分钟請求50次
 - **數據限量**：单次最多6000行（覆盖全市场A股）
 
@@ -330,8 +330,8 @@ ts_code,symbol,name,area,industry,fullname,enname,cnspell,market,exchange,curr_t
 
 ## 港股數據（stock_list_hk.csv）
 
-### 數據接口
-- **接口名称**：`hk_basic`
+### 數據介面
+- **介面名称**：`hk_basic`
 - **數據權限**：使用者需要至少2000积分才可以调取
 - **數據限量**：单次可提取全部在交易的港股列表數據
 
@@ -363,8 +363,8 @@ ts_code,name,fullname,enname,cn_spell,market,list_status,list_date,delist_date,t
 
 ## 美股數據（stock_list_us.csv）
 
-### 數據接口
-- **接口名称**：`us_basic`
+### 數據介面
+- **介面名称**：`us_basic`
 - **數據權限**：120积分可以试用，5000积分有正式權限
 - **數據限量**：单次最大6000，可分页提取
 
@@ -375,11 +375,11 @@ ts_code,name,fullname,enname,cn_spell,market,list_status,list_date,delist_date,t
 | ts_code | str | 美股代碼 | AAPL |
 | name | str | 中文名称 | 苹果 |
 | enname | str | 英文名称 | Apple Inc. |
-| classify | str | 分类 | ADR/GDR/EQT |
+| classify | str | 分類 | ADR/GDR/EQT |
 | list_date | str | 上市日期 | 19801212 |
 | delist_date | str | 退市日期 | - |
 
-### 分类说明
+### 分類说明
 - **ADR**：美國存托凭证（American Depositary Receipt）
 - **GDR**：全球存托凭证（Global Depositary Receipt）
 - **EQT**：普通股（Equity）
@@ -396,18 +396,18 @@ BABA,阿里巴巴,Alibaba Group Holding Ltd.,ADR,20140919,
 
 ## 使用说明
 
-### 读取數據
+### 讀取數據
 
 ```python
 import pandas as pd
 
-# 读取 A股數據
+# 讀取 A股數據
 a_stocks = pd.read_csv('data/stock_list_a.csv')
 
-# 读取港股數據
+# 讀取港股數據
 hk_stocks = pd.read_csv('data/stock_list_hk.csv')
 
-# 读取美股數據
+# 讀取美股數據
 us_stocks = pd.read_csv('data/stock_list_us.csv')
 ```
 
@@ -435,15 +435,15 @@ us_stocks = pd.read_csv('data/stock_list_us.csv')
    - A股/港股：需要2000积分
    - 美股：120积分试用，5000积分正式權限
 3. **請求限制**：注意 API 的每分钟請求次数限制
-4. **數據完整性**：本數據仅包含基础資訊，如需更多數據請參考 Tushare 官方文档
+4. **數據完整性**：本數據仅包含基礎資訊，如需更多數據請參考 Tushare 官方文档
 
 ---
 
-## 相关链接
+## 相關链接
 
 - [Tushare 官网](https://tushare.pro)
 - [Tushare 文档](https://tushare.pro/document/2)
-- [积分获取办法](https://tushare.pro/document/1)
+- [积分獲取办法](https://tushare.pro/document/1)
 - [API 數據调试](https://tushare.pro/document/2)
 """
 
@@ -458,27 +458,27 @@ us_stocks = pd.read_csv('data/stock_list_us.csv')
 def main():
     """主函數"""
     print("=" * 60)
-    print("Tushare 股票列表获取工具")
+    print("Tushare 股票列表獲取工具")
     print("=" * 60)
 
-    # 1. 获取 API 实例
+    # 1. 獲取 API 实例
     api = get_tushare_api()
     if not api:
         return 1
 
-    # 2. 获取 A股數據
+    # 2. 獲取 A股數據
     a_df = fetch_a_stock_list(api)
     if a_df is not None:
         save_to_csv(a_df, 'stock_list_a.csv', 'A股')
 
-    # 3. 获取港股數據
-    random_sleep()  # 休息后再获取港股
+    # 3. 獲取港股數據
+    random_sleep()  # 休息后再獲取港股
     hk_df = fetch_hk_stock_list(api)
     if hk_df is not None:
         save_to_csv(hk_df, 'stock_list_hk.csv', '港股')
 
-    # 4. 获取美股數據（分页）
-    random_sleep()  # 休息后再获取美股
+    # 4. 獲取美股數據（分页）
+    random_sleep()  # 休息后再獲取美股
     us_df = fetch_us_stock_list(api)
     if us_df is not None:
         save_to_csv(us_df, 'stock_list_us.csv', '美股')
@@ -504,7 +504,7 @@ def main():
         print(f"  ✓ 美股：{len(us_df)} 只")
 
     print(f"\n总计：{total_count} 只股票")
-    print(f"输出目錄：{OUTPUT_DIR}")
+    print(f"輸出目錄：{OUTPUT_DIR}")
 
     return 0
 
@@ -516,7 +516,7 @@ if __name__ == "__main__":
         print("\n\n[中断] 使用者取消操作")
         sys.exit(1)
     except Exception as e:
-        print(f"\n[錯誤] 未预期的异常: {e}")
+        print(f"\n[錯誤] 未预期的例外: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

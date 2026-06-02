@@ -129,12 +129,12 @@ class TestSelectionSourcePatternEdgeCases:
         pattern = re.compile(SELECTION_SOURCE_PATTERN)
 
         # Chinese characters should fail
-        assert pattern.fullmatch("手动输入") is None
+        assert pattern.fullmatch("手动輸入") is None
         assert pattern.fullmatch("自动补全") is None
         assert pattern.fullmatch("图片识别") is None
 
         # Mixed characters should fail
-        assert pattern.fullmatch("manual输入") is None
+        assert pattern.fullmatch("manual輸入") is None
         assert pattern.fullmatch("autocomplete识别") is None
 
 

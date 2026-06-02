@@ -341,7 +341,7 @@ class BacktestService:
             return parsed
         if getattr(analysis, "created_at", None):
             return analysis.created_at.date()
-        logger.warning(f"无法確定分析日期，略過记录: {analysis.code}#{getattr(analysis, 'id', '?')}")
+        logger.warning(f"無法確定分析日期，略過记录: {analysis.code}#{getattr(analysis, 'id', '?')}")
         return None
 
     def _try_fill_daily_data(self, *, code: str, analysis_date: date, eval_window_days: int) -> None:

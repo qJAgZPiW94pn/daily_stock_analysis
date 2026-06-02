@@ -389,7 +389,7 @@ def _handle_analyze_pattern(stock_code: str, days: int = 60) -> dict:
             patterns_detected.append({
                 "pattern": label, "type": t,
                 "day_offset": -(n - 1 - i),
-                "strength": "强", "desc": "实体大，方向明确"
+                "strength": "强", "desc": "实体大，方向明確"
             })
 
     # --- Multi-candle patterns (use last 10 days) ---
@@ -461,7 +461,7 @@ def _handle_analyze_pattern(stock_code: str, days: int = 60) -> dict:
             patterns_detected.append({
                 "pattern": "箱体震荡", "type": "consolidation",
                 "day_offset": 0, "strength": "中",
-                "desc": f"近10日波幅 {box_range_pct:.1f}%，价格在区间内震荡"
+                "desc": f"近10日波幅 {box_range_pct:.1f}%，价格在區間内震荡"
             })
 
     # Deduplicate by pattern name, keep most recent

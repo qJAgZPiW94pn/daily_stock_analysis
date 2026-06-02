@@ -296,7 +296,7 @@ def change_password(current: str, new: str) -> Optional[str]:
         return "尚未设置密碼"
 
     if not current or not current.strip():
-        return "请输入当前密碼"
+        return "请輸入当前密碼"
     if not _verify_password_hash(current, _password_hash_salt, _password_hash_stored):
         return "当前密碼錯誤"
 

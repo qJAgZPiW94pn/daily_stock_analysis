@@ -271,12 +271,12 @@ class TickFlowFetcher(BaseFetcher):
                 self._universe_query_supported = False
                 self._universe_query_checked_at = now
                 logger.info(
-                    "[TickFlowFetcher] 当前套餐不支援标的池查詢，市场统计回退到现有數據源"
+                    "[TickFlowFetcher] 当前套餐不支援标的池查詢，市场統計回退到现有數據源"
                 )
                 return None
             raise
         if not quotes:
-            logger.warning("[TickFlowFetcher] 市场统计行情为空")
+            logger.warning("[TickFlowFetcher] 市场統計行情为空")
             return None
 
         stats = {
@@ -335,7 +335,7 @@ class TickFlowFetcher(BaseFetcher):
                 stats["flat_count"] += 1
 
         if valid_rows == 0:
-            logger.warning("[TickFlowFetcher] 市场统计未命中有效 A 股行情")
+            logger.warning("[TickFlowFetcher] 市场統計未命中有效 A 股行情")
             return None
 
         return stats

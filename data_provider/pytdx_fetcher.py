@@ -6,12 +6,12 @@ PytdxFetcher - 通达信數據源 (Priority 2)
 
 數據来源：通达信行情服務器（pytdx 库）
 特点：免费、無需 Token、直连行情服務器
-优点：实时數據、稳定、无配额限制
+优点：实时數據、稳定、无配額限制
 
-关键策略：
-1. 多服務器自动切换
+關鍵策略：
+1. 多服務器自动切換
 2. 連線逾時自动重连
-3. 失败后指數退避重试
+3. 失败后指數退避重試
 """
 
 import logging
@@ -46,12 +46,12 @@ _PYTDX_CONNECTION_COOLDOWN_SECONDS = 15.0
 
 def _parse_hosts_from_env() -> Optional[List[Tuple[str, int]]]:
     """
-    从环境變數构建通达信服務器列表。
+    从環境變數构建通达信服務器列表。
 
-    优先级：
+    優先级：
     1. PYTDX_SERVERS：逗号分隔 "ip:port,ip:port"（如 "192.168.1.1:7709,10.0.0.1:7709"）
     2. PYTDX_HOST + PYTDX_PORT：单个服務器
-    3. 均未配置时傳回 None（调用方使用 DEFAULT_HOSTS）
+    3. 均未配置时傳回 None（呼叫方使用 DEFAULT_HOSTS）
     """
     servers = os.getenv("PYTDX_SERVERS", "").strip()
     if servers:
@@ -84,9 +84,9 @@ def _parse_hosts_from_env() -> Optional[List[Tuple[str, int]]]:
 
 def _is_us_code(stock_code: str) -> bool:
     """
-    判断代碼是否为美股
+    判斷代碼是否为美股
     
-    美股代碼规则：
+    美股代碼規則：
     - 1-5个大写字母，如 'AAPL', 'TSLA'
     - 可能包含 '.'，如 'BRK.B'
     """
@@ -96,15 +96,15 @@ def _is_us_code(stock_code: str) -> bool:
 
 class PytdxFetcher(BaseFetcher):
     """
-    通达信數據源实现
+    通达信數據源實現
     
-    优先级：2（与 Tushare 同级）
+    優先级：2（与 Tushare 同级）
     數據来源：通达信行情服務器
     
-    关键策略：
+    關鍵策略：
     - 自动选择最优服務器
-    - 連線失败自动切换服務器
-    - 失败后指數退避重试
+    - 連線失败自动切換服務器
+    - 失败后指數退避重試
     
     Pytdx 特点：
     - 免费、無需注册
@@ -116,7 +116,7 @@ class PytdxFetcher(BaseFetcher):
     name = "PytdxFetcher"
     priority = int(os.getenv("PYTDX_PRIORITY", "2"))
     
-    # 默认通达信行情服務器列表
+    # 預設通达信行情服務器列表
     DEFAULT_HOSTS = [
         ("119.147.212.81", 7709),  # 深圳
         ("112.74.214.43", 7727),   # 深圳
@@ -135,7 +135,7 @@ class PytdxFetcher(BaseFetcher):
         初始化 PytdxFetcher
 
         Args:
-            hosts: 服務器列表 [(host, port), ...]。若未传入，优先使用环境變數
+            hosts: 服務器列表 [(host, port), ...]。若未传入，優先使用環境變數
                    PYTDX_SERVERS（ip:port,ip:port）或 PYTDX_HOST+PYTDX_PORT，
                    否则使用内置 DEFAULT_HOSTS。
         """
@@ -169,7 +169,7 @@ class PytdxFetcher(BaseFetcher):
     
     def _get_pytdx(self):
         """
-        延遲加载 pytdx 模块
+        延遲加载 pytdx 模組
         
         只在首次使用时匯入，避免未安裝时报错
         """
@@ -185,14 +185,14 @@ class PytdxFetcher(BaseFetcher):
         """
         Pytdx 連線上下文管理器
         
-        确保：
+        確保：
         1. 进入上下文时自动連線
         2. 退出上下文时自动斷開
-        3. 异常时也能正确斷開
+        3. 例外时也能正确斷開
         
         使用示例：
             with self._pytdx_session() as api:
-                # 在这里执行數據查詢
+                # 在这里執行數據查詢
         """
         if self._is_in_connection_cooldown():
             raise DataSourceUnavailableError(
@@ -207,7 +207,7 @@ class PytdxFetcher(BaseFetcher):
         connected = False
         
         try:
-            # 尝试連線服務器（自动选择最优）
+            # 嘗試連線服務器（自动选择最优）
             for i in range(len(self._hosts)):
                 host_idx = (self._current_host_idx + i) % len(self._hosts)
                 host, port = self._hosts[host_idx]
@@ -223,13 +223,13 @@ class PytdxFetcher(BaseFetcher):
                     continue
             
             if not connected:
-                self._mark_connection_cooldown("Pytdx 无法連線任何服務器")
-                raise DataFetchError("Pytdx 无法連線任何服務器")
+                self._mark_connection_cooldown("Pytdx 無法連線任何服務器")
+                raise DataFetchError("Pytdx 無法連線任何服務器")
             
             yield api
             
         finally:
-            # 确保斷開連線
+            # 確保斷開連線
             try:
                 api.disconnect()
                 logger.debug("Pytdx 連線已斷開")
@@ -238,7 +238,7 @@ class PytdxFetcher(BaseFetcher):
     
     def _get_market_code(self, stock_code: str) -> Tuple[int, str]:
         """
-        根据股票代碼判断市场
+        根据股票代碼判斷市场
         
         Pytdx 市场代碼：
         - 0: 深圳
@@ -252,12 +252,12 @@ class PytdxFetcher(BaseFetcher):
         """
         code = stock_code.strip()
         
-        # 去除可能的前缀后缀
+        # 去除可能的前綴后缀
         code = code.replace('.SH', '').replace('.SZ', '')
         code = code.replace('.sh', '').replace('.sz', '')
         code = code.replace('sh', '').replace('sz', '')
         
-        # 根据代碼前缀判断市场
+        # 根据代碼前綴判斷市场
         # 上海：60xxxx, 68xxxx（科创板）
         # 深圳：00xxxx, 30xxxx（创业板）, 002xxx（中小板）
         if code.startswith(('60', '68')):
@@ -294,44 +294,44 @@ class PytdxFetcher(BaseFetcher):
     )
     def _fetch_raw_data(self, stock_code: str, start_date: str, end_date: str) -> pd.DataFrame:
         """
-        从通达信获取原始數據
+        从通达信獲取原始數據
         
-        使用 get_security_bars() 获取日线數據
+        使用 get_security_bars() 獲取日线數據
         
         流程：
-        1. 检查是否为美股（不支援）
+        1. 檢查是否为美股（不支援）
         2. 使用上下文管理器管理連線
-        3. 判断市场代碼
-        4. 调用 API 获取 K 线數據
+        3. 判斷市场代碼
+        4. 呼叫 API 獲取 K 线數據
         """
-        # 美股不支援，抛出异常让 DataFetcherManager 切换到其他數據源
+        # 美股不支援，拋出例外让 DataFetcherManager 切換到其他數據源
         if _is_us_code(stock_code):
             raise DataFetchError(f"PytdxFetcher 不支援美股 {stock_code}，请使用 AkshareFetcher 或 YfinanceFetcher")
 
-        # 港股不支援，抛出异常让 DataFetcherManager 切换到其他數據源
+        # 港股不支援，拋出例外让 DataFetcherManager 切換到其他數據源
         if _is_hk_market(stock_code):
             raise DataFetchError(f"PytdxFetcher 不支援港股 {stock_code}，请使用 AkshareFetcher")
 
-        # 北交所不支援，抛出异常让 DataFetcherManager 切换到其他數據源
+        # 北交所不支援，拋出例外让 DataFetcherManager 切換到其他數據源
         if is_bse_code(stock_code):
             raise DataFetchError(
-                f"PytdxFetcher 不支援北交所 {stock_code}，将自动切换其他數據源"
+                f"PytdxFetcher 不支援北交所 {stock_code}，将自动切換其他數據源"
             )
         
         market, code = self._get_market_code(stock_code)
         
-        # 计算需要获取的交易日数量（估算）
+        # 计算需要獲取的交易日数量（估算）
         from datetime import datetime as dt
         start_dt = dt.strptime(start_date, '%Y-%m-%d')
         end_dt = dt.strptime(end_date, '%Y-%m-%d')
         days = (end_dt - start_dt).days
         count = min(max(days * 5 // 7 + 10, 30), 800)  # 估算交易日，最大 800 条
         
-        logger.debug(f"调用 Pytdx get_security_bars(market={market}, code={code}, count={count})")
+        logger.debug(f"呼叫 Pytdx get_security_bars(market={market}, code={code}, count={count})")
         
         with self._pytdx_session() as api:
             try:
-                # 获取日 K 线數據
+                # 獲取日 K 线數據
                 # category: 9-日线, 0-5分钟, 1-15分钟, 2-30分钟, 3-1小时
                 data = api.get_security_bars(
                     category=9,  # 日线
@@ -344,10 +344,10 @@ class PytdxFetcher(BaseFetcher):
                 if data is None or len(data) == 0:
                     raise DataFetchError(f"Pytdx 未查詢到 {stock_code} 的數據")
                 
-                # 转换为 DataFrame
+                # 轉換为 DataFrame
                 df = api.to_df(data)
                 
-                # 过滤日期范围
+                # 过滤日期範圍
                 df['datetime'] = pd.to_datetime(df['datetime'])
                 df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
                 
@@ -356,16 +356,16 @@ class PytdxFetcher(BaseFetcher):
             except Exception as e:
                 if isinstance(e, DataFetchError):
                     raise
-                raise DataFetchError(f"Pytdx 获取數據失败: {e}") from e
+                raise DataFetchError(f"Pytdx 獲取數據失败: {e}") from e
     
     def _normalize_data(self, df: pd.DataFrame, stock_code: str) -> pd.DataFrame:
         """
-        标准化 Pytdx 數據
+        標準化 Pytdx 數據
         
         Pytdx 傳回的列名：
         datetime, open, high, low, close, vol, amount
         
-        需要映射到标准列名：
+        需要映射到標準列名：
         date, open, high, low, close, volume, amount, pct_chg
         """
         df = df.copy()
@@ -395,7 +395,7 @@ class PytdxFetcher(BaseFetcher):
     
     def get_stock_name(self, stock_code: str) -> Optional[str]:
         """
-        获取股票名称
+        獲取股票名称
         
         Args:
             stock_code: 股票代碼
@@ -407,7 +407,7 @@ class PytdxFetcher(BaseFetcher):
         if _is_hk_market(stock_code):
             return None
 
-        # 先检查快取
+        # 先檢查快取
         if stock_code in self._stock_name_cache:
             return self._stock_name_cache[stock_code]
         
@@ -415,7 +415,7 @@ class PytdxFetcher(BaseFetcher):
             market, code = self._get_market_code(stock_code)
             
             with self._pytdx_session() as api:
-                # 获取股票列表（快取）
+                # 獲取股票列表（快取）
                 if self._stock_list_cache is None:
                     self._build_stock_list_cache(api)
                 
@@ -425,7 +425,7 @@ class PytdxFetcher(BaseFetcher):
                     self._stock_name_cache[stock_code] = name
                     return name
                 
-                # 尝试使用 get_finance_info
+                # 嘗試使用 get_finance_info
                 finance_info = api.get_finance_info(market, code)
                 if finance_info and 'name' in finance_info:
                     name = finance_info['name']
@@ -433,13 +433,13 @@ class PytdxFetcher(BaseFetcher):
                     return name
                 
         except Exception as e:
-            logger.debug(f"Pytdx 获取股票名称失败 {stock_code}: {e}")
+            logger.debug(f"Pytdx 獲取股票名称失败 {stock_code}: {e}")
         
         return None
     
     def get_realtime_quote(self, stock_code: str) -> Optional[dict]:
         """
-        获取实时行情
+        獲取实时行情
         
         Args:
             stock_code: 股票代碼
@@ -449,7 +449,7 @@ class PytdxFetcher(BaseFetcher):
         """
         if is_bse_code(stock_code):
             raise DataFetchError(
-                f"PytdxFetcher 不支援北交所 {stock_code}，将自动切换其他數據源"
+                f"PytdxFetcher 不支援北交所 {stock_code}，将自动切換其他數據源"
             )
         try:
             market, code = self._get_market_code(stock_code)
@@ -473,7 +473,7 @@ class PytdxFetcher(BaseFetcher):
                         'ask_prices': [quote.get(f'ask{i}', 0) for i in range(1, 6)],
                     }
         except Exception as e:
-            logger.warning(f"Pytdx 获取实时行情失败 {stock_code}: {e}")
+            logger.warning(f"Pytdx 獲取实时行情失败 {stock_code}: {e}")
         
         return None
 
@@ -487,7 +487,7 @@ if __name__ == "__main__":
     try:
         # 測試历史數據
         df = fetcher.get_daily_data('600519')  # 茅台
-        print(f"获取成功，共 {len(df)} 条數據")
+        print(f"獲取成功，共 {len(df)} 条數據")
         print(df.tail())
         
         # 測試股票名称
@@ -499,4 +499,4 @@ if __name__ == "__main__":
         print(f"实时行情: {quote}")
         
     except Exception as e:
-        print(f"获取失败: {e}")
+        print(f"獲取失败: {e}")

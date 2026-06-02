@@ -29,7 +29,7 @@ Briefly describe the problem.
 
 ## 复现步骤 / Reproduction Steps
 
-1. 执行命令 / Run command '...'
+1. 執行命令 / Run command '...'
 2. 配置 / Config '...'
 3. 查看 / View '...'
 4. 出现錯誤 / Error occurs
@@ -39,9 +39,9 @@ Briefly describe the problem.
 描述你期望发生的情况。  
 Describe what you expected to happen.
 
-## 实际行为 / Actual Behavior
+## 實際行为 / Actual Behavior
 
-描述实际发生的情况。  
+描述實際发生的情况。  
 Describe what actually happened.
 
 ## 錯誤日誌 / Error Logs
@@ -50,12 +50,12 @@ Describe what actually happened.
 Paste relevant error logs here
 ```
 
-## 环境資訊 / Environment
+## 環境資訊 / Environment
 
 - 操作系統 / OS: [e.g. Ubuntu 22.04 / Windows 11 / macOS 14]
 - Python 版本 / Python version: [e.g. 3.11]
 - 執行方式 / Run mode: [Local / Docker / GitHub Actions]
-- 相关配置 / Relevant config:
+- 相關配置 / Relevant config:
   - GEMINI_MODEL / AI model: 
   - 數據源 / Data source: 
 

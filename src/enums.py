@@ -24,13 +24,13 @@ class ReportType(str, Enum):
     @classmethod
     def from_str(cls, value: str) -> "ReportType":
         """
-        从字符串安全地转换为枚举值
+        从字符串安全地轉換为枚举值
         
         Args:
             value: 字符串值
             
         Returns:
-            对应的枚举值，无效输入傳回默认值 SIMPLE
+            对应的枚举值，无效輸入傳回預設值 SIMPLE
         """
         try:
             normalized = value.lower().strip()
@@ -42,7 +42,7 @@ class ReportType(str, Enum):
     
     @property
     def display_name(self) -> str:
-        """获取用于显示的名称"""
+        """獲取用于顯示的名称"""
         return {
             ReportType.SIMPLE: "精简报告",
             ReportType.FULL: "完整报告",

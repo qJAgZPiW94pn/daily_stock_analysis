@@ -6,7 +6,7 @@ API v1 路由聚合
 
 职责：
 1. 聚合 v1 版本的所有 endpoint 路由
-2. 统一添加 /api/v1 前缀
+2. 统一添加 /api/v1 前綴
 """
 
 from fastapi import APIRouter

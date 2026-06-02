@@ -1,6 +1,6 @@
 
 
-## 一、整体设计
+## 一、整体設計
 
 ```mermaid
 flowchart TB
@@ -12,14 +12,14 @@ flowchart TB
         More[更多平台...]
     end
 
-    subgraph BotModule [bot/ 模块]
+    subgraph BotModule [bot/ 模組]
         WH[Webhook Server]
-        Adapters[平台适配器]
+        Adapters[平台適配器]
         Dispatcher[命令分发器]
         Commands[命令處理器]
     end
 
-    subgraph Core [现有核心模块]
+    subgraph Core [现有核心模組]
         AS[AnalysisService]
         MA[MarketAnalyzer]
         NS[NotificationService]
@@ -46,7 +46,7 @@ flowchart TB
 
 ```
 bot/
-├── __init__.py             # 模块入口，匯出主要类
+├── __init__.py             # 模組入口，匯出主要类
 ├── models.py               # 统一的訊息/回應模型
 ├── dispatcher.py           # 命令分发器（核心）
 ├── commands/               # 命令處理器
@@ -56,7 +56,7 @@ bot/
 │   ├── market.py           # /market 大盤复盘
 │   ├── help.py             # /help 帮助資訊
 │   └── status.py           # /status 系統狀態
-└── platforms/              # 平台适配器
+└── platforms/              # 平台適配器
     ├── __init__.py
     ├── base.py             # 平台抽象基类
     ├── feishu.py           # 飞书机器人
@@ -66,7 +66,7 @@ bot/
     └── telegram.py         # Telegram 机器人 （开发中）
 ```
 
-## 三、核心抽象设计
+## 三、核心抽象設計
 
 ### 3.1 统一訊息模型 (`bot/models.py`)
 
@@ -77,8 +77,8 @@ class BotMessage:
     platform: str           # 平台标识: feishu/dingtalk/wecom/telegram
     user_id: str            # 发送者 ID
     user_name: str          # 发送者名称
-    chat_id: str            # 会话 ID（群聊或私聊）
-    chat_type: str          # 会话类型: group/private
+    chat_id: str            # 會話 ID（群聊或私聊）
+    chat_type: str          # 會話类型: group/private
     content: str            # 訊息文本内容
     raw_data: Dict          # 原始請求數據（平台特定）
     timestamp: datetime     # 訊息时间
@@ -92,11 +92,11 @@ class BotResponse:
     at_user: bool = True    # 是否@发送者
 ```
 
-### 3.2 平台适配器基类 (`bot/platforms/base.py`)
+### 3.2 平台適配器基类 (`bot/platforms/base.py`)
 
 ```python
 class BotPlatform(ABC):
-    """平台适配器抽象基类"""
+    """平台適配器抽象基类"""
     
     @property
     @abstractmethod
@@ -106,7 +106,7 @@ class BotPlatform(ABC):
     
     @abstractmethod
     def verify_request(self, headers: Dict, body: bytes) -> bool:
-        """验证請求签名（安全校验）"""
+        """驗證請求簽名（安全校验）"""
         pass
     
     @abstractmethod
@@ -116,7 +116,7 @@ class BotPlatform(ABC):
     
     @abstractmethod
     def format_response(self, response: BotResponse) -> Dict:
-        """将统一回應转换为平台格式"""
+        """将统一回應轉換为平台格式"""
         pass
 ```
 
@@ -152,7 +152,7 @@ class BotCommand(ABC):
     
     @abstractmethod
     async def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行命令"""
+        """執行命令"""
         pass
 ```
 
@@ -176,7 +176,7 @@ class CommandDispatcher:
         """分发訊息到对应命令"""
         # 1. 解析命令和參數
         # 2. 查找命令處理器
-        # 3. 执行并傳回回應
+        # 3. 執行并傳回回應
 ```
 
 ## 四、已支援的命令
@@ -191,35 +191,35 @@ class CommandDispatcher:
 
 | /batch | /b, 批量 | 批量分析自选股 | `/batch` |
 
-| /help | /h, 帮助 | 显示帮助資訊 | `/help` |
+| /help | /h, 帮助 | 顯示帮助資訊 | `/help` |
 
 | /status | /s, 狀態 | 系統狀態 | `/status` |
 
-## 五、`/status` 与模型配置诊断说明
+## 五、`/status` 与模型配置診斷说明
 
-### 可配置层级与可用性判断依据
+### 可配置層級与可用性判斷依据
 
-- `/status` 显示的 LLM 可用性遵循系統统一執行时优先级：
+- `/status` 顯示的 LLM 可用性遵循系統统一執行时優先级：
   - `LITELLM_CONFIG`（LiteLLM YAML）
   - `LLM_CHANNELS`
   - legacy provider 键（`GEMINI_API_KEY` / `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `DEEPSEEK_API_KEY`）
 - 当主模型（`LITELLM_MODEL` 或 `AGENT_LITELLM_MODEL`）在当前激活层无可用来源时，会展示“AI 服務未配置”，并保留使用者可见原因行。
-- 本倉庫 `requirements.txt` 的執行时依賴约束为 `litellm>=1.80.10,!=1.82.7,!=1.82.8,<2.0.0`，该约束内本链路以现有兼容行为为准。
-- 该诊断规则与 `GET /api/v1/system/config/setup/status` 的 LLM 检查保持一致：`LITELLM_CONFIG`/`LLM_CHANNELS` 为高优先级；模式切换时不会做静默迁移，切回旧模式由使用者显式恢復历史值或回滚。
+- 本倉庫 `requirements.txt` 的執行时依賴約束为 `litellm>=1.80.10,!=1.82.7,!=1.82.8,<2.0.0`，该約束内本鏈路以现有相容行为为准。
+- 该診斷規則与 `GET /api/v1/system/config/setup/status` 的 LLM 檢查保持一致：`LITELLM_CONFIG`/`LLM_CHANNELS` 为高優先级；模式切換时不会做静默迁移，切回旧模式由使用者显式恢復历史值或回滚。
 
-### 回退与迁移边界
+### 回退与迁移邊界
 
-- `LITELLM_CONFIG` 与 `LLM_CHANNELS` 任一生效时，下层 legacy 配置会被该层忽略（不会繼續作为本次调用来源）。
-- 诊断增强不进行 silent migration：不会主动清空/刪除 `GEMINI_*`、`OPENAI_*`、`ANTHROPIC_*`、`LITELLM_*` 的历史值，仅在可用性诊断上提示。
+- `LITELLM_CONFIG` 与 `LLM_CHANNELS` 任一生效时，下层 legacy 配置会被该层忽略（不会繼續作为本次呼叫来源）。
+- 診斷增强不進行 silent migration：不会主动清空/刪除 `GEMINI_*`、`OPENAI_*`、`ANTHROPIC_*`、`LITELLM_*` 的历史值，仅在可用性診斷上提示。
 
-### 官方兼容来源（用于排障核对）
+### 官方相容来源（用于排障核对）
 
 - LiteLLM 官网：<https://docs.litellm.ai/>
 - LiteLLM OpenAI Compatible 说明：<https://docs.litellm.ai/docs/providers/openai_compatible>
 - OpenAI Chat API：<https://platform.openai.com/docs/api-reference/chat>
 - DeepSeek API 文档：<https://api-docs.deepseek.com/>
-- Kimi Moonshot 兼容说明：<https://platform.moonshot.ai/docs/guide/compatibility>
-- Gemini OpenAI 兼容说明：<https://ai.google.dev/gemini-api/docs/openai>
+- Kimi Moonshot 相容说明：<https://platform.moonshot.ai/docs/guide/compatibility>
+- Gemini OpenAI 相容说明：<https://ai.google.dev/gemini-api/docs/openai>
 - Ollama API 文档：<https://github.com/ollama/ollama/blob/main/docs/api.md>
 
 ## 六、Webhook 路由
@@ -241,7 +241,7 @@ class CommandDispatcher:
 ```python
 # === 机器人配置 ===
 bot_enabled: bool = False              # 是否启用机器人
-bot_command_prefix: str = "/"          # 命令前缀
+bot_command_prefix: str = "/"          # 命令前綴
 
 # 飞书机器人（事件订阅）
 feishu_app_id: str                     # 已有
@@ -267,17 +267,17 @@ telegram_webhook_secret: str           # 新增：Webhook 密钥
 
 1. 在 `bot/platforms/` 建立新文件
 2. 继承 `BotPlatform` 基类
-3. 实现 `verify_request`, `parse_message`, `format_response`
+3. 實現 `verify_request`, `parse_message`, `format_response`
 4. 在路由中注册 Webhook 端点
 
 ### 怎样新增新增命令
 
 1. 在 `bot/commands/` 建立新文件
 2. 继承 `BotCommand` 基类
-3. 实现 `execute` 方法
+3. 實現 `execute` 方法
 4. 在分发器中注册命令
 
-## 安全相关配置
+## 安全相關配置
 
 - 支援命令频率限制（防刷）
 - 敏感操作（如批量分析）可设置權限白名单

@@ -20,7 +20,7 @@ class FeishuDocManager:
         self.folder_token = self.config.feishu_folder_token
 
         # 初始化 SDK 客户端
-        # SDK 会自动處理 tenant_access_token 的获取和刷新，無需人工干预
+        # SDK 会自动處理 tenant_access_token 的獲取和刷新，無需人工干预
         if self.is_configured():
             self.client = lark.Client.builder() \
                 .app_id(self.app_id) \
@@ -31,7 +31,7 @@ class FeishuDocManager:
             self.client = None
 
     def is_configured(self) -> bool:
-        """检查配置是否完整"""
+        """檢查配置是否完整"""
         return bool(self.app_id and self.app_secret and self.folder_token)
 
     def create_daily_doc(self, title: str, content_md: str) -> Optional[str]:
@@ -59,12 +59,12 @@ class FeishuDocManager:
                 return None
 
             doc_id = response.data.document.document_id
-            # 这里的 domain 只是为了生成链接，实际访问会重定向
+            # 这里的 domain 只是为了生成链接，實際訪問会重定向
             doc_url = f"https://feishu.cn/docx/{doc_id}"
             logger.info(f"飞书文档建立成功: {title} (ID: {doc_id})")
 
             # 2. 解析 Markdown 并写入内容
-            # 将 Markdown 转换为 SDK 需要的 Block 对象列表
+            # 将 Markdown 轉換为 SDK 需要的 Block 对象列表
             blocks = self._markdown_to_sdk_blocks(content_md)
 
             # 飞书 API 限制每次写入 Block 数量（建议 50 个左右），分批写入
@@ -93,14 +93,14 @@ class FeishuDocManager:
             return doc_url
 
         except Exception as e:
-            logger.error(f"飞书文档操作异常: {e}")
+            logger.error(f"飞书文档操作例外: {e}")
             import traceback
             logger.error(traceback.format_exc())
             return None
 
     def _markdown_to_sdk_blocks(self, md_text: str) -> List[Block]:
         """
-        将简单的 Markdown 转换为飞书 SDK 的 Block 对象
+        将簡單的 Markdown 轉換为飞书 SDK 的 Block 对象
         """
         blocks = []
         lines = md_text.split('\n')
@@ -110,7 +110,7 @@ class FeishuDocManager:
             if not line:
                 continue
 
-            # 默认普通文本 (Text = 2)
+            # 預設普通文本 (Text = 2)
             block_type = 2
             text_content = line
 

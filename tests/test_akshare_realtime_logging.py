@@ -111,7 +111,7 @@ def test_sina_realtime_remote_disconnect_logs_category(caplog, monkeypatch, aksh
     assert source_key == "akshare_sina"
     assert "category=remote_disconnect" in message
     assert f"endpoint={SINA_REALTIME_ENDPOINT}" in caplog.text
-    assert "新浪 实时行情接口失败:" in caplog.text
+    assert "新浪 实时行情介面失败:" in caplog.text
 
 
 def test_tencent_realtime_http_status_logs_endpoint(caplog, monkeypatch, akshare_fetcher):
@@ -234,7 +234,7 @@ def test_limit_up_pool_zero_pads_first_seal_times_before_sorting(monkeypatch, ak
                 "首次封板时间": 141354,
                 "最后封板时间": 141500,
                 "炸板次数": 0,
-                "漲停统计": "1/1",
+                "漲停統計": "1/1",
                 "连板数": 1,
                 "所属行业": "地产",
             },
@@ -249,7 +249,7 @@ def test_limit_up_pool_zero_pads_first_seal_times_before_sorting(monkeypatch, ak
                 "首次封板时间": 92500,
                 "最后封板时间": 93000,
                 "炸板次数": 0,
-                "漲停统计": "1/1",
+                "漲停統計": "1/1",
                 "连板数": 1,
                 "所属行业": "计算机",
             },
@@ -264,7 +264,7 @@ def test_limit_up_pool_zero_pads_first_seal_times_before_sorting(monkeypatch, ak
                 "首次封板时间": 101500,
                 "最后封板时间": 102000,
                 "炸板次数": 0,
-                "漲停统计": "1/1",
+                "漲停統計": "1/1",
                 "连板数": 1,
                 "所属行业": "电子",
             },

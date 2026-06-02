@@ -58,7 +58,7 @@ class ChatCommand(BotCommand):
         
     @property
     def description(self) -> str:
-        return "与 AI 助手进行自由对话 (需开启 Agent 模式)"
+        return "与 AI 助手進行自由对话 (需开启 Agent 模式)"
         
     @property
     def usage(self) -> str:
@@ -80,7 +80,7 @@ class ChatCommand(BotCommand):
 
         if not config.agent_mode:
             return BotResponse.text_response(
-                "⚠️ Agent 模式未开启，无法使用对话功能。\n请在配置中设置 `AGENT_MODE=true`。"
+                "⚠️ Agent 模式未开启，無法使用对话功能。\n请在配置中设置 `AGENT_MODE=true`。"
             )
             
         if not args:
@@ -104,4 +104,4 @@ class ChatCommand(BotCommand):
         except Exception as e:
             logger.error(f"Chat command failed: {e}")
             logger.exception("Chat error details:")
-            return BotResponse.text_response(f"⚠️ 对话执行出错: {str(e)}")
+            return BotResponse.text_response(f"⚠️ 对话執行出错: {str(e)}")

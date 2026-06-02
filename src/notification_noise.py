@@ -233,7 +233,7 @@ def evaluate_notification_noise(
             now=now,
         )
     except Exception as exc:  # pragma: no cover - defensive behavior is tested via monkeypatch.
-        logger.warning("通知降噪判断失败，将繼續发送静态通知渠道: %s", exc)
+        logger.warning("通知降噪判斷失败，将繼續发送静态通知渠道: %s", exc)
         return NotificationNoiseDecision(
             should_send=True,
             reason_code="noise_check_failed_open",
@@ -273,13 +273,13 @@ def _evaluate_notification_noise(
 
     if min_severity_raw:
         if min_severity_raw not in NOTIFICATION_SEVERITY_RANK:
-            logger.warning("NOTIFICATION_MIN_SEVERITY=%s 无效，将忽略最低级别过滤", min_severity_raw)
+            logger.warning("NOTIFICATION_MIN_SEVERITY=%s 无效，将忽略最低級別过滤", min_severity_raw)
         elif NOTIFICATION_SEVERITY_RANK[resolved_severity] < NOTIFICATION_SEVERITY_RANK[min_severity_raw]:
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="min_severity",
                 message=(
-                    f"通知级别 {resolved_severity} 低于最低级别 {min_severity_raw}，"
+                    f"通知級別 {resolved_severity} 低于最低級別 {min_severity_raw}，"
                     "已略過静态通知渠道。"
                 ),
                 **decision_base,

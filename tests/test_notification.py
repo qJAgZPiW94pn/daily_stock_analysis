@@ -5,9 +5,9 @@ A股自选股智能分析系統 - 通知服務单元測試
 ===================================
 
 职责：
-1. 验证通知服務的配置检测逻辑
-2. 验证通知服務的渠道检测逻辑
-3. 验证通知服務的訊息发送逻辑
+1. 驗證通知服務的配置检测邏輯
+2. 驗證通知服務的渠道检测邏輯
+3. 驗證通知服務的訊息发送邏輯
 
 TODO: 
 1. 添加发送渠道以外的測試，如：
@@ -52,18 +52,18 @@ def _make_response(status_code: int, json: Optional[dict] = None) -> requests.Re
 class TestNotificationServiceSendToMethods(unittest.TestCase):
     """測試通知发送服務
 
-    測試设计：
+    測試設計：
 
     測試按照渠道的字母顺序排列，在合适位置添加新的測試方法。
-    如果采用长訊息分批发送，必须单独測試分批发送的逻辑，
+    如果采用长訊息分批发送，必须单独測試分批发送的邏輯，
         e.g. test_send_to_discord_via_notification_service_with_bot_requires_chunking
 
     1. 添加模拟配置：
     使用 mock.patch 装饰器来模拟 get_config 函數，
     使用 _make_config 函數添加配置，并傳回 Config 实例。
 
-    2. 检查配置是否正确：
-    使用 assertIn 检查 NotificationChannel.xxxx 是否在
+    2. 檢查配置是否正确：
+    使用 assertIn 檢查 NotificationChannel.xxxx 是否在
     `NotificationService.get_available_channels()` 傳回值中。
 
     3. 模拟請求回應：
@@ -71,10 +71,10 @@ class TestNotificationServiceSendToMethods(unittest.TestCase):
     使用 _make_response 函數模拟請求回應，并傳回 Response 实例。
     若使用其他函數模拟請求回應，则使用 mock.patch 装饰器来模拟该函數。
 
-    4. 使用 assertTrue 检查 send 的傳回值。
+    4. 使用 assertTrue 檢查 send 的傳回值。
 
-    5. 使用 assert_called_once 检查請求函數是否被调用一次。
-    測試分批发送时，使用 assertAlmostEqual(mock_post.call_count, ...) 检查請求函數被调用次数
+    5. 使用 assert_called_once 檢查請求函數是否被呼叫一次。
+    測試分批发送时，使用 assertAlmostEqual(mock_post.call_count, ...) 檢查請求函數被呼叫次数
 
     """
 
@@ -406,7 +406,7 @@ class TestNotificationServiceSendToMethods(unittest.TestCase):
 
 
 class TestNotificationServiceReportGeneration(unittest.TestCase):
-    """报告生成与选路相关測試。"""
+    """报告生成与选路相關測試。"""
 
     @mock.patch("src.notification.get_config")
     def test_generate_aggregate_report_routes_by_report_type(self, mock_get_config: mock.MagicMock):

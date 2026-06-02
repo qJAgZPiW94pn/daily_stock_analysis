@@ -4,7 +4,7 @@
 命令分发器
 ===================================
 
-负责解析命令、匹配處理器、分发执行。
+负责解析命令、匹配處理器、分发執行。
 """
 
 import asyncio
@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 
 class RateLimiter:
     """
-    简单的频率限制器
+    簡單的频率限制器
 
-    基于滑动窗口演算法，限制每个使用者的請求频率。
+    基于滑动窗口演演算法，限制每个使用者的請求频率。
     """
 
     def __init__(self, max_requests: int = 10, window_seconds: int = 60):
@@ -40,13 +40,13 @@ class RateLimiter:
 
     def is_allowed(self, user_id: str) -> bool:
         """
-        检查使用者是否允许請求
+        檢查使用者是否允許請求
 
         Args:
             user_id: 使用者标识
 
         Returns:
-            是否允许
+            是否允許
         """
         now = time.time()
         window_start = now - self.window_seconds
@@ -57,7 +57,7 @@ class RateLimiter:
             if t > window_start
         ]
 
-        # 检查是否超限
+        # 檢查是否超限
         if len(self._requests[user_id]) >= self.max_requests:
             return False
 
@@ -66,7 +66,7 @@ class RateLimiter:
         return True
 
     def get_remaining(self, user_id: str) -> int:
-        """获取剩余可用請求数"""
+        """獲取剩余可用請求数"""
         now = time.time()
         window_start = now - self.window_seconds
 
@@ -106,7 +106,7 @@ class CommandDispatcher:
     ):
         """
         Args:
-            command_prefix: 命令前缀，默认 "/"
+            command_prefix: 命令前綴，預設 "/"
             rate_limit_requests: 频率限制：窗口内最大請求数
             rate_limit_window: 频率限制：窗口时间（秒）
             admin_users: 管理员使用者 ID 列表
@@ -118,7 +118,7 @@ class CommandDispatcher:
         self._aliases: Dict[str, str] = {}
         self._rate_limiter = RateLimiter(rate_limit_requests, rate_limit_window)
 
-        # 回调函數：获取帮助命令的命令列表
+        # 回调函數：獲取帮助命令的命令列表
         self._help_command_getter: Optional[Callable] = None
 
     def register(self, command: BotCommand) -> None:
@@ -179,7 +179,7 @@ class CommandDispatcher:
 
     def get_command(self, name: str) -> Optional[BotCommand]:
         """
-        获取命令
+        獲取命令
 
         支援命令名和别名查詢。
 
@@ -206,7 +206,7 @@ class CommandDispatcher:
         列出所有命令
 
         Args:
-            include_hidden: 是否包含隐藏命令
+            include_hidden: 是否包含隱藏命令
 
         Returns:
             命令列表
@@ -219,7 +219,7 @@ class CommandDispatcher:
         return sorted(commands, key=lambda c: c.name)
 
     def is_admin(self, user_id: str) -> bool:
-        """检查使用者是否是管理员"""
+        """檢查使用者是否是管理员"""
         return user_id in self.admin_users
 
     def add_admin(self, user_id: str) -> None:
@@ -233,7 +233,7 @@ class CommandDispatcher:
     def dispatch(self, message: BotMessage) -> BotResponse:
         """同步分发訊息。
 
-        保持现有同步调用方兼容，实际逻辑委托给 `dispatch_async()`。
+        保持现有同步呼叫方相容，實際邏輯委托给 `dispatch_async()`。
         """
         try:
             asyncio.get_running_loop()
@@ -256,14 +256,14 @@ class CommandDispatcher:
         if "error" in error_holder:
             raise error_holder["error"]
 
-        return result_holder.get("response", BotResponse.error_response("命令执行失败"))
+        return result_holder.get("response", BotResponse.error_response("命令執行失败"))
 
     def _prepare_dispatch(self, message: BotMessage) -> tuple[Optional[str], List[str], Optional[BotCommand], Optional[BotResponse]]:
         """Run shared dispatch pre-checks for sync/async entrypoints."""
         if not self._rate_limiter.is_allowed(message.user_id):
             remaining_time = self._rate_limiter.window_seconds
             return None, [], None, BotResponse.error_response(
-                f"請求过于频繁，请 {remaining_time} 秒后再试"
+                f"請求过于頻繁，请 {remaining_time} 秒后再试"
             )
 
         cmd_name, args = message.get_command_and_args(self.command_prefix)
@@ -308,16 +308,16 @@ class CommandDispatcher:
             return BotResponse.text_response("")
 
         if command is None:
-            return BotResponse.error_response("命令执行失败")
+            return BotResponse.error_response("命令執行失败")
 
         try:
             response = command.execute(message, args)
-            logger.info(f"[Dispatcher] 命令 {cmd_name} 执行成功")
+            logger.info(f"[Dispatcher] 命令 {cmd_name} 執行成功")
             return response
         except Exception as e:
-            logger.error(f"[Dispatcher] 命令 {cmd_name} 执行失败: {e}")
+            logger.error(f"[Dispatcher] 命令 {cmd_name} 執行失败: {e}")
             logger.exception(e)
-            return BotResponse.error_response(f"命令执行失败: {str(e)[:100]}")
+            return BotResponse.error_response(f"命令執行失败: {str(e)[:100]}")
 
     async def dispatch_async(self, message: BotMessage) -> BotResponse:
         """
@@ -348,23 +348,23 @@ class CommandDispatcher:
             return BotResponse.text_response("")
 
         if command is None:
-            return BotResponse.error_response("命令执行失败")
+            return BotResponse.error_response("命令執行失败")
 
-        # 6. 执行命令
+        # 6. 執行命令
         try:
             response = await command.execute_async(message, args)
-            logger.info(f"[Dispatcher] 命令 {cmd_name} 执行成功")
+            logger.info(f"[Dispatcher] 命令 {cmd_name} 執行成功")
             return response
         except Exception as e:
-            logger.error(f"[Dispatcher] 命令 {cmd_name} 执行失败: {e}")
+            logger.error(f"[Dispatcher] 命令 {cmd_name} 執行失败: {e}")
             logger.exception(e)
-            return BotResponse.error_response(f"命令执行失败: {str(e)[:100]}")
+            return BotResponse.error_response(f"命令執行失败: {str(e)[:100]}")
 
     def set_help_command_getter(self, getter: Callable) -> None:
         """
-        设置帮助命令的命令列表获取器
+        设置帮助命令的命令列表獲取器
 
-        用于让 HelpCommand 获取命令列表。
+        用于让 HelpCommand 獲取命令列表。
 
         Args:
             getter: 回调函數，傳回命令列表
@@ -424,7 +424,7 @@ User: "analyze TSLA and NVDA using trend strategy"
         r'(?:[036]\d{5}|(?:43|83|87|88|92)\d{4})'  # A-share / BSE 6-digit codes
         r'|(?:hk|HK)\d{5}'                    # HK code
         r'|(?<![a-zA-Z])[A-Z]{2,5}(?![a-zA-Z])'  # US ticker — UPPERCASE only, no IGNORECASE
-        r'|分析|看看|查一?下|研究|诊断|怎么样|走勢|趨勢'
+        r'|分析|看看|查一?下|研究|診斷|怎么样|走勢|趨勢'
         r'|能买|可以买|涨还是跌|怎么看|能追|建议|目标价'
         r'|支撑|压力|阻力|止损|买点|卖点|技术面|基本面|筹码'
         r'|(?i:analyz|stock|buy|sell|trend|backtest|strateg)',
@@ -434,7 +434,7 @@ User: "analyze TSLA and NVDA using trend strategy"
         r'[，,。.!！?？:：;；`\'"“”‘’（）()\[\]{}<>]+',
         r'(?i:\b(?:please|analy[sz]e|analysis|research|check|look\s+at|stock|ticker|trend|price)\b)',
         r'(?:帮我|帮忙|麻烦|请|想请你|我想|想|用|按照|基于|关于|对)\s*',
-        r'(?:分析|看看|研究|诊断|查一?下|聊聊|说说|问问|评估)\s*',
+        r'(?:分析|看看|研究|診斷|查一?下|聊聊|说说|问问|評估)\s*',
         r'(?:最近|近期|当前|今天|这只|这个|個股|股票)\s*',
         r'(?:走勢|情况|表现|如何|怎么样|怎么看|可以吗|能买吗|值不值得买|技术面|基本面|策略)\s*',
         r'\s+',
@@ -734,9 +734,9 @@ _dispatcher: Optional[CommandDispatcher] = None
 
 def get_dispatcher() -> CommandDispatcher:
     """
-    获取全局分发器实例
+    獲取全局分发器实例
 
-    使用单例模式，首次调用时自动初始化并注册所有命令。
+    使用单例模式，首次呼叫时自动初始化并注册所有命令。
     """
     global _dispatcher
 

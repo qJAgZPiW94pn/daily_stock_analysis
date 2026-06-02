@@ -112,10 +112,10 @@ class GotifySender:
             logger.error("发送 Gotify 訊息失败: 請求逾時")
             return False
         except requests.exceptions.RequestException as exc:
-            logger.error("发送 Gotify 訊息失败: 網路請求异常")
-            logger.debug("Gotify 請求异常类型: %s", type(exc).__name__)
+            logger.error("发送 Gotify 訊息失败: 網路請求例外")
+            logger.debug("Gotify 請求例外类型: %s", type(exc).__name__)
             return False
         except Exception as exc:
-            logger.error("发送 Gotify 訊息失败: 未知异常")
-            logger.debug("Gotify 未知异常类型: %s", type(exc).__name__)
+            logger.error("发送 Gotify 訊息失败: 未知例外")
+            logger.debug("Gotify 未知例外类型: %s", type(exc).__name__)
             return False

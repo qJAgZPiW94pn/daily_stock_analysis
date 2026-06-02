@@ -135,7 +135,7 @@ class AgentOrchestrator:
             if parse_dashboard and dashboard is not None:
                 dashboard = self._mark_partial_dashboard(
                     dashboard,
-                    note="多 Agent 逾時，以下结论基于已完成阶段自动降级生成。",
+                    note="多 Agent 逾時，以下结论基于已完成阶段自动降級生成。",
                 )
                 ctx.set_data("final_dashboard", dashboard)
                 content = json.dumps(dashboard, ensure_ascii=False, indent=2)
@@ -176,7 +176,7 @@ class AgentOrchestrator:
             if parse_dashboard and dashboard is not None:
                 dashboard = self._mark_partial_dashboard(
                     dashboard,
-                    note="多 Agent 预算不足，以下结论基于已完成阶段自动降级生成。",
+                    note="多 Agent 预算不足，以下结论基于已完成阶段自动降級生成。",
                 )
                 ctx.set_data("final_dashboard", dashboard)
                 content = json.dumps(dashboard, ensure_ascii=False, indent=2)
@@ -976,7 +976,7 @@ class AgentOrchestrator:
             battle["position_strategy"] = {
                 "suggested_position": _default_position_size(decision_type),
                 "entry_plan": position_advice["no_position"],
-                "risk_control": f"止损参考 {sniper.get('stop_loss', '待补充')}",
+                "risk_control": f"止损參考 {sniper.get('stop_loss', '待补充')}",
             }
 
         data_perspective = dashboard_block.get("data_perspective")
@@ -1209,7 +1209,7 @@ class AgentOrchestrator:
     ) -> Dict[str, Any]:
         tagged = dict(dashboard)
         summary = _first_non_empty_text(tagged.get("analysis_summary"))
-        prefix = "[降级结果] "
+        prefix = "[降級结果] "
         if summary and not summary.startswith(prefix):
             tagged["analysis_summary"] = prefix + summary
         elif not summary:
@@ -1304,11 +1304,11 @@ class AgentOrchestrator:
                 position = core.get("position_advice")
                 if isinstance(position, dict):
                     if new_signal == "hold":
-                        position["no_position"] = "風險未解除前先观望，等待更清晰的入场条件。"
+                        position["no_position"] = "風險未解除前先观望，等待更清晰的入场條件。"
                         position["has_position"] = "谨慎持有并收紧止损，待風險缓解后再考虑加仓。"
                     elif new_signal == "sell":
                         position["no_position"] = "風險明显偏高，暂不新开仓。"
-                        position["has_position"] = "优先控制回撤，建议减仓或退出高風險仓位。"
+                        position["has_position"] = "優先控制回撤，建议减仓或退出高風險仓位。"
 
         ctx.set_data("final_dashboard", dashboard)
         ctx.set_data("risk_override_applied", {
@@ -1351,7 +1351,7 @@ class AgentOrchestrator:
             severity = str(flag.get("severity", "")).lower()
             if description:
                 warnings.append(f"[{severity or 'risk'}] {description}")
-        prefix = f"风控接管：最终信号已下调为 {signal}。"
+        prefix = f"风控接管：最終信号已下调为 {signal}。"
         merged = " ".join(dict.fromkeys([prefix] + warnings))
         return merged[:500]
 
@@ -1387,7 +1387,7 @@ _COMMON_WORDS: set[str] = {
 }
 
 _LOWERCASE_TICKER_HINTS = re.compile(
-    r"分析|看看|查一?下|研究|诊断|走勢|趨勢|股價|股票|個股",
+    r"分析|看看|查一?下|研究|診斷|走勢|趨勢|股價|股票|個股",
 )
 
 
@@ -1485,15 +1485,15 @@ def _default_position_advice(signal: str) -> Dict[str, str]:
     mapping = {
         "buy": {
             "no_position": "可结合支撑位分批试仓，避免一次性追高。",
-            "has_position": "可繼續持有，回踩关键位不破再考虑加仓。",
+            "has_position": "可繼續持有，回踩關鍵位不破再考虑加仓。",
         },
         "hold": {
-            "no_position": "暂不追高，等待更清晰的入场条件。",
-            "has_position": "以观察为主，跌破止损位再执行风控。",
+            "no_position": "暂不追高，等待更清晰的入场條件。",
+            "has_position": "以观察为主，跌破止损位再執行风控。",
         },
         "sell": {
             "no_position": "暂不参与，等待風險充分释放。",
-            "has_position": "优先控制回撤，按计划减仓或离场。",
+            "has_position": "優先控制回撤，按计划减仓或离场。",
         },
     }
     return mapping.get(signal, mapping["hold"])

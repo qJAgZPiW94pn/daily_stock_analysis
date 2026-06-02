@@ -2,7 +2,7 @@
 
 这里是项目文档入口。README 负责项目概览和快速开始；更完整的配置、部署、功能说明和排障内容从这里进入。
 
-## 按场景选择
+## 按場景选择
 
 | 我想要 | 先看 | 繼續看 |
 | --- | --- | --- |
@@ -21,19 +21,19 @@
 | --- | --- |
 | [README](../README.md) | 项目定位、核心能力、快速开始、推送效果 |
 | [小白客户端安裝与配置](beginner-client-setup.md) | 面向不会代碼使用者的客户端下載、Anspire Open / AIHubMix 模型配置、新闻源配置和常见議題 |
-| [完整配置与部署指南](full-guide.md) | 环境准备、執行方式、配置说明、部署路徑和常见議題 |
+| [完整配置与部署指南](full-guide.md) | 環境准备、執行方式、配置说明、部署路徑和常见議題 |
 | [FAQ](FAQ.md) | 常见配置、模型、通知、部署和執行議題 |
-| [更新日誌](CHANGELOG.md) | 版本变化、能力调整和迁移说明 |
+| [更新日誌](CHANGELOG.md) | 版本变化、能力調整和迁移说明 |
 
 ## 配置
 
 | 文档 | 内容 |
 | --- | --- |
 | [LLM 配置指南](LLM_CONFIG_GUIDE.md) | 大模型渠道、三层配置、Web 设置页和常见模型配置 |
-| [LLM 服務商配置指南](llm-providers.md) | Provider 预设、Actions 映射、錯誤分类和诊断建议 |
+| [LLM 服務商配置指南](llm-providers.md) | Provider 预设、Actions 映射、錯誤分類和診斷建议 |
 | [LiteLLM YAML 示例](examples/litellm_config.example.yaml) | LiteLLM 多渠道配置示例 |
 | [通知能力基线](notifications.md) | 企业微信、飞书、Telegram、Discord、Slack、電郵等通知渠道配置 |
-| [Tushare 股票列表指南](TUSHARE_STOCK_LIST_GUIDE.md) | Tushare 股票列表相关配置和使用说明 |
+| [Tushare 股票列表指南](TUSHARE_STOCK_LIST_GUIDE.md) | Tushare 股票列表相關配置和使用说明 |
 
 ## 使用专题
 
@@ -41,8 +41,8 @@
 | --- | --- |
 | [Bot 命令与接入](bot-command.md) | Bot 命令、Webhook、平台接入和回调说明 |
 | [Bot 平台配置](bot/) | 飞书、钉钉、Discord 等 Bot 配置截图和补充说明 |
-| [实时警報中心](alerts.md) | EventMonitor 基线、Web 规则管理、通知结果、冷却狀態和 Phase 边界 |
-| [图片识别 Prompt](image-extract-prompt.md) | 图片识别股票資訊的 Prompt 与使用边界 |
+| [实时警報中心](alerts.md) | EventMonitor 基线、Web 規則管理、通知结果、冷却狀態和 Phase 邊界 |
+| [图片识别 Prompt](image-extract-prompt.md) | 图片识别股票資訊的 Prompt 与使用邊界 |
 | [OpenClaw Skill 集成](openclaw-skill-integration.md) | OpenClaw / Skill 外部集成说明 |
 
 ## 部署与打包
@@ -50,11 +50,11 @@
 | 文档 | 内容 |
 | --- | --- |
 | [部署指南](DEPLOY.md) | 服務器部署、Docker、systemd、Supervisor 等部署方式 |
-| [云端 WebUI 部署](deploy-webui-cloud.md) | 云服務器访问 WebUI 的部署说明 |
+| [云端 WebUI 部署](deploy-webui-cloud.md) | 云服務器訪問 WebUI 的部署说明 |
 | [Zeabur 部署](docker/zeabur-deployment.md) | Zeabur 平台部署说明 |
 | [桌面端打包说明](desktop-package.md) | Electron 桌面端和 Web 构建产物打包说明 |
 
-## 参考与开发
+## 參考与开发
 
 | 文档 | 内容 |
 | --- | --- |

@@ -683,7 +683,7 @@ class TestOrchestratorExecution(unittest.TestCase):
         self.assertIsNotNone(result.dashboard)
         self.assertIsNotNone(result.content)
         self.assertIn("insufficient budget", (result.error or "").lower())
-        self.assertIn("[降级结果]", result.dashboard["analysis_summary"])
+        self.assertIn("[降級结果]", result.dashboard["analysis_summary"])
         technical.run.assert_called_once()
         intel.run.assert_not_called()
 
@@ -711,7 +711,7 @@ class TestOrchestratorExecution(unittest.TestCase):
                 agent_name="decision",
                 signal="buy",
                 confidence=0.87,
-                reasoning="综合技术与情绪判断，倾向于買入。",
+                reasoning="综合技术与情绪判斷，倾向于買入。",
             ))
             return self._stage_result("decision")
 
@@ -842,7 +842,7 @@ class TestOrchestratorExecution(unittest.TestCase):
         self.assertTrue(result.success)
         self.assertIn("timed out", result.error)
         self.assertEqual(result.dashboard["decision_type"], "buy")
-        self.assertIn("降级结果", result.dashboard["analysis_summary"])
+        self.assertIn("降級结果", result.dashboard["analysis_summary"])
         self.assertEqual(
             result.dashboard["dashboard"]["battle_plan"]["sniper_points"]["stop_loss"],
             295.0,
@@ -1045,13 +1045,13 @@ class TestTechnicalAgentSkillPolicy(unittest.TestCase):
         agent = TechnicalAgent(
             tool_registry=MagicMock(),
             llm_adapter=MagicMock(),
-            skill_instructions="### 技能 1: 默认多头趨勢",
+            skill_instructions="### 技能 1: 預設多头趨勢",
             technical_skill_policy=TECHNICAL_SKILL_RULES_EN,
         )
         prompt = agent.system_prompt(AgentContext(query="分析 600519", stock_code="600519"))
 
         self.assertIn("Bias from MA5 < 2%", prompt)
-        self.assertIn("### 技能 1: 默认多头趨勢", prompt)
+        self.assertIn("### 技能 1: 預設多头趨勢", prompt)
 
 
 class TestBaseAgentMessageAssembly(unittest.TestCase):

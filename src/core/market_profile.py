@@ -2,8 +2,8 @@
 """
 大盤复盘市场区域配置
 
-定义各市场区域的指數、新闻搜索词、Prompt 提示等元數據，
-供 MarketAnalyzer 按 region 切换 A 股/美股复盘行为。
+定义各市场区域的指數、新闻搜尋词、Prompt 提示等元數據，
+供 MarketAnalyzer 按 region 切換 A 股/美股复盘行为。
 """
 
 from dataclasses import dataclass
@@ -15,9 +15,9 @@ class MarketProfile:
     """大盤复盘市场区域配置"""
 
     region: str  # "cn" | "us"
-    # 用于判断整体走勢的指數代碼，cn 用上证 000001，us 用标普 SPX
+    # 用于判斷整体走勢的指數代碼，cn 用上证 000001，us 用标普 SPX
     mood_index_code: str
-    # 新闻搜索关键词
+    # 新闻搜尋關鍵词
     news_queries: List[str]
     # 指數点评 Prompt 提示语
     prompt_index_hint: str

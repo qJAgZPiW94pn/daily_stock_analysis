@@ -4,7 +4,7 @@
 大盤复盘命令
 ===================================
 
-执行大盤复盘分析，生成市场概览报告。
+執行大盤复盘分析，生成市场概览报告。
 """
 
 import logging
@@ -21,14 +21,14 @@ class MarketCommand(BotCommand):
     """
     大盤复盘命令
 
-    执行大盤复盘分析，包括：
+    執行大盤复盘分析，包括：
     - 主要指數表现
     - 板塊热点
     - 市场情绪
     - 后市展望
 
     用法：
-        /market - 执行大盤复盘
+        /market - 執行大盤复盘
     """
 
     @property
@@ -48,11 +48,11 @@ class MarketCommand(BotCommand):
         return "/market"
 
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行大盤复盘命令"""
+        """執行大盤复盘命令"""
         config = self._get_config()
         lock_token = self._try_acquire_market_review_lock(config)
         if lock_token is None:
-            return BotResponse.markdown_response("⚠️ 大盤复盘正在执行中，请稍后再试。")
+            return BotResponse.markdown_response("⚠️ 大盤复盘正在執行中，请稍后再试。")
 
         thread = threading.Thread(
             target=self._run_market_review,
@@ -68,7 +68,7 @@ class MarketCommand(BotCommand):
             )
             self._release_market_review_lock(lock_token)
             return BotResponse.error_response(
-                "大盤复盘啟動失败，已释放執行锁；请稍后重试"
+                "大盤复盘啟動失败，已释放執行锁；请稍后重試"
             )
 
         return BotResponse.markdown_response(
@@ -76,7 +76,7 @@ class MarketCommand(BotCommand):
             "正在分析：\n"
             "• 主要指數表现\n"
             "• 板塊热点分析\n"
-            "• 市场情绪判断\n"
+            "• 市场情绪判斷\n"
             "• 后市展望\n\n"
             "分析完成后将自动推送结果。"
         )
@@ -109,7 +109,7 @@ class MarketCommand(BotCommand):
                 open_markets,
             )
         except Exception as exc:
-            logger.warning("交易日过滤失败，按配置繼續执行大盤复盘: %s", exc)
+            logger.warning("交易日过滤失败，按配置繼續執行大盤复盘: %s", exc)
             return None
 
     def _run_market_review(
@@ -118,16 +118,16 @@ class MarketCommand(BotCommand):
         config,
         lock_token: Optional[Any],
     ) -> None:
-        """后台执行大盤复盘"""
+        """后台執行大盤复盘"""
         try:
             override_region = self._compute_market_review_override_region(config)
             if override_region == "":
                 from src.notification import NotificationService
                 notifier = NotificationService(source_message=message)
-                logger.info("[MarketCommand] 今日相关市场休市，略過大盤复盘")
+                logger.info("[MarketCommand] 今日相關市场休市，略過大盤复盘")
                 if notifier.is_available():
                     notifier.send(
-                        "🎯 大盤复盘\n\n今日相关市场休市，已略過大盤复盘。",
+                        "🎯 大盤复盘\n\n今日相關市场休市，已略過大盤复盘。",
                         email_send_to_all=True,
                         route_type="report",
                     )

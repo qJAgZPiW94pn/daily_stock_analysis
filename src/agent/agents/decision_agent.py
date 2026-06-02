@@ -51,7 +51,7 @@ Requirements:
 """
             if report_language == "en":
                 return prompt + "\nAlways answer in English.\n"
-            return prompt + "\n默认使用中文回答。\n"
+            return prompt + "\n預設使用中文回答。\n"
 
         skills = ""
         if self.skill_instructions:
@@ -118,7 +118,7 @@ new decision_type values.
 """
         return prompt + """
 
-## 输出语言
+## 輸出语言
 - 所有 JSON 键名保持不变。
 - `decision_type` 必须保持为 `buy|hold|sell`。
 - 所有面向使用者的人类可读文本值必须使用中文。

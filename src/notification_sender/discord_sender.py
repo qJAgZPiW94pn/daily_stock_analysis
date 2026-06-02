@@ -35,7 +35,7 @@ class DiscordSender:
         self._webhook_verify_ssl = getattr(config, 'webhook_verify_ssl', True)
     
     def _is_discord_configured(self) -> bool:
-        """检查 Discord 配置是否完整（支援 Bot 或 Webhook）"""
+        """檢查 Discord 配置是否完整（支援 Bot 或 Webhook）"""
         # 只要配置了 Webhook 或完整的 Bot Token+Channel，即视为可用
         bot_ok = bool(self._discord_config['bot_token'] and self._discord_config['channel_id'])
         webhook_ok = bool(self._discord_config['webhook_url'])
@@ -55,10 +55,10 @@ class DiscordSender:
         try:
             chunks = chunk_content_by_max_words(content, self._discord_max_words)
         except ValueError as e:
-            logger.error(f"分割 Discord 訊息失败: {e}, 尝试整段发送。")
+            logger.error(f"分割 Discord 訊息失败: {e}, 嘗試整段发送。")
             chunks = [content]
 
-        # 优先使用 Webhook（配置简单，權限低）
+        # 優先使用 Webhook（配置簡單，權限低）
         if self._discord_config['webhook_url']:
             return all(self._send_discord_webhook(chunk, timeout_seconds=timeout_seconds) for chunk in chunks)
 
@@ -103,7 +103,7 @@ class DiscordSender:
                 logger.error(f"Discord Webhook 发送失败: {response.status_code} {response.text}")
                 return False
         except Exception as e:
-            logger.error(f"Discord Webhook 发送异常: {e}")
+            logger.error(f"Discord Webhook 发送例外: {e}")
             return False
     
     def _send_discord_bot(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
@@ -136,5 +136,5 @@ class DiscordSender:
                 logger.error(f"Discord Bot 发送失败: {response.status_code} {response.text}")
                 return False
         except Exception as e:
-            logger.error(f"Discord Bot 发送异常: {e}")
+            logger.error(f"Discord Bot 发送例外: {e}")
             return False

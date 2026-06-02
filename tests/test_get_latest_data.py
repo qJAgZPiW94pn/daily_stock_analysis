@@ -5,7 +5,7 @@ get_latest_data 測試
 ===================================
 
 职责：
-1. 验证 get_latest_data 方法
+1. 驗證 get_latest_data 方法
 2. 測試傳回數據按日期降序排列
 3. 測試 days 參數限制
 """
@@ -74,20 +74,20 @@ class GetLatestDataTestCase(unittest.TestCase):
         self.assertEqual(len(result), 5)
 
     def test_get_latest_data_ordered_by_date_desc(self) -> None:
-        """验证數據按日期降序排列"""
+        """驗證數據按日期降序排列"""
         # 插入3天數據
         for i in range(3):
             self._insert_stock_data("600519", days_ago=i, close=100.0 + i)
 
         result = self.db.get_latest_data("600519", days=3)
 
-        # 验证日期降序（最新日期在前）
+        # 驗證日期降序（最新日期在前）
         self.assertEqual(len(result), 3)
         self.assertGreater(result[0].date, result[1].date)
         self.assertGreater(result[1].date, result[2].date)
 
     def test_get_latest_data_filters_by_code(self) -> None:
-        """验证按股票代碼过滤"""
+        """驗證按股票代碼过滤"""
         # 插入不同股票的數據
         self._insert_stock_data("600519", days_ago=0, close=100.0)
         self._insert_stock_data("000001", days_ago=0, close=50.0)

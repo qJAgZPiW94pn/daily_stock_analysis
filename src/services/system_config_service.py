@@ -392,7 +392,7 @@ class SystemConfigService:
             error_code, retryable = self._classify_notification_exception(exc)
             return self._build_notification_test_result(
                 success=False,
-                message=f"通知測試异常: {exc}",
+                message=f"通知測試例外: {exc}",
                 error_code=error_code,
                 stage="notification_send",
                 retryable=retryable,
@@ -1407,8 +1407,8 @@ class SystemConfigService:
             else:
                 warnings.append(
                     (
-                        f"MAX_WORKERS={max_workers} 已写入 .env，但本次未触发執行时重载"
-                        "（reload_now=false）；重载后才会应用。"
+                        f"MAX_WORKERS={max_workers} 已写入 .env，但本次未触发執行时重載"
+                        "（reload_now=false）；重載后才会应用。"
                     )
                 )
 
@@ -1442,7 +1442,7 @@ class SystemConfigService:
             warnings.append(
                 (
                     f"SCHEDULE_TIME={schedule_time} 已写入 .env。"
-                    "如果当前程式已经以 schedule 模式執行，scheduler 会在下一轮检查中自动重建 daily job；"
+                    "如果当前程式已經以 schedule 模式執行，scheduler 会在下一轮檢查中自动重建 daily job；"
                     "如果当前程式未以 schedule 模式執行，本次保存不会啟動 scheduler。"
                 )
             )
@@ -1455,7 +1455,7 @@ class SystemConfigService:
             warnings.append(
                 (
                     f"{', '.join(sorted(startup_only_bind_keys))} 已写入 .env。"
-                    "这些属于啟動期监听配置：当前已執行的 WebUI/API 程式不会因为本次保存重新绑定监听地址或端口；"
+                    "这些属于啟動期监听配置：当前已執行的 WebUI/API 程式不会因为本次保存重新綁定监听地址或端口；"
                     "请重啟当前程式、Docker 容器或服務管理器后生效。"
                 )
             )
@@ -1498,7 +1498,7 @@ class SystemConfigService:
 
         cleaned_targets = list(cleared_labels)
         if removed_fallbacks:
-            cleaned_targets.append("备选模型中的失效项")
+            cleaned_targets.append("備選模型中的失效项")
 
         cleaned_text = " / ".join(cleaned_targets)
         warning = (
@@ -2520,7 +2520,7 @@ class SystemConfigService:
             True,
             "needs_action",
             f"Agent 主模型 {agent_model} 缺少可用渠道或匹配的 API Key。",
-            "请调整 AGENT_LITELLM_MODEL 或补齐对应渠道配置。",
+            "请調整 AGENT_LITELLM_MODEL 或补齐对应渠道配置。",
         )
 
     def _build_setup_stock_list_check(self, effective_map: Dict[str, str]) -> Dict[str, Any]:
@@ -2624,7 +2624,7 @@ class SystemConfigService:
                 True,
                 "needs_action",
                 f"資料庫路徑父目錄不可用: {parent}",
-                "请检查 DATABASE_PATH 或上级目錄權限。",
+                "请檢查 DATABASE_PATH 或上级目錄權限。",
             )
 
         if os.access(probe, os.W_OK):
@@ -2647,7 +2647,7 @@ class SystemConfigService:
             True,
             "needs_action",
             f"資料庫路徑上级目錄不可写: {probe}",
-            "请调整 DATABASE_PATH 或目錄權限。",
+            "请調整 DATABASE_PATH 或目錄權限。",
         )
 
     @staticmethod

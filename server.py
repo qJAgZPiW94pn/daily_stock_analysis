@@ -7,7 +7,7 @@ Daily Stock Analysis - FastAPI 后端服務入口
 职责：
 1. 提供 RESTful API 服務
 2. 配置 CORS 跨域支援
-3. 健康检查接口
+3. 健康檢查介面
 4. 托管前端静态文件（生产模式）
 
 啟動方式：
@@ -15,7 +15,7 @@ Daily Stock Analysis - FastAPI 后端服務入口
     
     或使用 main.py:
     python main.py --serve-only      # 仅啟動 API 服務
-    python main.py --serve           # API 服務 + 执行分析
+    python main.py --serve           # API 服務 + 執行分析
 """
 
 import logging
@@ -23,7 +23,7 @@ import logging
 from src.config import setup_env, get_config
 from src.logging_config import setup_logging
 
-# 初始化环境變數与日誌
+# 初始化環境變數与日誌
 setup_env()
 
 config = get_config()

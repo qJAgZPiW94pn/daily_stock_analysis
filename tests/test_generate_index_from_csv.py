@@ -65,7 +65,7 @@ class TestExtractSymbol:
 
 
 class TestDetermineMarket:
-    """測試市场判断函數"""
+    """測試市场判斷函數"""
 
     def test_a_stock_sz(self):
         """測試 A股深圳"""
@@ -114,7 +114,7 @@ class TestDetermineMarket:
 
 
 class TestGetStockName:
-    """測試股票名称获取函數"""
+    """測試股票名称獲取函數"""
 
     def test_cn_stock_name(self):
         """測試 A股使用 name 欄位"""
@@ -142,7 +142,7 @@ class TestGetStockName:
 
 
 class TestDataCleaning:
-    """測試數據清洗逻辑"""
+    """測試數據清洗邏輯"""
 
     def test_valid_cn_stock(self):
         """測試有效的 A股记录"""
@@ -251,7 +251,7 @@ class TestDataCleaning:
         assert result is None
 
     def test_us_delist_priority_prefers_blank_over_nat(self):
-        """測試美股去重优先级：空 delist_date 优先于 NaT"""
+        """測試美股去重優先级：空 delist_date 優先于 NaT"""
         assert get_us_delist_priority({'delist_date': ''}) == 2
         assert get_us_delist_priority({'delist_date': 'NaT'}) == 1
         assert get_us_delist_priority({'delist_date': '20250131'}) == 0
@@ -282,10 +282,10 @@ class TestAliases:
 
 
 class TestOutputFormat:
-    """測試输出格式"""
+    """測試輸出格式"""
 
     def test_compress_index_field_order(self):
-        """測試压缩格式的欄位顺序"""
+        """測試壓縮格式的欄位顺序"""
         index = [{
             "canonicalCode": "000001.SZ",
             "displayCode": "000001",
@@ -304,7 +304,7 @@ class TestOutputFormat:
         assert len(compressed) == 1
         item = compressed[0]
 
-        # 验证欄位顺序
+        # 驗證欄位顺序
         assert item[0] == "000001.SZ"      # canonicalCode
         assert item[1] == "000001"         # displayCode
         assert item[2] == "平安银行"       # nameZh
@@ -317,7 +317,7 @@ class TestOutputFormat:
         assert item[9] == 100              # popularity
 
     def test_compress_index_field_count(self):
-        """測試压缩格式的欄位数量"""
+        """測試壓縮格式的欄位数量"""
         index = [{
             "canonicalCode": "AAPL",
             "displayCode": "AAPL",
@@ -399,27 +399,27 @@ class TestIntegration:
         # 加载數據
         stocks = load_tushare_data(tmp_path)
 
-        # 验证數據
+        # 驗證數據
         assert len(stocks) == 3
 
         # 构建索引
         index = build_stock_index(stocks)
 
-        # 验证索引
+        # 驗證索引
         assert len(index) == 3
 
-        # 压缩索引
+        # 壓縮索引
         compressed = compress_index(index)
 
-        # 验证压缩
+        # 驗證壓縮
         assert len(compressed) == 3
 
-        # 验证欄位数量
+        # 驗證欄位数量
         for item in compressed:
             assert len(item) == 10
 
     def test_market_distribution(self, tmp_path):
-        """測試市场分布统计"""
+        """測試市场分布統計"""
         # 建立測試數據
         csv_file = tmp_path / 'stock_list_a.csv'
         with open(csv_file, 'w', encoding='utf-8-sig', newline='') as f:
@@ -432,13 +432,13 @@ class TestIntegration:
         stocks = load_tushare_data(tmp_path)
         index = build_stock_index(stocks)
 
-        # 统计市场分布
+        # 統計市场分布
         market_stats = {}
         for item in index:
             market = item['market']
             market_stats[market] = market_stats.get(market, 0) + 1
 
-        # 验证统计
+        # 驗證統計
         assert market_stats.get('CN', 0) == 2  # SZ, SH
         assert market_stats.get('BSE', 0) == 1  # BJ
 
@@ -507,12 +507,12 @@ class TestPinyin:
     """測試拼音生成"""
 
     def test_normalize_name(self):
-        """測試名称标准化"""
-        # 測試 ST 前缀去除
+        """測試名称標準化"""
+        # 測試 ST 前綴去除
         result = normalize_name_for_pinyin('*ST平安')
         assert 'ST' not in result
 
-        # 測試 N 前缀去除
+        # 測試 N 前綴去除
         result = normalize_name_for_pinyin('N平安银行')
         assert 'N' not in result
 

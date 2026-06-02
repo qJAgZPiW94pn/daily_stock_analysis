@@ -1,5 +1,5 @@
 # ===================================
-# 高级模型路由 YAML 模板（底层兼容 LiteLLM Router）
+# 進階模型路由 YAML 模板（底层相容 LiteLLM Router）
 # ===================================
 # 配套文档：docs/LLM_CONFIG_GUIDE.md 第 3.2 节
 #
@@ -9,26 +9,26 @@
 # 3. 按需配置下面的 model_list
 #
 # 密钥引用格式：
-#   api_key: "os.environ/ENV_VAR_NAME"  → 从环境變數读取，避免明文写入文件
+#   api_key: "os.environ/ENV_VAR_NAME"  → 从環境變數讀取，避免明文写入文件
 #   api_key: "sk-xxxxxxxx"              → 直接写入（不推荐）
 #
 # 更多文档: https://docs.litellm.ai/docs/proxy/configs
 # ===================================
 
 model_list:
-  # --- siliconflow (OpenAI 兼容，一个 Key 使用多种模型) ---
-  # 这是一个自定义 OpenAI 兼容模型渠道的示例
+  # --- siliconflow (OpenAI 相容，一个 Key 使用多种模型) ---
+  # 这是一个自定义 OpenAI 相容模型渠道的示例
   - model_name: openai/Qwen/Qwen3.5-397B-A17B
     litellm_params:
       model: openai/Qwen/Qwen3.5-397B-A17B
-      api_key: "os.environ/LITELLM_API_KEY" # 从环境變數读取 Key，安全防泄漏
+      api_key: "os.environ/LITELLM_API_KEY" # 从環境變數讀取 Key，安全防泄漏
       api_base: https://api.siliconflow.cn/v1
       # 以下配置是表示如何启用Qwen模型的enable_thinking开关
       extra_body:
         chat_template_kwargs:
           enable_thinking: true
 
-  # --- AIHubmix (OpenAI 兼容，一个 Key 使用多种模型) ---
+  # --- AIHubmix (OpenAI 相容，一个 Key 使用多种模型) ---
   - model_name: openai/gpt-4o-mini
     litellm_params:
       model: openai/gpt-4o-mini
@@ -87,7 +87,7 @@ model_list:
 # ===================================
 router_settings:
   routing_strategy: simple-shuffle    # simple-shuffle / least-busy / latency-based
-  num_retries: 2                      # 单个 deployment 失败后重试次数
+  num_retries: 2                      # 单个 deployment 失败后重試次数
   # timeout: 30                       # 請求逾時（秒）
-  # allowed_fails: 3                  # deployment 被冷却前允许的失败次数
+  # allowed_fails: 3                  # deployment 被冷却前允許的失败次数
   # cooldown_time: 60                 # deployment 冷却时间（秒）

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票智能分析系統 - 大盤复盘模块（支援 A 股 / 港股 / 美股）
+股票智能分析系統 - 大盤复盘模組（支援 A 股 / 港股 / 美股）
 ===================================
 
 职责：
 1. 根据 MARKET_REVIEW_REGION 配置选择市场区域（cn / hk / us / both）
-2. 执行大盤复盘分析并生成复盘报告
+2. 執行大盤复盘分析并生成复盘报告
 3. 保存和发送复盘报告
 """
 
@@ -60,21 +60,21 @@ def run_market_review(
     query_id: Optional[str] = None,
 ) -> Optional[str]:
     """
-    执行大盤复盘分析
+    執行大盤复盘分析
 
     Args:
         notifier: 通知服務
         analyzer: AI分析器（可選）
-        search_service: 搜索服務（可選）
+        search_service: 搜尋服務（可選）
         send_notification: 是否发送通知
         merge_notification: 是否合併推送（略過本次推送，由 main 层合併個股+大盤后统一发送，Issue #190）
         override_region: 覆盖 config 的 market_review_region（Issue #373 交易日过滤后有效子集）
-        query_id: 历史记录关联 ID；API 后台工作会传入 task_id，CLI/Bot 为空时自动生成
+        query_id: 历史记录關聯 ID；API 后台工作会传入 task_id，CLI/Bot 为空时自动生成
 
     Returns:
         复盘报告文本
     """
-    logger.info("开始执行大盤复盘分析...")
+    logger.info("开始執行大盤复盘分析...")
     config = get_config()
     review_text = _get_market_review_text(getattr(config, "report_language", "zh"))
     region = (
@@ -98,7 +98,7 @@ def run_market_review(
 
     try:
         if len(run_markets) > 1:
-            # 多市场顺序执行，合併报告
+            # 多市场顺序執行，合併报告
             parts = []
             for mkt, title_key, label in _ALL_MARKETS:
                 if mkt not in run_markets:
@@ -220,7 +220,7 @@ def _persist_market_review_history(
             logger.warning("大盤复盘历史记录保存失败: query_id=%s", history_query_id)
         return saved
     except Exception as exc:
-        logger.warning("大盤复盘历史记录保存异常，报告文件与推送流程繼續: %s", exc, exc_info=True)
+        logger.warning("大盤复盘历史记录保存例外，报告文件与推送流程繼續: %s", exc, exc_info=True)
         return 0
 
 

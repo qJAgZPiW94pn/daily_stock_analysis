@@ -5,8 +5,8 @@ A股自选股智能分析系統 - 新闻情报存储单元測試
 ===================================
 
 职责：
-1. 验证新闻情报的保存与去重逻辑
-2. 验证无 URL 情况下的兜底去重键
+1. 驗證新闻情报的保存与去重邏輯
+2. 驗證无 URL 情况下的兜底去重键
 """
 
 import os
@@ -33,7 +33,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
         self._db_path = os.path.join(self._temp_dir.name, "test_news_intel.db")
         os.environ["DATABASE_PATH"] = self._db_path
 
-        # 重置配置与資料庫单例，确保使用临时库
+        # 重置配置与資料庫单例，確保使用暫時库
         Config._instance = None
         DatabaseManager.reset_instance()
         self.db = DatabaseManager.get_instance()
@@ -139,7 +139,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
             self.assertTrue(row.url.startswith("no-url:"))
 
     def test_get_recent_news(self) -> None:
-        """可按时间范围查詢最新新闻"""
+        """可按时间範圍查詢最新新闻"""
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         result = SearchResult(
             title="茅台股價震荡",
@@ -164,7 +164,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
 
     def test_save_news_intel_retries_on_sqlite_locked_execute(self) -> None:
         result = SearchResult(
-            title="茅台锁竞争重试",
+            title="茅台锁竞争重試",
             snippet="模拟 SQLite locked...",
             url="https://news.example.com/retry",
             source="example.com",

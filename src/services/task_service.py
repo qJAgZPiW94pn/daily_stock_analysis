@@ -6,7 +6,7 @@
 
 职责：
 1. 管理非同步分析工作（執行緒池）
-2. 执行股票分析并推送结果
+2. 執行股票分析并推送结果
 3. 查詢工作狀態和历史
 
 迁移自 web/services.py 的 AnalysisService 类
@@ -33,7 +33,7 @@ class TaskService:
 
     负责：
     1. 管理非同步分析工作
-    2. 执行股票分析
+    2. 執行股票分析
     3. 触发通知推送
     """
 
@@ -48,7 +48,7 @@ class TaskService:
 
     @classmethod
     def get_instance(cls) -> 'TaskService':
-        """获取单例实例"""
+        """獲取单例实例"""
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
@@ -57,7 +57,7 @@ class TaskService:
 
     @property
     def executor(self) -> ThreadPoolExecutor:
-        """获取或建立執行緒池"""
+        """獲取或建立執行緒池"""
         if self._executor is None:
             self._executor = ThreadPoolExecutor(
                 max_workers=self._max_workers,
@@ -86,7 +86,7 @@ class TaskService:
         Returns:
             工作資訊字典
         """
-        # 确保 report_type 是枚举类型
+        # 確保 report_type 是枚举类型
         if isinstance(report_type, str):
             report_type = ReportType.from_str(report_type)
 
@@ -107,14 +107,14 @@ class TaskService:
 
         return {
             "success": True,
-            "message": "分析工作已提交，将非同步执行并推送通知",
+            "message": "分析工作已提交，将非同步執行并推送通知",
             "code": code,
             "task_id": task_id,
             "report_type": report_type.value
         }
 
     def get_task_status(self, task_id: str) -> Optional[Dict[str, Any]]:
-        """获取工作狀態"""
+        """獲取工作狀態"""
         with self._tasks_lock:
             return self._tasks.get(task_id)
 
@@ -133,7 +133,7 @@ class TaskService:
         days: int = 30,
         limit: int = 50
     ) -> List[Dict[str, Any]]:
-        """获取分析历史记录"""
+        """獲取分析历史记录"""
         db = get_db()
         records = db.get_analysis_history(code=code, query_id=query_id, days=days, limit=limit)
         return [r.to_dict() for r in records]
@@ -148,7 +148,7 @@ class TaskService:
         query_source: str = "bot"
     ) -> Dict[str, Any]:
         """
-        执行单只股票分析
+        執行单只股票分析
 
         内部方法，在執行緒池中執行
         """
@@ -182,7 +182,7 @@ class TaskService:
                 save_context_snapshot=save_context_snapshot
             )
 
-            # 执行单只股票分析（启用单股推送）
+            # 執行单只股票分析（启用单股推送）
             result = pipeline.process_single_stock(
                 code=code,
                 skip_analysis=False,
@@ -225,7 +225,7 @@ class TaskService:
 
         except Exception as e:
             error_msg = str(e)
-            logger.error(f"[TaskService] 股票 {code} 分析异常: {error_msg}")
+            logger.error(f"[TaskService] 股票 {code} 分析例外: {error_msg}")
 
             with self._tasks_lock:
                 self._tasks[task_id].update({
@@ -242,5 +242,5 @@ class TaskService:
 # ============================================================
 
 def get_task_service() -> TaskService:
-    """获取工作服務单例"""
+    """獲取工作服務单例"""
     return TaskService.get_instance()

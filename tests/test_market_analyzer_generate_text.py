@@ -190,7 +190,7 @@ class TestAnalyzerGenerateText:
             )
 
         with patch("src.analyzer.call_litellm_with_param_recovery", side_effect=_fake_call_litellm_with_param_recovery):
-            text, _, _ = analyzer._call_litellm("回归用例", {"max_tokens": 128, "temperature": 0.7})
+            text, _, _ = analyzer._call_litellm("迴歸用例", {"max_tokens": 128, "temperature": 0.7})
 
         assert text == "ok"
         passed_model_list = captured.get("model_list")
@@ -663,7 +663,7 @@ class TestAnalyzerGenerateText:
 
         assert result.analysis_summary == "补全后结果"
         assert [progress for progress, _ in progress_updates] == [68, 93, 94, 95]
-        assert "补全重试" in progress_updates[2][1]
+        assert "补全重試" in progress_updates[2][1]
         assert "解析 JSON" in progress_updates[3][1]
 
     def test_parse_response_non_json_returns_failure(self):
@@ -1169,12 +1169,12 @@ Sector text.
         result = ma._build_news_block([
             {
                 "title": "政策利好带动板塊活跃",
-                "snippet": "相关主题成交放大",
+                "snippet": "相關主题成交放大",
             }
         ])
 
-        assert "| 1 | 政策利好带动板塊活跃 | 相关主题成交放大 | - |" in result
-        assert "| 1 | 政策利好带动板塊活跃 | 相关主题成交放大 | source |" not in result
+        assert "| 1 | 政策利好带动板塊活跃 | 相關主题成交放大 | - |" in result
+        assert "| 1 | 政策利好带动板塊活跃 | 相關主题成交放大 | source |" not in result
 
     def test_review_prompt_caps_news_url_context(self):
         from src.market_analyzer import MarketOverview

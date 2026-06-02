@@ -24,8 +24,8 @@
 ## 💖 赞助商 (Sponsors)
 <div align="center">
   <p align="center">
-    <a href="https://open.anspire.cn/?share_code=QFBC0FYC" target="_blank"><img src="./docs/assets/anspire.png" alt="Anspire Open 一站式模型和搜索服務" width="300" height="141" style="width: 300px; height: 141px; object-fit: contain;"></a>
-    <a href="https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis" target="_blank"><img src="./docs/assets/serpapi_banner_zh.png" alt="轻松抓取搜索引擎上的实时金融新闻數據 - SerpApi" width="300" height="141" style="width: 300px; height: 141px; object-fit: contain;"></a>
+    <a href="https://open.anspire.cn/?share_code=QFBC0FYC" target="_blank"><img src="./docs/assets/anspire.png" alt="Anspire Open 一站式模型和搜尋服務" width="300" height="141" style="width: 300px; height: 141px; object-fit: contain;"></a>
+    <a href="https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis" target="_blank"><img src="./docs/assets/serpapi_banner_zh.png" alt="轻松抓取搜尋引擎上的实时金融新闻數據 - SerpApi" width="300" height="141" style="width: 300px; height: 141px; object-fit: contain;"></a>
   </p>
 </div>
 
@@ -40,25 +40,25 @@
 
 | 能力 | 覆盖内容 |
 |------|------|
-| AI 决策报告 | 核心结论、評分、趨勢、买卖点位、風險警报、催化因素、操作检查清单 |
-| 多市场數據聚合 | A股、港股、美股、ETF；行情、K 线、技术指标、資金流、筹码、新闻、公告和基本面 |
+| AI 决策报告 | 核心结论、評分、趨勢、买卖点位、風險警报、催化因素、操作檢查清单 |
+| 多市场數據聚合 | A股、港股、美股、ETF；行情、K 线、技术指標、資金流、筹码、新闻、公告和基本面 |
 | Web / 桌面工作台 | 手动分析、工作进度、历史报告、完整 Markdown、回测、持倉、配置管理、浅色 / 深色主题 |
 | Agent 策略问股 | 多轮追问，支援均线、缠论、波浪、趨勢、热点、事件、成长、预期等 15 种内置策略，覆盖 Web/Bot/API |
 | 智能匯入与补全 | 图片、CSV/Excel、剪贴板匯入；股票代碼/名称/拼音/别名补全 |
 | 自動化与推送 | GitHub Actions、Docker、本機定时工作、FastAPI 服務和企业微信/飞书/Telegram/Discord/Slack/電郵推送 |
 
-> 功能细节、欄位契约、基本面 P0 逾時语义、交易纪律、數據源优先级、Web/API 行为请看 [完整配置与部署指南](docs/full-guide.md)。
+> 功能细节、欄位契约、基本面 P0 逾時语义、交易纪律、數據源優先级、Web/API 行为请看 [完整配置与部署指南](docs/full-guide.md)。
 
 ### 技术栈与數據来源
 
 | 类型 | 支援 |
 |------|------|
-| AI 模型 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[AIHubMix](https://aihubmix.com/?aff=CfMq)、Gemini、OpenAI 兼容、DeepSeek、通义千问、Claude、Ollama 本機模型等 |
+| AI 模型 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[AIHubMix](https://aihubmix.com/?aff=CfMq)、Gemini、OpenAI 相容、DeepSeek、通义千问、Claude、Ollama 本機模型等 |
 | 行情數據 | [TickFlow](https://tickflow.org/auth/register?ref=WDSGSPS5XC)、AkShare、Tushare、Pytdx、Baostock、YFinance、Longbridge |
-| 新闻搜索 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis)、[Tavily](https://tavily.com/)、[Bocha](https://open.bocha.cn/)、[Brave](https://brave.com/search/api/)、[MiniMax](https://platform.minimaxi.com/)、SearXNG |
+| 新闻搜尋 | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC)、[SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis)、[Tavily](https://tavily.com/)、[Bocha](https://open.bocha.cn/)、[Brave](https://brave.com/search/api/)、[MiniMax](https://platform.minimaxi.com/)、SearXNG |
 | 社交舆情 | [Stock Sentiment API](https://api.adanos.org/docs)（Reddit / X / Polymarket，仅美股，可選） |
 
-> 完整规则见 [數據源配置](docs/full-guide.md#數據源配置)。
+> 完整規則见 [數據源配置](docs/full-guide.md#數據源配置)。
 
 ## 🚀 快速开始
 
@@ -77,16 +77,16 @@
 
 **AI 模型配置（至少配置一个）**
 
-默认先选一个模型服務商并填写 API Key；需要多模型、图片识别、本機模型或高级路由时，再参考 [LLM 配置指南](docs/LLM_CONFIG_GUIDE.md)。
+預設先选一个模型服務商并填写 API Key；需要多模型、图片识别、本機模型或進階路由时，再參考 [LLM 配置指南](docs/LLM_CONFIG_GUIDE.md)。
 
 | Secret 名称 | 说明 | 必填 |
 |------------|------|:----:|
-| `ANSPIRE_API_KEYS` | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC) API Key，一Key同时启用全球热门大模型和联网搜索，無需科学上网，含免费额度 | **推荐** |
-| `AIHUBMIX_KEY` | [AIHubMix](https://aihubmix.com/?aff=CfMq) API Key，一Key切换使用全系模型，無需科学上网，本项目可享 10% 优惠 | **推荐** |
+| `ANSPIRE_API_KEYS` | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC) API Key，一Key同时启用全球热门大模型和联网搜尋，無需科学上网，含免费額度 | **推荐** |
+| `AIHUBMIX_KEY` | [AIHubMix](https://aihubmix.com/?aff=CfMq) API Key，一Key切換使用全系模型，無需科学上网，本项目可享 10% 优惠 | **推荐** |
 | `GEMINI_API_KEY` | Google Gemini API Key | 可選 |
 | `ANTHROPIC_API_KEY` | Anthropic Claude API Key | 可選 |
-| `OPENAI_API_KEY` | OpenAI 兼容 API Key（支援 DeepSeek、通义千问等） | 可選 |
-| `OPENAI_BASE_URL` / `OPENAI_MODEL` | 使用 OpenAI 兼容服務时填写 | 可選 |
+| `OPENAI_API_KEY` | OpenAI 相容 API Key（支援 DeepSeek、通义千问等） | 可選 |
+| `OPENAI_BASE_URL` / `OPENAI_MODEL` | 使用 OpenAI 相容服務时填写 | 可選 |
 
 > Ollama 更适合本機 / Docker 部署，GitHub Actions 推荐使用云端 API。
 
@@ -101,7 +101,7 @@
 | `SLACK_BOT_TOKEN` + `SLACK_CHANNEL_ID` | Slack Bot |
 | `EMAIL_SENDER` + `EMAIL_PASSWORD` | 電郵推送 |
 
-更多渠道、签名校验、分组電郵、Markdown 转图片等配置见 [通知渠道详细配置](docs/full-guide.md#通知渠道详细配置)。
+更多渠道、簽名校验、分組電郵、Markdown 转图片等配置见 [通知渠道詳細配置](docs/full-guide.md#通知渠道詳細配置)。
 
 **自选股配置（必填）**
 
@@ -111,19 +111,19 @@
 
 **新闻源配置（推荐）**
 
-新闻源会显著影响舆情、公告、事件和催化因素质量，建议至少配置一个搜索服務。
+新闻源会显著影响舆情、公告、事件和催化因素质量，建议至少配置一个搜尋服務。
 
 | Secret 名称 | 说明 | 必填 |
 |------------|------|:----:|
 | `ANSPIRE_API_KEYS` | [Anspire AI Search](https://aisearch.anspire.cn/)：中文内容特别最佳化，适合 A 股新闻和舆情检索；同一 Key 可复用为 Anspire 大模型 | **推荐** |
-| `SERPAPI_API_KEYS` | [SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis)：搜索引擎结果补强，适合实时金融新闻 | **推荐** |
-| `TAVILY_API_KEYS` | [Tavily](https://tavily.com/)：通用新闻搜索 API | 可選 |
-| `BOCHA_API_KEYS` | [博查搜索](https://open.bocha.cn/)：中文搜索最佳化，支援 AI 摘要 | 可選 |
-| `BRAVE_API_KEYS` | [Brave Search](https://brave.com/search/api/)：隐私优先，美股资讯补强 | 可選 |
-| `MINIMAX_API_KEYS` | [MiniMax](https://platform.minimaxi.com/)：结构化搜索结果 | 可選 |
-| `SEARXNG_BASE_URLS` | SearXNG 自建实例：无配额兜底，适合私有部署 | 可選 |
+| `SERPAPI_API_KEYS` | [SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis)：搜尋引擎结果补强，适合实时金融新闻 | **推荐** |
+| `TAVILY_API_KEYS` | [Tavily](https://tavily.com/)：通用新闻搜尋 API | 可選 |
+| `BOCHA_API_KEYS` | [博查搜尋](https://open.bocha.cn/)：中文搜尋最佳化，支援 AI 摘要 | 可選 |
+| `BRAVE_API_KEYS` | [Brave Search](https://brave.com/search/api/)：隐私優先，美股资讯补强 | 可選 |
+| `MINIMAX_API_KEYS` | [MiniMax](https://platform.minimaxi.com/)：结构化搜尋结果 | 可選 |
+| `SEARXNG_BASE_URLS` | SearXNG 自建实例：无配額兜底，适合私有部署 | 可選 |
 
-更多搜索源、社交舆情和降级规则见 [搜索服務配置](docs/full-guide.md#搜索服務配置)。
+更多搜尋源、社交舆情和降級規則见 [搜尋服務配置](docs/full-guide.md#搜尋服務配置)。
 
 #### 3. 启用 Actions
 
@@ -135,7 +135,7 @@
 
 #### 完成
 
-默认每个**工作日 18:00（北京时间）**自动执行，也可手动触发。默认非交易日（含 A/H/US 節假日）不执行；强制執行、交易日检查、断点续传等规则见 [完整指南](docs/full-guide.md#定时工作配置)。
+預設每个**工作日 18:00（北京时间）**自动執行，也可手动触发。預設非交易日（含 A/H/US 節假日）不執行；強制執行、交易日檢查、断点续传等規則见 [完整指南](docs/full-guide.md#定时工作配置)。
 
 ### 方式二：本機執行 / Docker 部署
 
@@ -146,7 +146,7 @@ git clone https://github.com/ZhuLinsen/daily_stock_analysis.git && cd daily_stoc
 # 安裝依賴
 pip install -r requirements.txt
 
-# 配置环境變數
+# 配置環境變數
 cp .env.example .env && vim .env
 
 # 執行分析
@@ -164,7 +164,7 @@ python main.py --schedule
 python main.py --serve-only
 ```
 
-> Docker 部署、定时工作、云服務器访问請參考 [完整指南](docs/full-guide.md)；桌面客户端打包請參考 [桌面端打包说明](docs/desktop-package.md)。
+> Docker 部署、定时工作、云服務器訪問請參考 [完整指南](docs/full-guide.md)；桌面客户端打包請參考 [桌面端打包说明](docs/desktop-package.md)。
 
 ## 📱 推送效果
 
@@ -187,12 +187,12 @@ python main.py --serve-only
 
 風險点1：2月5日主力資金大幅净賣出3.63亿元，需警惕短期抛压。
 風險点2：筹码集中度高达35.15%，表明筹码分散，拉升阻力可能较大。
-風險点3：舆情中提及公司历史违规记录及重组相关風險提示，需保持关注。
+風險点3：舆情中提及公司历史违规记录及重组相關風險提示，需保持关注。
 ✨ 利好催化:
 
 利好1：公司被市场定位为AI服務器HDI核心供应商，受益于AI产业发展。
 利好2：2025年前三季度扣非净利潤同比暴涨407.52%，业绩表现强劲。
-📢 最新动态: 【最新訊息】舆情显示公司是AI PCB微钻领域龙头，深度绑定全球头部PCB/载板厂。2月5日主力資金净賣出3.63亿元，需关注后续資金流向。
+📢 最新动态: 【最新訊息】舆情顯示公司是AI PCB微钻领域龙头，深度綁定全球头部PCB/载板厂。2月5日主力資金净賣出3.63亿元，需关注后续資金流向。
 
 ---
 生成时间: 18:00
@@ -217,7 +217,7 @@ python main.py --serve-only
 
 ## ⚙️ 配置说明
 
-完整环境變數、模型渠道、通知渠道、數據源优先级、交易纪律、基本面 P0 语义和部署说明請參考 [完整配置指南](docs/full-guide.md)。
+完整環境變數、模型渠道、通知渠道、數據源優先级、交易纪律、基本面 P0 语义和部署说明請參考 [完整配置指南](docs/full-guide.md)。
 
 ## 🖥️ Web 界面
 
@@ -228,27 +228,27 @@ python main.py --webui
 python main.py --webui-only
 ```
 
-访问 `http://127.0.0.1:8000` 即可使用。認證、智能匯入、搜索补全、历史报告复制、云服務器访问等细节见 [本機 WebUI 管理界面](docs/full-guide.md#本機-webui-管理界面)。
+訪問 `http://127.0.0.1:8000` 即可使用。認證、智能匯入、搜尋补全、历史报告复制、云服務器訪問等细节见 [本機 WebUI 管理界面](docs/full-guide.md#本機-webui-管理界面)。
 
 ## 🤖 Agent 策略问股
 
 配置任意可用 AI API Key 后，Web `/chat` 页面即可使用策略问股；如需显式關閉可设置 `AGENT_MODE=false`。
 
-- 支援均线金叉、缠论、波浪理论、多头趨勢、热点题材、事件驱动、成长质量、预期重估等内置策略
-- 支援实时行情、K 线、技术指标、新闻和風險資訊调用
-- 支援多轮追问、会话匯出、发送到通知渠道和后台执行
+- 支援均线金叉、缠论、波浪理論、多头趨勢、热点题材、事件驱动、成长质量、预期重估等内置策略
+- 支援实时行情、K 线、技术指標、新闻和風險資訊呼叫
+- 支援多轮追问、會話匯出、发送到通知渠道和后台執行
 - 支援自定义策略文件与多 Agent 编排（实验性）
 
-> Agent 具体參數、`skill` 命名兼容、多 Agent 模式和预算护栏见 [完整指南](docs/full-guide.md#本機-webui-管理界面) 与 [LLM 配置指南](docs/LLM_CONFIG_GUIDE.md)。
+> Agent 具体參數、`skill` 命名相容、多 Agent 模式和预算护栏见 [完整指南](docs/full-guide.md#本機-webui-管理界面) 与 [LLM 配置指南](docs/LLM_CONFIG_GUIDE.md)。
 
-## 🧩 相关项目 (Related Projects)
+## 🧩 相關项目 (Related Projects)
 
-> DSA 聚焦日常分析报告；下面两个同系列项目分别覆盖选股、策略验证与策略进化，适合按需延伸使用。它们当前独立维护，后续会优先探索与 DSA 的候选股匯入、回测验证和报告联动。
+> DSA 聚焦日常分析报告；下面两个同系列项目分别覆盖选股、策略驗證与策略进化，适合按需延伸使用。它们当前独立维护，后续会優先探索与 DSA 的候选股匯入、回测驗證和报告联动。
 
 | 项目 | 定位 |
 |------|------|
 | [AlphaSift](https://github.com/ZhuLinsen/alphasift) | 多因子选股与全市场扫描，用于从股票池中提取候选标的 |
-| [AlphaEvo](https://github.com/ZhuLinsen/alphaevo) | 策略回测与自我进化，用于验证策略规则，并通过迭代探索策略參數与组合 |
+| [AlphaEvo](https://github.com/ZhuLinsen/alphaevo) | 策略回测与自我进化，用于驗證策略規則，并通过反覆探索策略參數与组合 |
 
 ## 📬 联系与合作
 

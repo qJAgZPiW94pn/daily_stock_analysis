@@ -51,7 +51,7 @@ class BatchCommand(BotCommand):
         return False  # 可以根据需要设为 True
     
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行批量分析命令"""
+        """執行批量分析命令"""
         from src.config import get_config
         
         config = get_config()
@@ -80,7 +80,7 @@ class BatchCommand(BotCommand):
         
         logger.info(f"[BatchCommand] 开始批量分析 {len(stock_list)} 只股票")
         
-        # 在后台執行緒中执行分析
+        # 在后台執行緒中執行分析
         thread = threading.Thread(
             target=self._run_batch_analysis,
             args=(stock_list, message),
@@ -97,7 +97,7 @@ class BatchCommand(BotCommand):
         )
     
     def _run_batch_analysis(self, stock_list: List[str], message: BotMessage) -> None:
-        """后台执行批量分析"""
+        """后台執行批量分析"""
         try:
             from src.config import get_config
             from main import StockAnalysisPipeline
@@ -112,7 +112,7 @@ class BatchCommand(BotCommand):
                 query_source="bot"
             )
             
-            # 执行分析（会自动推送汇总报告）
+            # 執行分析（会自动推送汇总报告）
             results = pipeline.run(
                 stock_codes=stock_list,
                 dry_run=False,

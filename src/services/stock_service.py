@@ -5,8 +5,8 @@
 ===================================
 
 职责：
-1. 封装股票數據获取逻辑
-2. 提供实时行情和历史數據接口
+1. 封装股票數據獲取邏輯
+2. 提供实时行情和历史數據介面
 """
 
 import logging
@@ -22,7 +22,7 @@ class StockService:
     """
     股票數據服務
     
-    封装股票數據获取的业务逻辑
+    封装股票數據獲取的业务邏輯
     """
     
     def __init__(self):
@@ -31,7 +31,7 @@ class StockService:
     
     def get_realtime_quote(self, stock_code: str) -> Optional[Dict[str, Any]]:
         """
-        获取股票实时行情
+        獲取股票实时行情
         
         Args:
             stock_code: 股票代碼
@@ -40,17 +40,17 @@ class StockService:
             实时行情數據字典
         """
         try:
-            # 调用數據获取器获取实时行情
+            # 呼叫數據獲取器獲取实时行情
             from data_provider.base import DataFetcherManager
             
             manager = DataFetcherManager()
             quote = manager.get_realtime_quote(stock_code)
             
             if quote is None:
-                logger.warning(f"获取 {stock_code} 实时行情失败")
+                logger.warning(f"獲取 {stock_code} 实时行情失败")
                 return None
             
-            # UnifiedRealtimeQuote 是 dataclass，使用 getattr 安全访问欄位
+            # UnifiedRealtimeQuote 是 dataclass，使用 getattr 安全訪問欄位
             # 欄位映射: UnifiedRealtimeQuote -> API 回應
             # - code -> stock_code
             # - name -> stock_name
@@ -82,7 +82,7 @@ class StockService:
             logger.warning("DataFetcherManager 未找到，使用占位數據")
             return self._get_placeholder_quote(stock_code)
         except Exception as e:
-            logger.error(f"获取实时行情失败: {e}", exc_info=True)
+            logger.error(f"獲取实时行情失败: {e}", exc_info=True)
             return None
     
     def get_history_data(
@@ -92,41 +92,41 @@ class StockService:
         days: int = 30
     ) -> Dict[str, Any]:
         """
-        获取股票历史行情
+        獲取股票历史行情
         
         Args:
             stock_code: 股票代碼
             period: K 线周期 (daily/weekly/monthly)
-            days: 获取天数
+            days: 獲取天数
             
         Returns:
             历史行情數據字典
             
         Raises:
-            ValueError: 当 period 不是 daily 时抛出（weekly/monthly 暂未实现）
+            ValueError: 当 period 不是 daily 时拋出（weekly/monthly 暂未實現）
         """
-        # 验证 period 參數，只支援 daily
+        # 驗證 period 參數，只支援 daily
         if period != "daily":
             raise ValueError(
                 f"暂不支援 '{period}' 周期，目前仅支援 'daily'。"
-                "weekly/monthly 聚合功能将在后续版本实现。"
+                "weekly/monthly 聚合功能将在后续版本實現。"
             )
         
         try:
-            # 调用數據获取器获取历史數據
+            # 呼叫數據獲取器獲取历史數據
             from data_provider.base import DataFetcherManager
             
             manager = DataFetcherManager()
             df, source = manager.get_daily_data(stock_code, days=days)
             
             if df is None or df.empty:
-                logger.warning(f"获取 {stock_code} 历史數據失败")
+                logger.warning(f"獲取 {stock_code} 历史數據失败")
                 return {"stock_code": stock_code, "period": period, "data": []}
             
-            # 获取股票名称
+            # 獲取股票名称
             stock_name = manager.get_stock_name(stock_code)
             
-            # 转换为回應格式
+            # 轉換为回應格式
             data = []
             for _, row in df.iterrows():
                 date_val = row.get("date")
@@ -157,12 +157,12 @@ class StockService:
             logger.warning("DataFetcherManager 未找到，傳回空數據")
             return {"stock_code": stock_code, "period": period, "data": []}
         except Exception as e:
-            logger.error(f"获取历史數據失败: {e}", exc_info=True)
+            logger.error(f"獲取历史數據失败: {e}", exc_info=True)
             return {"stock_code": stock_code, "period": period, "data": []}
     
     def _get_placeholder_quote(self, stock_code: str) -> Dict[str, Any]:
         """
-        获取占位行情數據（用于測試）
+        獲取占位行情數據（用于測試）
         
         Args:
             stock_code: 股票代碼

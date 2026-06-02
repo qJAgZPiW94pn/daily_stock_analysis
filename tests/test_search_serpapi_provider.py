@@ -50,7 +50,7 @@ class TestSerpAPISearchProvider(unittest.TestCase):
 
     def test_provider_skips_body_fetch_when_snippet_is_sufficient(self) -> None:
         provider = SerpAPISearchProvider(["dummy_key"])
-        long_snippet = "这是一段已经足够长的摘要。 " * 12
+        long_snippet = "这是一段已經足够长的摘要。 " * 12
 
         with self._patch_serpapi(
             {

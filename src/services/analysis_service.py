@@ -5,8 +5,8 @@
 ===================================
 
 职责：
-1. 封装股票分析逻辑
-2. 调用 analyzer 和 pipeline 执行分析
+1. 封装股票分析邏輯
+2. 呼叫 analyzer 和 pipeline 執行分析
 3. 保存分析结果到資料庫
 """
 
@@ -30,7 +30,7 @@ class AnalysisService:
     """
     分析服務
     
-    封装股票分析相关的业务逻辑
+    封装股票分析相關的业务邏輯
     """
     
     def __init__(self):
@@ -49,14 +49,14 @@ class AnalysisService:
         skills: Optional[List[str]] = None,
     ) -> Optional[Dict[str, Any]]:
         """
-        执行股票分析
+        執行股票分析
         
         Args:
             stock_code: 股票代碼
             report_type: 报告类型 (simple/detailed)
-            force_refresh: 是否强制刷新
+            force_refresh: 是否強制刷新
             query_id: 查詢 ID（可選）
-            send_notification: 是否发送通知（API 触发默认发送）
+            send_notification: 是否发送通知（API 触发預設发送）
             
         Returns:
             分析结果字典，包含:
@@ -66,7 +66,7 @@ class AnalysisService:
         """
         try:
             self.last_error = None
-            # 匯入分析相关模块
+            # 匯入分析相關模組
             from src.config import get_config
             from src.core.pipeline import StockAnalysisPipeline
             from src.enums import ReportType
@@ -75,7 +75,7 @@ class AnalysisService:
             if query_id is None:
                 query_id = uuid.uuid4().hex
             
-            # 获取配置
+            # 獲取配置
             config = get_config()
             
             # 建立分析流水线
@@ -90,7 +90,7 @@ class AnalysisService:
             # 確定报告类型 (API: simple/detailed/full/brief -> ReportType)
             rt = ReportType.from_str(report_type)
             
-            # 执行分析
+            # 執行分析
             result = pipeline.process_single_stock(
                 code=stock_code,
                 skip_analysis=False,
@@ -133,7 +133,7 @@ class AnalysisService:
         Returns:
             格式化的回應字典
         """
-        # 获取狙击点位
+        # 獲取狙击点位
         sniper_points = {}
         if hasattr(result, 'get_sniper_points'):
             sniper_points = result.get_sniper_points() or {}

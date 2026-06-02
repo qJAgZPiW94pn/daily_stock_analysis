@@ -33,7 +33,7 @@ class AskCommandSkillSelectionTestCase(unittest.TestCase):
             ),
             Skill(
                 name="wave_theory",
-                display_name="波浪理论",
+                display_name="波浪理論",
                 description="wave",
                 instructions="wave",
                 default_active=True,
@@ -49,7 +49,7 @@ class AskCommandSkillSelectionTestCase(unittest.TestCase):
         skills = [
             Skill(
                 name="bull_trend",
-                display_name="默认多头趨勢",
+                display_name="預設多头趨勢",
                 description="trend",
                 instructions="trend",
                 aliases=["趨勢", "趨勢分析"],
@@ -141,10 +141,10 @@ class TestAskCommandMultiStock(unittest.TestCase):
     def test_merge_code_args_keeps_comma_split_multi_stock_support(self):
         command = AskCommand()
 
-        raw_code_str, remaining_args = command._merge_code_args(["600519,", "000858", "波浪理论"])
+        raw_code_str, remaining_args = command._merge_code_args(["600519,", "000858", "波浪理論"])
 
         self.assertEqual(raw_code_str, "600519,000858")
-        self.assertEqual(remaining_args, ["波浪理论"])
+        self.assertEqual(remaining_args, ["波浪理論"])
 
     def test_build_portfolio_section_reads_assessment(self):
         command = AskCommand()
@@ -170,7 +170,7 @@ class TestAskCommandMultiStock(unittest.TestCase):
                 "summary": "组合偏消费集中，建议控制仓位。",
                 "portfolio_risk_score": 7,
                 "sector_warnings": ["白酒板塊集中度过高"],
-                "correlation_warnings": ["600519 与 000858 相关性偏高"],
+                "correlation_warnings": ["600519 与 000858 相關性偏高"],
                 "rebalance_suggestions": ["降低单一行业暴露"],
                 "positions": [
                     {"code": "600519", "suggested_weight": 0.4, "signal": "buy"},
@@ -315,7 +315,7 @@ class TestAskCommandMultiStock(unittest.TestCase):
 
         text = AskCommand._format_stock_result("600519", dashboard, "raw content")
 
-        self.assertIn("**关键点位**", text)
+        self.assertIn("**關鍵点位**", text)
         self.assertIn("ideal_buy=10.0", text)
         self.assertIn("secondary_buy=9.8", text)
         self.assertIn("stop_loss=9.5", text)

@@ -4,7 +4,7 @@
 帮助命令
 ===================================
 
-显示可用命令列表和使用说明。
+顯示可用命令列表和使用说明。
 """
 
 from typing import List
@@ -17,12 +17,12 @@ class HelpCommand(BotCommand):
     """
     帮助命令
     
-    显示所有可用命令的列表和使用说明。
-    也可以查看特定命令的详细帮助。
+    顯示所有可用命令的列表和使用说明。
+    也可以查看特定命令的詳細帮助。
     
     用法：
-        /help         - 显示所有命令
-        /help analyze - 显示 analyze 命令的详细帮助
+        /help         - 顯示所有命令
+        /help analyze - 顯示 analyze 命令的詳細帮助
     """
     
     @property
@@ -35,20 +35,20 @@ class HelpCommand(BotCommand):
     
     @property
     def description(self) -> str:
-        return "显示帮助資訊"
+        return "顯示帮助資訊"
     
     @property
     def usage(self) -> str:
         return "/help [命令名]"
     
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行帮助命令"""
+        """執行帮助命令"""
         # 延遲匯入避免循环依賴
         from bot.dispatcher import get_dispatcher
         
         dispatcher = get_dispatcher()
         
-        # 如果指定了命令名，显示该命令的详细帮助
+        # 如果指定了命令名，顯示该命令的詳細帮助
         if args:
             cmd_name = args[0]
             command = dispatcher.get_command(cmd_name)
@@ -56,11 +56,11 @@ class HelpCommand(BotCommand):
             if command is None:
                 return BotResponse.error_response(f"未知命令: {cmd_name}")
             
-            # 构建详细帮助
+            # 构建詳細帮助
             help_text = self._format_command_help(command, dispatcher.command_prefix)
             return BotResponse.markdown_response(help_text)
         
-        # 显示所有命令列表
+        # 顯示所有命令列表
         commands = dispatcher.list_commands(include_hidden=False)
         prefix = dispatcher.command_prefix
         
@@ -80,7 +80,7 @@ class HelpCommand(BotCommand):
             # 命令名和别名
             aliases_str = ""
             if cmd.aliases:
-                # 过滤掉中文别名，只显示英文别名
+                # 过滤掉中文别名，只顯示英文别名
                 en_aliases = [a for a in cmd.aliases if a.isascii()]
                 if en_aliases:
                     aliases_str = f" ({', '.join(prefix + a for a in en_aliases[:2])})"
@@ -91,7 +91,7 @@ class HelpCommand(BotCommand):
         lines.extend([
             "",
             "---",
-            f"💡 输入 {prefix}help <命令名> 查看详细用法",
+            f"💡 輸入 {prefix}help <命令名> 查看詳細用法",
             "",
             "**示例：**",
             "",
@@ -105,7 +105,7 @@ class HelpCommand(BotCommand):
         return "\n".join(lines)
     
     def _format_command_help(self, command: BotCommand, prefix: str) -> str:
-        """格式化单个命令的详细帮助"""
+        """格式化单个命令的詳細帮助"""
         lines = [
             f"📖 **{prefix}{command.name}** - {command.description}",
             "",

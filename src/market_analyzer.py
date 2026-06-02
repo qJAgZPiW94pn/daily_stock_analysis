@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-大盤复盘分析模块
+大盤复盘分析模組
 ===================================
 
 职责：
-1. 获取大盤指數數據（上证、深证、创业板）
-2. 搜索市场新闻形成复盘情报
+1. 獲取大盤指數數據（上证、深证、创业板）
+2. 搜尋市场新闻形成复盘情报
 3. 使用大模型生成每日大盤复盘报告
 """
 
@@ -86,7 +86,7 @@ class MarketOverview:
     limit_up_count: int = 0             # 漲停家数
     limit_down_count: int = 0           # 跌停家数
     total_amount: float = 0.0           # 两市成交额（亿元）
-    # north_flow: float = 0.0           # 北向資金净流入（亿元）- 已废弃，接口不可用
+    # north_flow: float = 0.0           # 北向資金净流入（亿元）- 已废弃，介面不可用
     
     # 板塊涨幅榜
     top_sectors: List[Dict] = field(default_factory=list)     # 涨幅前5板塊
@@ -98,10 +98,10 @@ class MarketAnalyzer:
     大盤复盘分析器
     
     功能：
-    1. 获取大盤指數实时行情
-    2. 获取市场漲跌统计
-    3. 获取板塊漲跌榜
-    4. 搜索市场新闻
+    1. 獲取大盤指數实时行情
+    2. 獲取市场漲跌統計
+    3. 獲取板塊漲跌榜
+    4. 搜尋市场新闻
     5. 生成大盤复盘报告
     """
     
@@ -115,8 +115,8 @@ class MarketAnalyzer:
         初始化大盤分析器
 
         Args:
-            search_service: 搜索服務实例
-            analyzer: AI分析器实例（用于调用LLM）
+            search_service: 搜尋服務实例
+            analyzer: AI分析器实例（用于呼叫LLM）
             region: 市场区域 cn=A股 us=美股
         """
         self.config = get_config()
@@ -287,7 +287,7 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
 
     def get_market_overview(self) -> MarketOverview:
         """
-        获取市场概览數據
+        獲取市场概览數據
         
         Returns:
             MarketOverview: 市场概览數據对象
@@ -295,31 +295,31 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
         today = datetime.now().strftime('%Y-%m-%d')
         overview = MarketOverview(date=today)
         
-        # 1. 获取主要指數行情（按 region 切换 A 股/美股）
+        # 1. 獲取主要指數行情（按 region 切換 A 股/美股）
         overview.indices = self._get_main_indices()
 
-        # 2. 获取漲跌统计（A 股有，美股无等效數據）
+        # 2. 獲取漲跌統計（A 股有，美股无等效數據）
         if self.profile.has_market_stats:
             self._get_market_statistics(overview)
 
-        # 3. 获取板塊漲跌榜（A 股有，美股暂无）
+        # 3. 獲取板塊漲跌榜（A 股有，美股暂无）
         if self.profile.has_sector_rankings:
             self._get_sector_rankings(overview)
         
-        # 4. 获取北向資金（可選）
+        # 4. 獲取北向資金（可選）
         # self._get_north_flow(overview)
         
         return overview
 
     
     def _get_main_indices(self) -> List[MarketIndex]:
-        """获取主要指數实时行情"""
+        """獲取主要指數实时行情"""
         indices = []
 
         try:
-            logger.info("[大盤] 获取主要指數实时行情...")
+            logger.info("[大盤] 獲取主要指數实时行情...")
 
-            # 使用 DataFetcherManager 获取指數行情（按 region 切换）
+            # 使用 DataFetcherManager 獲取指數行情（按 region 切換）
             data_list = self.data_manager.get_main_indices(region=self.region)
 
             if data_list:
@@ -341,19 +341,19 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
                     indices.append(index)
 
             if not indices:
-                logger.warning("[大盤] 所有行情數據源失败，将依賴新闻搜索进行分析")
+                logger.warning("[大盤] 所有行情數據源失败，将依賴新闻搜尋進行分析")
             else:
-                logger.info(f"[大盤] 获取到 {len(indices)} 个指數行情")
+                logger.info(f"[大盤] 獲取到 {len(indices)} 个指數行情")
 
         except Exception as e:
-            logger.error(f"[大盤] 获取指數行情失败: {e}")
+            logger.error(f"[大盤] 獲取指數行情失败: {e}")
 
         return indices
 
     def _get_market_statistics(self, overview: MarketOverview):
-        """获取市场漲跌统计"""
+        """獲取市场漲跌統計"""
         try:
-            logger.info("[大盤] 获取市场漲跌统计...")
+            logger.info("[大盤] 獲取市场漲跌統計...")
 
             stats = self.data_manager.get_market_stats()
 
@@ -370,12 +370,12 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
                           f"成交额:{overview.total_amount:.0f}亿")
 
         except Exception as e:
-            logger.error(f"[大盤] 获取漲跌统计失败: {e}")
+            logger.error(f"[大盤] 獲取漲跌統計失败: {e}")
 
     def _get_sector_rankings(self, overview: MarketOverview):
-        """获取板塊漲跌榜"""
+        """獲取板塊漲跌榜"""
         try:
-            logger.info("[大盤] 获取板塊漲跌榜...")
+            logger.info("[大盤] 獲取板塊漲跌榜...")
 
             top_sectors, bottom_sectors = self.data_manager.get_sector_rankings(5)
 
@@ -387,14 +387,14 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
                 logger.info(f"[大盤] 领跌板塊: {[s['name'] for s in overview.bottom_sectors]}")
 
         except Exception as e:
-            logger.error(f"[大盤] 获取板塊漲跌榜失败: {e}")
+            logger.error(f"[大盤] 獲取板塊漲跌榜失败: {e}")
     
     # def _get_north_flow(self, overview: MarketOverview):
-    #     """获取北向資金流入"""
+    #     """獲取北向資金流入"""
     #     try:
-    #         logger.info("[大盤] 获取北向資金...")
+    #         logger.info("[大盤] 獲取北向資金...")
     #         
-    #         # 获取北向資金數據
+    #         # 獲取北向資金數據
     #         df = ak.stock_hsgt_north_net_flow_in_em(symbol="北上")
     #         
     #         if df is not None and not df.empty:
@@ -408,28 +408,28 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
     #             logger.info(f"[大盤] 北向資金净流入: {overview.north_flow:.2f}亿")
     #             
     #     except Exception as e:
-    #         logger.warning(f"[大盤] 获取北向資金失败: {e}")
+    #         logger.warning(f"[大盤] 獲取北向資金失败: {e}")
     
     def search_market_news(self) -> List[Dict]:
         """
-        搜索市场新闻
+        搜尋市场新闻
         
         Returns:
             新闻列表
         """
         if not self.search_service:
-            logger.warning("[大盤] 搜索服務未配置，略過新闻搜索")
+            logger.warning("[大盤] 搜尋服務未配置，略過新闻搜尋")
             return []
         
         all_news = []
 
-        # 按 region 使用不同的新闻搜索词
+        # 按 region 使用不同的新闻搜尋词
         search_queries = self.profile.news_queries
         
         try:
-            logger.info("[大盤] 开始搜索市场新闻...")
+            logger.info("[大盤] 开始搜尋市场新闻...")
             
-            # 根据 region 设置搜索上下文名称，避免美股搜索被解读为 A 股语境
+            # 根据 region 设置搜尋上下文名称，避免美股搜尋被解读为 A 股语境
             market_names = {"cn": "大盤", "us": "US market", "hk": "HK market"}
             market_name = market_names.get(self.region, "大盤")
             for query in search_queries:
@@ -441,12 +441,12 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
                 )
                 if response and response.results:
                     all_news.extend(response.results)
-                    logger.info(f"[大盤] 搜索 '{query}' 获取 {len(response.results)} 条结果")
+                    logger.info(f"[大盤] 搜尋 '{query}' 獲取 {len(response.results)} 条结果")
             
-            logger.info(f"[大盤] 共获取 {len(all_news)} 条市场新闻")
+            logger.info(f"[大盤] 共獲取 {len(all_news)} 条市场新闻")
             
         except Exception as e:
-            logger.error(f"[大盤] 搜索市场新闻失败: {e}")
+            logger.error(f"[大盤] 搜尋市场新闻失败: {e}")
         
         return all_news
     
@@ -468,7 +468,7 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
         # 构建 Prompt
         prompt = self._build_review_prompt(overview, news)
         
-        logger.info("[大盤] 调用大模型生成复盘报告...")
+        logger.info("[大盤] 呼叫大模型生成复盘报告...")
         # Use the public generate_text() entry point — never access private analyzer attributes.
         review = self.analyzer.generate_text(prompt, max_tokens=8192, temperature=0.7)
 
@@ -579,7 +579,7 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
             "",
             f"> **盘面温度**：{label} **{score}/100** {self._build_temperature_bar(score)}",
             "",
-            "| 指标 | 数值 | 观察 |",
+            "| 指標 | 数值 | 观察 |",
             "|------|------|------|",
             f"| 上涨/下跌/平盘 | {overview.up_count} / {overview.down_count} / {overview.flat_count} | 上涨占比(不含平盘) {up_ratio:.1%} |",
             f"| 漲停/跌停 | {overview.limit_up_count} / {overview.limit_down_count} | 漲跌停差 {limit_spread:+d} |",
@@ -618,7 +618,7 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
             guidance_map = {
                 "green": "風險偏好尚可，关注主线延续与仓位纪律。",
                 "yellow": "信号分化，控制仓位并等待量价确认。",
-                "red": "風險偏高，优先控制回撤，避免追高弱反弹。",
+                "red": "風險偏高，優先控制回撤，避免追高弱反弹。",
             }
             reasons = self._build_market_light_reasons_zh(overview, score)
 
@@ -881,7 +881,7 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
         # 新闻資訊 - 支援 SearchResult 对象或字典
         news_text = ""
         for i, n in enumerate(news[:6], 1):
-            # 兼容 SearchResult 对象和字典
+            # 相容 SearchResult 对象和字典
             title = self._compact_news_text(self._get_news_field(n, "title"), limit=90)
             snippet = self._compact_news_text(self._get_news_field(n, "snippet"), limit=220)
             source = self._compact_news_text(self._get_news_field(n, "source"), limit=60)
@@ -917,7 +917,7 @@ Lagging: {bottom_sectors_text if bottom_sectors_text else "N/A"}"""
 - 漲停: {overview.limit_up_count} 家 | 跌停: {overview.limit_down_count} 家
 - 两市成交额: {overview.total_amount:.0f} 亿元"""
             else:
-                stats_block = "## 市场概况\n（该市场暂无漲跌家数等统计）"
+                stats_block = "## 市场概况\n（该市场暂无漲跌家数等統計）"
 
             if self.profile.has_sector_rankings:
                 sector_block = f"""## 板塊表现
@@ -927,7 +927,7 @@ Lagging: {bottom_sectors_text if bottom_sectors_text else "N/A"}"""
                 sector_block = "## 板塊表现\n（该市场暂无板塊漲跌數據）"
 
         data_no_indices_hint = (
-            "注意：由于行情數據获取失败，请主要根据【市场新闻】进行定性分析和总结，不要编造具体的指數点位。"
+            "注意：由于行情數據獲取失败，请主要根据【市场新闻】進行定性分析和总结，不要编造具体的指數点位。"
             if not indices_text
             else ""
         )
@@ -940,8 +940,8 @@ Lagging: {bottom_sectors_text if bottom_sectors_text else "N/A"}"""
             indices_placeholder = indices_text if indices_text else "No index data (API error)"
             news_placeholder = news_text if news_text else "No relevant news"
         else:
-            indices_placeholder = indices_text if indices_text else "暂无指數數據（接口异常）"
-            news_placeholder = news_text if news_text else "暂无相关新闻"
+            indices_placeholder = indices_text if indices_text else "暂无指數數據（介面例外）"
+            news_placeholder = news_text if news_text else "暂无相關新闻"
 
         if review_language == "en":
             report_title = self._get_review_title(overview.date).removeprefix("## ").strip()
@@ -1007,13 +1007,13 @@ Lagging: {bottom_sectors_text if bottom_sectors_text else "N/A"}"""
 Output the report content directly, no extra commentary.
 """
 
-        # A 股场景使用中文提示语
+        # A 股場景使用中文提示语
         return f"""你是一位专业的A/H/美股市场分析师，请根据以下數據生成一份结构化的{self._get_market_scope_name('zh')}大盤复盘报告。
 
-【重要】输出要求：
-- 必须输出纯 Markdown 文本格式
-- 禁止输出 JSON 格式
-- 禁止输出代碼块
+【重要】輸出要求：
+- 必须輸出纯 Markdown 文本格式
+- 禁止輸出 JSON 格式
+- 禁止輸出代碼块
 - emoji 仅在标题处少量使用（每个标题最多1个）
 - 报告要像交易员盘后工作台：先给结论，再按數據表、主线、催化、计划展开
 - 不要重复列出已由系統注入的表格數據；正文负责解释表格背后的含义
@@ -1041,20 +1041,20 @@ Output the report content directly, no extra commentary.
 
 ---
 
-# 输出格式模板（请严格按此格式输出）
+# 輸出格式模板（请严格按此格式輸出）
 
 ## {overview.date} 大盤复盘
 
-> 一句话给出今日市场狀態、核心矛盾和明日优先观察方向。
+> 一句话给出今日市场狀態、核心矛盾和明日優先观察方向。
 
 ### 一、盘面总览
-（2-3句话概括指數、漲跌家数、成交额和情绪温度，明确“强势/偏暖/震荡/偏弱”判断）
+（2-3句话概括指數、漲跌家数、成交额和情绪温度，明確“强势/偏暖/震荡/偏弱”判斷）
 
 ### 二、指數结构
-（{self._get_index_hint()}，说明谁在护盘、谁在拖累，以及关键支撑/压力）
+（{self._get_index_hint()}，说明谁在护盘、谁在拖累，以及關鍵支撑/压力）
 
 ### 三、板塊主线
-（分析领涨/领跌板塊背后的逻辑、持续性和是否形成主线）
+（分析领涨/领跌板塊背后的邏輯、持续性和是否形成主线）
 
 ### 四、資金与情绪
 （解读成交额、漲跌停结构、市场宽度和風險偏好）
@@ -1063,18 +1063,18 @@ Output the report content directly, no extra commentary.
 （结合近三日新闻，提炼真正影响明日交易的催化或扰动）
 
 ### 六、明日交易计划
-（给出进攻/均衡/防守结论、仓位区间、关注方向、回避方向和一个触发失效条件）
+（给出进攻/均衡/防守结论、仓位區間、关注方向、回避方向和一个触发失效條件）
 
 ### 七、風險提示
-（列出需要关注的風險点；最后补充“建议仅供参考，不构成投资建议”。）
+（列出需要关注的風險点；最后补充“建议仅供參考，不构成投资建议”。）
 
 ---
 
-请直接输出复盘报告内容，不要输出其他说明文字。
+请直接輸出复盘报告内容，不要輸出其他说明文字。
 """
     
     def _generate_template_review(self, overview: MarketOverview, news: List) -> str:
-        """使用模板生成复盘报告（无大模型时的备选方案）"""
+        """使用模板生成复盘报告（无大模型时的備選方案）"""
         template_language = self._get_template_review_language()
         mood_code = self.profile.mood_index_code
         # 根据 mood_index_code 查找对应指數
@@ -1159,7 +1159,7 @@ Market conditions can change quickly. The data above is for reference only and d
         sector_block = self._build_sector_block(overview)
         return f"""## {overview.date} 大盤复盘
 
-> 今日{market_label}市场整体呈现**{market_mood}**态势，优先观察指數承接、成交额变化和板塊持续性。
+> 今日{market_label}市场整体呈现**{market_mood}**态势，優先观察指數承接、成交额变化和板塊持续性。
 
 ### 一、盘面总览
 {dashboard_block or "暂无市场宽度數據。"}
@@ -1174,16 +1174,16 @@ Market conditions can change quickly. The data above is for reference only and d
 - 结合成交额和漲跌家数看，当前更适合等待确认，避免仅凭单一热点追高。
 
 ### 五、訊息催化
-- 暂无可用新闻时，应降低对题材持续性的確定性判断。
+- 暂无可用新闻时，应降低对题材持续性的確定性判斷。
 
 ### 六、明日交易计划
 - **结论**：均衡观察。
-- **仓位**：控制在中性区间，等待指數与主线共振。
+- **仓位**：控制在中性區間，等待指數与主线共振。
 - **关注方向**：{top_text or "强于指數的主线板塊"}。
 - **回避方向**：{bottom_text or "连续走弱且缺少修复信号的方向"}。
 
 ### 七、風險提示
-- 市场有風險，投资需谨慎。以上數據仅供参考，不构成投资建议。
+- 市场有風險，投资需谨慎。以上數據仅供參考，不构成投资建议。
 
 ---
 *复盘时间: {datetime.now().strftime('%H:%M')}*
@@ -1191,17 +1191,17 @@ Market conditions can change quickly. The data above is for reference only and d
     
     def run_daily_review(self) -> str:
         """
-        执行每日大盤复盘流程
+        執行每日大盤复盘流程
         
         Returns:
             复盘报告文本
         """
         logger.info("========== 开始大盤复盘分析 ==========")
         
-        # 1. 获取市场概览
+        # 1. 獲取市场概览
         overview = self.get_market_overview()
         
-        # 2. 搜索市场新闻
+        # 2. 搜尋市场新闻
         news = self.search_market_news()
         
         # 3. 生成复盘报告
@@ -1224,7 +1224,7 @@ if __name__ == "__main__":
     
     analyzer = MarketAnalyzer()
     
-    # 測試获取市场概览
+    # 測試獲取市场概览
     overview = analyzer.get_market_overview()
     print(f"\n=== 市场概览 ===")
     print(f"日期: {overview.date}")

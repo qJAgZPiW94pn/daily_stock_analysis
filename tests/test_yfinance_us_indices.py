@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-data_provider/yfinance_fetcher 中美股指數获取逻辑的单元測試
+data_provider/yfinance_fetcher 中美股指數獲取邏輯的单元測試
 
 使用 unittest.mock 模拟 yfinance API 回應，覆盖：
 - _fetch_yf_ticker_data 单指數數據解析
-- _get_us_main_indices 美股指數批量获取及异常场景
+- _get_us_main_indices 美股指數批量獲取及例外場景
 """
 import sys
 import os
@@ -12,11 +12,11 @@ import unittest
 from unittest.mock import MagicMock, patch
 import pandas as pd
 
-# 在匯入 data_provider 前 mock 可能缺失的依賴，避免环境差异导致測試无法執行
+# 在匯入 data_provider 前 mock 可能缺失的依賴，避免環境差异导致測試無法執行
 if 'fake_useragent' not in sys.modules:
     sys.modules['fake_useragent'] = MagicMock()
 
-# 确保能匯入项目模块
+# 確保能匯入项目模組
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
@@ -34,7 +34,7 @@ def _make_mock_hist(close: float, prev_close: float, high: float = None, low: fl
 
 
 def _make_mock_yf(hist_df: pd.DataFrame):
-    """构造模拟的 yf 模块，Ticker().history() 傳回给定 DataFrame"""
+    """构造模拟的 yf 模組，Ticker().history() 傳回给定 DataFrame"""
     mock_ticker = MagicMock()
     mock_ticker.history.return_value = hist_df
     mock_yf = MagicMock()
@@ -43,7 +43,7 @@ def _make_mock_yf(hist_df: pd.DataFrame):
 
 
 class TestFetchYfTickerData(unittest.TestCase):
-    """_fetch_yf_ticker_data 单指數取数逻辑測試"""
+    """_fetch_yf_ticker_data 单指數取数邏輯測試"""
 
     def setUp(self):
         from data_provider.yfinance_fetcher import YfinanceFetcher
@@ -91,7 +91,7 @@ class TestFetchYfTickerData(unittest.TestCase):
 
 
 class TestGetUsMainIndices(unittest.TestCase):
-    """_get_us_main_indices 美股指數批量获取測試"""
+    """_get_us_main_indices 美股指數批量獲取測試"""
 
     def setUp(self):
         from data_provider.yfinance_fetcher import YfinanceFetcher
@@ -163,7 +163,7 @@ class TestGetUsMainIndices(unittest.TestCase):
 
     @patch('data_provider.yfinance_fetcher.get_us_index_yf_symbol')
     def test_handles_ticker_exception(self, mock_get_symbol):
-        """Ticker.history 抛异常时略過该指數，不整体失败"""
+        """Ticker.history 抛例外时略過该指數，不整体失败"""
         mock_get_symbol.return_value = ('^GSPC', '标普500指數')
         mock_ticker = MagicMock()
         mock_ticker.history.side_effect = Exception("Network error")

@@ -32,16 +32,16 @@ logger = logging.getLogger(__name__)
 
 # Tool name → friendly label for progress messages
 _THINKING_TOOL_LABELS: Dict[str, str] = {
-    "get_realtime_quote": "行情获取",
-    "get_daily_history": "K线數據获取",
-    "analyze_trend": "技术指标分析",
+    "get_realtime_quote": "行情獲取",
+    "get_daily_history": "K线數據獲取",
+    "analyze_trend": "技术指標分析",
     "get_chip_distribution": "筹码分布分析",
-    "search_stock_news": "新闻搜索",
-    "search_comprehensive_intel": "综合情报搜索",
-    "get_market_indices": "市场概览获取",
+    "search_stock_news": "新闻搜尋",
+    "search_comprehensive_intel": "综合情报搜尋",
+    "get_market_indices": "市场概览獲取",
     "get_sector_rankings": "行业板塊分析",
     "get_analysis_context": "历史分析上下文",
-    "get_stock_info": "基本資訊获取",
+    "get_stock_info": "基本資訊獲取",
     "analyze_pattern": "K线形态识别",
     "get_volume_analysis": "量能分析",
     "calculate_ma": "均线计算",
@@ -569,7 +569,7 @@ def run_agent_loop(
                 total_tokens,
             )
             if progress_callback:
-                progress_callback({"type": "generating", "step": step + 1, "message": "正在生成最终分析..."})
+                progress_callback({"type": "generating", "step": step + 1, "message": "正在生成最終分析..."})
 
             final_content = response.content or ""
             is_error = response.provider == "error"

@@ -50,7 +50,7 @@ class Serverchan3Sender:
 
         Server酱3 特点：
         - 国内推送服務，支援多家国产系統推送通道，可无后台推送
-        - 简单易用的 API 接口
+        - 簡單易用的 API 介面
 
         Args:
             content: 訊息内容（Markdown 格式）

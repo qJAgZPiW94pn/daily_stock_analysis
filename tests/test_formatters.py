@@ -82,13 +82,13 @@ class TestChunkContentByMaxWords(unittest.TestCase):
         self.assertEqual("".join(r.replace(TRUNCATION_SUFFIX, "") for r in result), "🎯ab")
         
     def test_chunk_raises_when_max_words_below_min_in_recursion(self):
-        # Safe guard測試，避免无限循环，抛出錯誤
+        # Safe guard測試，避免無限循环，拋出錯誤
         with self.assertRaises(ValueError) as ctx:
             chunk_content_by_max_words("\n---\n###\n**\n##\n\n", MIN_MAX_WORDS, special_char_len=2)
         self.assertIn(str(MIN_MAX_WORDS), str(ctx.exception))
 
     def test_chunk_by_max_words_raises_when_max_words_below_min(self):
-        # Safe guard測試，避免无限循环，抛出錯誤
+        # Safe guard測試，避免無限循环，拋出錯誤
         with self.assertRaises(ValueError) as ctx:
             _chunk_by_max_words("🎯ab", 2, special_char_len=2)
         self.assertIn(str(MIN_MAX_WORDS), str(ctx.exception))

@@ -32,7 +32,7 @@ class PushoverSender:
         }
         
     def _is_pushover_configured(self) -> bool:
-        """检查 Pushover 配置是否完整"""
+        """檢查 Pushover 配置是否完整"""
         return bool(self._pushover_config['user_key'] and self._pushover_config['api_token'])
 
     def send_to_pushover(
@@ -57,12 +57,12 @@ class PushoverSender:
         Pushover 特点：
         - 支援 iOS/Android/桌面多平台推送
         - 訊息限制 1024 字符
-        - 支援优先级设置
+        - 支援優先级设置
         - 支援 HTML 格式
         
         Args:
             content: 訊息内容（Markdown 格式，会转为纯文本）
-            title: 訊息标题（可選，默认为"股票分析报告"）
+            title: 訊息标题（可選，預設为"股票分析报告"）
 
         Returns:
             是否发送成功
@@ -85,7 +85,7 @@ class PushoverSender:
         # Pushover 訊息限制 1024 字符
         max_length = 1024
         
-        # 转换 Markdown 为纯文本（Pushover 支援 HTML，但纯文本更通用）
+        # 轉換 Markdown 为纯文本（Pushover 支援 HTML，但纯文本更通用）
         plain_content = markdown_to_plain_text(content)
         
         if len(plain_content) <= max_length:
@@ -123,7 +123,7 @@ class PushoverSender:
             api_token: 应用 API Token
             message: 訊息内容
             title: 訊息标题
-            priority: 优先级 (-2 ~ 2，默认 0)
+            priority: 優先级 (-2 ~ 2，預設 0)
         """
         try:
             payload = {
@@ -168,7 +168,7 @@ class PushoverSender:
         """
         分段发送长 Pushover 訊息
         
-        按段落分割，确保每段不超过最大长度
+        按段落分割，確保每段不超过最大长度
         """
         import time
         
@@ -185,7 +185,7 @@ class PushoverSender:
         current_length = 0
         
         for section in sections:
-            # 计算添加这个 section 后的实际长度
+            # 计算添加这个 section 后的實際长度
             # join() 只在元素之间放置分隔符，不是每个元素后面
             # 所以：第一个元素不需要分隔符，后续元素需要一个分隔符連線
             if current_chunk:

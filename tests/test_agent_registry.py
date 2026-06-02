@@ -560,7 +560,7 @@ instructions: |
   **測試策略**
 
   这是一个用自然语言编写的測試策略。
-  判断标准：当 MA5 > MA10 时買入。
+  判斷標準：当 MA5 > MA10 时買入。
 """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8') as f:
             f.write(yaml_content)
@@ -611,7 +611,7 @@ instructions: 用自然语言描述的策略内容
         yaml_content = """
 name: metadata_skill
 display_name: 元數據技能
-description: 带有默认元數據的技能
+description: 带有預設元數據的技能
 aliases: [别名一, 别名二]
 default_active: true
 default_router: true
@@ -811,7 +811,7 @@ Use RESTful naming and consistent validation.
 name: dragon_head
 display_name: 自定义龙头策略
 description: 我自己的龙头策略
-instructions: 按照我的规则分析龙头股
+instructions: 按照我的規則分析龙头股
 """)
             manager.load_custom_strategies(tmpdir)
 

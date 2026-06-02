@@ -14,7 +14,7 @@ from typing import Dict, Any, Optional, List
 
 
 class ChatType(str, Enum):
-    """会话类型"""
+    """會話类型"""
     GROUP = "group"      # 群聊
     PRIVATE = "private"  # 私聊
     UNKNOWN = "unknown"  # 未知
@@ -41,8 +41,8 @@ class BotMessage:
         message_id: 訊息 ID（平台原始 ID）
         user_id: 发送者 ID
         user_name: 发送者名称
-        chat_id: 会话 ID（群聊 ID 或私聊 ID）
-        chat_type: 会话类型
+        chat_id: 會話 ID（群聊 ID 或私聊 ID）
+        chat_type: 會話类型
         content: 訊息文本内容（已去除 @机器人 部分）
         raw_content: 原始訊息内容
         mentioned: 是否 @了机器人
@@ -68,7 +68,7 @@ class BotMessage:
         解析命令和參數
         
         Args:
-            prefix: 命令前缀，默认 "/"
+            prefix: 命令前綴，預設 "/"
             
         Returns:
             (command, args) 元组，如 ("analyze", ["600519"])
@@ -76,9 +76,9 @@ class BotMessage:
         """
         text = self.content.strip()
         
-        # 检查是否以命令前缀开头
+        # 檢查是否以命令前綴开头
         if not text.startswith(prefix):
-            # 尝试匹配中文命令（无前缀）
+            # 嘗試匹配中文命令（无前綴）
             chinese_commands = {
                 '分析': 'analyze',
                 '大盤': 'market',
@@ -92,7 +92,7 @@ class BotMessage:
                     return en_cmd, args
             return None, []
         
-        # 去除前缀
+        # 去除前綴
         text = text[len(prefix):]
         
         # 分割命令和參數
@@ -106,7 +106,7 @@ class BotMessage:
         return command, args
     
     def is_command(self, prefix: str = "/") -> bool:
-        """检查訊息是否是命令"""
+        """檢查訊息是否是命令"""
         cmd, _ = self.get_command_and_args(prefix)
         return cmd is not None
 
@@ -116,7 +116,7 @@ class BotResponse:
     """
     统一的机器人回應模型
     
-    命令處理器傳回此模型，由平台适配器转换为平台特定格式。
+    命令處理器傳回此模型，由平台適配器轉換为平台特定格式。
     
     Attributes:
         text: 回复文本
@@ -152,7 +152,7 @@ class WebhookResponse:
     """
     Webhook 回應模型
     
-    平台适配器傳回此模型，包含 HTTP 回應内容。
+    平台適配器傳回此模型，包含 HTTP 回應内容。
     
     Attributes:
         status_code: HTTP 狀態码
@@ -170,7 +170,7 @@ class WebhookResponse:
     
     @classmethod
     def challenge(cls, challenge: str) -> 'WebhookResponse':
-        """建立验证回應（用于平台 URL 验证）"""
+        """建立驗證回應（用于平台 URL 驗證）"""
         return cls(status_code=200, body={"challenge": challenge})
     
     @classmethod

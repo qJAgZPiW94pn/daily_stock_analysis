@@ -127,8 +127,8 @@ class TestAgentExecutor(unittest.TestCase):
         executor = AgentExecutor(
             registry,
             adapter,
-            skill_instructions="### 技能 1: 默认多头趨勢",
-            default_skill_policy="## 默认技能基线（必须严格遵守）\n- **多头排列必须条件**：MA5 > MA10 > MA20",
+            skill_instructions="### 技能 1: 預設多头趨勢",
+            default_skill_policy="## 預設技能基线（必须严格遵守）\n- **多头排列必须條件**：MA5 > MA10 > MA20",
             use_legacy_default_prompt=True,
             max_steps=2,
         )
@@ -136,9 +136,9 @@ class TestAgentExecutor(unittest.TestCase):
 
         self.assertTrue(result.success)
         prompt = adapter.call_with_tools.call_args.args[0][0]["content"]
-        self.assertIn("### 技能 1: 默认多头趨勢", prompt)
+        self.assertIn("### 技能 1: 預設多头趨勢", prompt)
         self.assertIn("专注于趨勢交易", prompt)
-        self.assertIn("多头排列必须条件", prompt)
+        self.assertIn("多头排列必须條件", prompt)
         self.assertIn("多头排列：MA5 > MA10 > MA20", prompt)
 
     def test_simple_text_response(self):

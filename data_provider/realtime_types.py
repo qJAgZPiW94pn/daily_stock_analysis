@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-实时行情统一类型定义 & 熔断机制
+实时行情统一类型定义 & 熔斷機制
 ===================================
 
-设计目标：
+設計目标：
 1. 统一各數據源的实时行情傳回结构
-2. 实现熔断/冷却机制，避免连续失败时反复請求
-3. 支援多數據源故障切换
+2. 實現熔斷/冷却機制，避免连续失败时反复請求
+3. 支援多數據源故障切換
 
 使用方式：
 - 所有 Fetcher 的 get_realtime_quote() 统一傳回 UnifiedRealtimeQuote
-- CircuitBreaker 管理各數據源的熔断狀態
+- CircuitBreaker 管理各數據源的熔斷狀態
 """
 
 import logging
@@ -25,28 +25,28 @@ logger = logging.getLogger(__name__)
 
 
 # ============================================
-# 通用类型转换工具函數
+# 通用类型轉換工具函數
 # ============================================
-# 设计说明：
+# 設計说明：
 # 各數據源傳回的原始數據类型不一致（str/float/int/NaN），
-# 使用这些函數统一转换，避免在各 Fetcher 中重复定义。
+# 使用这些函數统一轉換，避免在各 Fetcher 中重复定义。
 
 def safe_float(val: Any, default: Optional[float] = None) -> Optional[float]:
     """
-    安全转换为浮点数
+    安全轉換为浮点数
     
-    處理场景：
+    處理場景：
     - None / 空字符串 → default
     - pandas NaN / numpy NaN → default
     - 数值字符串 → float
     - 已是数值 → float
     
     Args:
-        val: 待转换的值
-        default: 转换失败时的默认值
+        val: 待轉換的值
+        default: 轉換失败时的預設值
         
     Returns:
-        转换后的浮点数，或默认值
+        轉換后的浮点数，或預設值
     """
     try:
         if val is None:
@@ -59,7 +59,7 @@ def safe_float(val: Any, default: Optional[float] = None) -> Optional[float]:
                 return default
         
         # 處理 pandas/numpy NaN
-        # 使用 math.isnan 而不是 pd.isna，避免强制依賴 pandas
+        # 使用 math.isnan 而不是 pd.isna，避免強制依賴 pandas
         import math
         try:
             if math.isnan(float(val)):
@@ -74,16 +74,16 @@ def safe_float(val: Any, default: Optional[float] = None) -> Optional[float]:
 
 def safe_int(val: Any, default: Optional[int] = None) -> Optional[int]:
     """
-    安全转换为整数
+    安全轉換为整数
     
-    先转换为 float，再取整，處理 "123.0" 这类情况
+    先轉換为 float，再取整，處理 "123.0" 这类情况
     
     Args:
-        val: 待转换的值
-        default: 转换失败时的默认值
+        val: 待轉換的值
+        default: 轉換失败时的預設值
         
     Returns:
-        转换后的整数，或默认值
+        轉換后的整数，或預設值
     """
     f_val = safe_float(val, default=None)
     if f_val is not None:
@@ -102,7 +102,7 @@ class RealtimeSource(Enum):
     SINA = "sina"                   # 新浪直连
     STOOQ = "stooq"                 # Stooq 美股兜底
     LONGBRIDGE = "longbridge"       # 长桥（美股/港股兜底）
-    FALLBACK = "fallback"           # 降级兜底
+    FALLBACK = "fallback"           # 降級兜底
 
 
 @dataclass
@@ -110,9 +110,9 @@ class UnifiedRealtimeQuote:
     """
     统一实时行情數據结构
     
-    设计原则：
+    設計原则：
     - 各數據源傳回的欄位可能不同，缺失欄位用 None 表示
-    - 主流程使用 getattr(quote, field, None) 获取，保证兼容性
+    - 主流程使用 getattr(quote, field, None) 獲取，保证相容性
     - source 欄位标记數據来源，便于调试
     """
     code: str
@@ -124,32 +124,32 @@ class UnifiedRealtimeQuote:
     change_pct: Optional[float] = None      # 漲跌幅(%)
     change_amount: Optional[float] = None   # 漲跌额
     
-    # === 量价指标（部分源可能缺失）===
+    # === 量价指標（部分源可能缺失）===
     volume: Optional[int] = None            # 成交量（手）
     amount: Optional[float] = None          # 成交额（元）
     volume_ratio: Optional[float] = None    # 量比
     turnover_rate: Optional[float] = None   # 换手率(%)
     amplitude: Optional[float] = None       # 振幅(%)
     
-    # === 价格区间 ===
+    # === 价格區間 ===
     open_price: Optional[float] = None      # 開盤价
     high: Optional[float] = None            # 最高价
     low: Optional[float] = None             # 最低价
     pre_close: Optional[float] = None       # 昨收价
     
-    # === 估值指标（仅东财等全量接口有）===
+    # === 估值指標（仅东财等全量介面有）===
     pe_ratio: Optional[float] = None        # 市盈率(动态)
     pb_ratio: Optional[float] = None        # 市净率
     total_mv: Optional[float] = None        # 总市值(元)
     circ_mv: Optional[float] = None         # 流通市值(元)
     
-    # === 其他指标 ===
+    # === 其他指標 ===
     change_60d: Optional[float] = None      # 60日漲跌幅(%)
     high_52w: Optional[float] = None        # 52周最高
     low_52w: Optional[float] = None         # 52周最低
     
     def to_dict(self) -> Dict[str, Any]:
-        """转换为字典（过滤 None 值）"""
+        """轉換为字典（过滤 None 值）"""
         result = {
             'code': self.code,
             'name': self.name,
@@ -170,11 +170,11 @@ class UnifiedRealtimeQuote:
         return result
     
     def has_basic_data(self) -> bool:
-        """检查是否有基本的价格數據"""
+        """檢查是否有基本的价格數據"""
         return self.price is not None and self.price > 0
     
     def has_volume_data(self) -> bool:
-        """检查是否有量价數據"""
+        """檢查是否有量价數據"""
         return self.volume_ratio is not None or self.turnover_rate is not None
 
 
@@ -203,7 +203,7 @@ class ChipDistribution:
     concentration_70: float = 0.0  # 70%筹码集中度
     
     def to_dict(self) -> Dict[str, Any]:
-        """转换为字典"""
+        """轉換为字典"""
         return {
             'code': self.code,
             'date': self.date,
@@ -218,7 +218,7 @@ class ChipDistribution:
     
     def get_chip_status(self, current_price: float) -> str:
         """
-        获取筹码狀態描述
+        獲取筹码狀態描述
         
         Args:
             current_price: 当前股價
@@ -269,30 +269,30 @@ class ChipDistribution:
 
 class CircuitBreaker:
     """
-    熔断器 - 管理數據源的熔断/冷却狀態
+    熔斷器 - 管理數據源的熔斷/冷却狀態
     
     策略：
-    - 连续失败 N 次后进入熔断狀態
-    - 熔断期间略過该數據源
+    - 连续失败 N 次后进入熔斷狀態
+    - 熔斷期间略過该數據源
     - 冷却时间后自动恢復半开狀態
-    - 半开狀態下单次成功则完全恢復，失败则繼續熔断
+    - 半开狀態下单次成功则完全恢復，失败则繼續熔斷
     
     狀態机：
-    CLOSED（正常） --失败N次--> OPEN（熔断）--冷却时间到--> HALF_OPEN（半开）
+    CLOSED（正常） --失败N次--> OPEN（熔斷）--冷却时间到--> HALF_OPEN（半开）
     HALF_OPEN --成功--> CLOSED
     HALF_OPEN --失败--> OPEN
     """
     
     # 狀態常量
     CLOSED = "closed"      # 正常狀態
-    OPEN = "open"          # 熔断狀態（不可用）
+    OPEN = "open"          # 熔斷狀態（不可用）
     HALF_OPEN = "half_open"  # 半开狀態（试探性請求）
     
     def __init__(
         self,
-        failure_threshold: int = 3,       # 连续失败次数阈值
-        cooldown_seconds: float = 300.0,  # 冷却时间（秒），默认5分钟
-        half_open_max_calls: int = 1      # 半开狀態最大尝试次数
+        failure_threshold: int = 3,       # 连续失败次数閾值
+        cooldown_seconds: float = 300.0,  # 冷却时间（秒），預設5分钟
+        half_open_max_calls: int = 1      # 半开狀態最大嘗試次数
     ):
         self.failure_threshold = failure_threshold
         self.cooldown_seconds = cooldown_seconds
@@ -303,7 +303,7 @@ class CircuitBreaker:
         self._lock = RLock()
     
     def _get_state_locked(self, source: str) -> Dict[str, Any]:
-        """获取或初始化數據源狀態（调用方需持有锁）。"""
+        """獲取或初始化數據源狀態（呼叫方需持有锁）。"""
         if source not in self._states:
             self._states[source] = {
                 'state': self.CLOSED,
@@ -315,9 +315,9 @@ class CircuitBreaker:
     
     def is_available(self, source: str) -> bool:
         """
-        检查數據源是否可用
+        檢查數據源是否可用
         
-        傳回 True 表示可以尝试請求
+        傳回 True 表示可以嘗試請求
         傳回 False 表示应略過该數據源
         """
         with self._lock:
@@ -328,18 +328,18 @@ class CircuitBreaker:
                 return True
 
             if state['state'] == self.OPEN:
-                # 检查冷却时间
+                # 檢查冷却时间
                 time_since_failure = current_time - state['last_failure_time']
                 if time_since_failure >= self.cooldown_seconds:
                     # 冷却完成，进入半开狀態（不预占名额，由 HALF_OPEN 分支统一管理）
                     state['state'] = self.HALF_OPEN
                     state['half_open_calls'] = 0
                     state['last_failure_time'] = current_time
-                    logger.info(f"[熔断器] {source} 冷却完成，进入半开狀態")
+                    logger.info(f"[熔斷器] {source} 冷却完成，进入半开狀態")
                     # Fall through to HALF_OPEN check below
                 else:
                     remaining = self.cooldown_seconds - time_since_failure
-                    logger.debug(f"[熔断器] {source} 处于熔断狀態，剩余冷却时间: {remaining:.0f}s")
+                    logger.debug(f"[熔斷器] {source} 处于熔斷狀態，剩余冷却时间: {remaining:.0f}s")
                     return False
 
             if state['state'] == self.HALF_OPEN:
@@ -347,13 +347,13 @@ class CircuitBreaker:
                     state['half_open_calls'] += 1
                     return True
                 # 所有探测名额已用完；若冷却时间再次到期仍未收到
-                # record_success/record_failure 回调，重置名额允许重新探测，
+                # record_success/record_failure 回调，重置名额允許重新探测，
                 # 避免永久卡在 HALF_OPEN。
                 time_since_failure = current_time - state['last_failure_time']
                 if time_since_failure >= self.cooldown_seconds:
                     state['half_open_calls'] = 1
                     state['last_failure_time'] = current_time
-                    logger.info(f"[熔断器] {source} 半开狀態探测逾時，重新探测")
+                    logger.info(f"[熔斷器] {source} 半开狀態探测逾時，重新探测")
                     return True
                 return False
 
@@ -371,7 +371,7 @@ class CircuitBreaker:
                 state['state'] = self.OPEN
                 state['half_open_calls'] = 0
                 state['last_failure_time'] = time.time()
-                logger.info(f"[熔断器] {source} 半开探测结果不確定，重新进入冷却")
+                logger.info(f"[熔斷器] {source} 半开探测结果不確定，重新进入冷却")
 
     def record_success(self, source: str) -> None:
         """记录成功請求"""
@@ -380,7 +380,7 @@ class CircuitBreaker:
 
             if state['state'] == self.HALF_OPEN:
                 # 半开狀態下成功，完全恢復
-                logger.info(f"[熔断器] {source} 半开狀態請求成功，恢復正常")
+                logger.info(f"[熔斷器] {source} 半开狀態請求成功，恢復正常")
 
             # 重置狀態
             state['state'] = self.CLOSED
@@ -397,25 +397,25 @@ class CircuitBreaker:
             state['last_failure_time'] = current_time
 
             if state['state'] == self.HALF_OPEN:
-                # 半开狀態下失败，繼續熔断
+                # 半开狀態下失败，繼續熔斷
                 state['state'] = self.OPEN
                 state['half_open_calls'] = 0
-                logger.warning(f"[熔断器] {source} 半开狀態請求失败，繼續熔断 {self.cooldown_seconds}s")
+                logger.warning(f"[熔斷器] {source} 半开狀態請求失败，繼續熔斷 {self.cooldown_seconds}s")
             elif state['failures'] >= self.failure_threshold:
-                # 达到阈值，进入熔断
+                # 达到閾值，进入熔斷
                 state['state'] = self.OPEN
-                logger.warning(f"[熔断器] {source} 连续失败 {state['failures']} 次，进入熔断狀態 "
+                logger.warning(f"[熔斷器] {source} 连续失败 {state['failures']} 次，进入熔斷狀態 "
                               f"(冷却 {self.cooldown_seconds}s)")
                 if error:
-                    logger.warning(f"[熔断器] 最后錯誤: {error}")
+                    logger.warning(f"[熔斷器] 最后錯誤: {error}")
     
     def get_status(self) -> Dict[str, str]:
-        """获取所有數據源狀態"""
+        """獲取所有數據源狀態"""
         with self._lock:
             return {source: info['state'] for source, info in self._states.items()}
     
     def reset(self, source: Optional[str] = None) -> None:
-        """重置熔断器狀態"""
+        """重置熔斷器狀態"""
         with self._lock:
             if source:
                 if source in self._states:
@@ -424,26 +424,26 @@ class CircuitBreaker:
                 self._states.clear()
 
 
-# 全局熔断器实例（实时行情专用）
+# 全局熔斷器实例（实时行情专用）
 _realtime_circuit_breaker = CircuitBreaker(
-    failure_threshold=3,      # 连续失败3次熔断
+    failure_threshold=3,      # 连续失败3次熔斷
     cooldown_seconds=300.0,   # 冷却5分钟
     half_open_max_calls=1
 )
 
-# 筹码接口熔断器（更保守的策略，因为该接口更不稳定）
+# 筹码介面熔斷器（更保守的策略，因为该介面更不稳定）
 _chip_circuit_breaker = CircuitBreaker(
-    failure_threshold=2,      # 连续失败2次熔断
+    failure_threshold=2,      # 连续失败2次熔斷
     cooldown_seconds=600.0,   # 冷却10分钟
     half_open_max_calls=1
 )
 
 
 def get_realtime_circuit_breaker() -> CircuitBreaker:
-    """获取实时行情熔断器"""
+    """獲取实时行情熔斷器"""
     return _realtime_circuit_breaker
 
 
 def get_chip_circuit_breaker() -> CircuitBreaker:
-    """获取筹码接口熔断器"""
+    """獲取筹码介面熔斷器"""
     return _chip_circuit_breaker

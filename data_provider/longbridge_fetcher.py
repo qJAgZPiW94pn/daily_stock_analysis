@@ -8,15 +8,15 @@ LongbridgeFetcher - 长桥兜底數據源 (Priority 5)
 特点：覆盖美股 + 港股，可计算量比/换手率/PE 等 yfinance 缺失欄位
 定位：美股/港股最后兜底數據源
 
-关键策略：
-1. 组合 quote + static_info 接口计算 turnover_rate / pe_ratio / total_mv
+關鍵策略：
+1. 组合 quote + static_info 介面计算 turnover_rate / pe_ratio / total_mv
 2. 通过 history_candlesticks 计算 volume_ratio（近5日均量比）
-3. 懒加载 QuoteContext，首次调用时才建立連線
-4. static_info 程式内短快取，减少重复請求（默认 24h，可调；见 LONGBRIDGE_STATIC_INFO_TTL_SECONDS）
+3. 懒加载 QuoteContext，首次呼叫时才建立連線
+4. static_info 程式内短快取，减少重复請求（預設 24h，可调；见 LONGBRIDGE_STATIC_INFO_TTL_SECONDS）
 
 凭证：`LONGBRIDGE_APP_KEY` / `LONGBRIDGE_APP_SECRET` / `LONGBRIDGE_ACCESS_TOKEN`。
 可選：`LONGBRIDGE_STATIC_INFO_TTL_SECONDS`；SDK `language` 取自 `REPORT_LANGUAGE`，`log_path` 为 `{LOG_DIR}/longbridge_sdk.log`；
-`LONGBRIDGE_HTTP_URL` / `LONGBRIDGE_QUOTE_WS_URL` / `LONGBRIDGE_TRADE_WS_URL` / `LONGBRIDGE_REGION` （见官方文档默认值）。
+`LONGBRIDGE_HTTP_URL` / `LONGBRIDGE_QUOTE_WS_URL` / `LONGBRIDGE_TRADE_WS_URL` / `LONGBRIDGE_REGION` （见官方文档預設值）。
 """
 
 import logging
@@ -103,7 +103,7 @@ def _sanitize_longbridge_env() -> None:
         val = os.environ.get(key)
         if val is not None and val.strip() == "":
             del os.environ[key]
-            logger.debug("[Longbridge] 刪除空环境變數 %s", key)
+            logger.debug("[Longbridge] 刪除空環境變數 %s", key)
 
     # App default: quiet (false). Matches README / docs/full-guide / .env.example; SDK alone may default verbose.
     if "LONGBRIDGE_PRINT_QUOTE_PACKAGES" not in os.environ:
@@ -262,12 +262,12 @@ def _to_longbridge_symbol(stock_code: str) -> Optional[str]:
 
 class LongbridgeFetcher(BaseFetcher):
     """
-    长桥 OpenAPI 數據源实现
+    长桥 OpenAPI 數據源實現
 
-    优先级: 5（最低，作为美股/港股最后兜底）
+    優先级: 5（最低，作为美股/港股最后兜底）
     數據来源: Longbridge OpenAPI
 
-    通过组合多个 API 计算 yfinance 缺失的指标:
+    通过组合多个 API 计算 yfinance 缺失的指標:
     - turnover_rate = volume / circulating_shares * 100
     - volume_ratio = today_volume / avg_5day_volume
     - pe_ratio = price / eps_ttm
@@ -305,7 +305,7 @@ class LongbridgeFetcher(BaseFetcher):
             return
         self._cooldown_until = time.time() + cooldown_seconds
         logger.warning(
-            "[Longbridge] 检测到連線异常，进入 %ss 冷却期以避免频繁重连: %s",
+            "[Longbridge] 检测到連線例外，进入 %ss 冷却期以避免頻繁重连: %s",
             cooldown_seconds,
             exc,
         )
@@ -544,7 +544,7 @@ class LongbridgeFetcher(BaseFetcher):
 
         symbol = _to_longbridge_symbol(stock_code)
         if symbol is None:
-            logger.debug(f"[Longbridge] 无法转换代碼: {stock_code}")
+            logger.debug(f"[Longbridge] 無法轉換代碼: {stock_code}")
             return None
 
         ctx = self._get_ctx()
@@ -606,7 +606,7 @@ class LongbridgeFetcher(BaseFetcher):
                 turnover_rate = round(volume / shares_for_turnover * 100, 4)
             elif volume > 0:
                 logger.debug(
-                    "[Longbridge] %s 无法计算换手率: volume=%s circulating=%s total_shares=%s",
+                    "[Longbridge] %s 無法计算换手率: volume=%s circulating=%s total_shares=%s",
                     symbol,
                     volume,
                     circulating,
@@ -653,7 +653,7 @@ class LongbridgeFetcher(BaseFetcher):
         )
 
         logger.info(
-            f"[Longbridge] {symbol} 行情获取成功: "
+            f"[Longbridge] {symbol} 行情獲取成功: "
             f"价格={price}, 量比={volume_ratio}, 换手率={turnover_rate}"
         )
         return quote

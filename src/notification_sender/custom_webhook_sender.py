@@ -39,7 +39,7 @@ class CustomWebhookSender:
         推送訊息到自定义 Webhook
         
         支援任意接受 POST JSON 的 Webhook 端点
-        默认发送格式：{"text": "訊息内容", "content": "訊息内容"}
+        預設发送格式：{"text": "訊息内容", "content": "訊息内容"}
         
         适用于：
         - 钉钉机器人
@@ -62,7 +62,7 @@ class CustomWebhookSender:
         
         for i, url in enumerate(self._custom_webhook_urls):
             try:
-                # 通用 JSON 格式，兼容大多数 Webhook
+                # 通用 JSON 格式，相容大多数 Webhook
                 # 钉钉格式: {"msgtype": "text", "text": {"content": "xxx"}}
                 # Slack 格式: {"text": "xxx"}
                 # Discord 格式: {"content": "xxx"}
@@ -95,7 +95,7 @@ class CustomWebhookSender:
                     logger.error(f"自定义 Webhook {i+1} 推送失败")
                     
             except Exception as e:
-                logger.error(f"自定义 Webhook {i+1} 推送异常: {e}")
+                logger.error(f"自定义 Webhook {i+1} 推送例外: {e}")
         
         logger.info(f"自定义 Webhook 推送完成：成功 {success_count}/{len(self._custom_webhook_urls)}")
         return success_count > 0
@@ -143,7 +143,7 @@ class CustomWebhookSender:
                             "自定义 Webhook %d 不支援图片，且无回退内容，略過", i + 1
                         )
             except Exception as e:
-                logger.error("自定义 Webhook %d 图片推送异常: %s", i + 1, e)
+                logger.error("自定义 Webhook %d 图片推送例外: %s", i + 1, e)
         return success_count > 0
 
     def _post_custom_webhook(self, url: str, payload: dict, timeout: int = 30) -> bool:
@@ -180,7 +180,7 @@ class CustomWebhookSender:
                 attempts.append({
                     "channel": "custom",
                     "success": False,
-                    "message": f"自定义 Webhook {index + 1} 測試异常: {exc}",
+                    "message": f"自定义 Webhook {index + 1} 測試例外: {exc}",
                     "target": url,
                     "error_code": self._classify_custom_webhook_exception(exc)[0],
                     "stage": "notification_send",
@@ -311,7 +311,7 @@ class CustomWebhookSender:
                 "group": "stock"
             }
         
-        # 通用格式（兼容大多数服務）
+        # 通用格式（相容大多数服務）
         return {
             "text": content,
             "content": content,
@@ -337,13 +337,13 @@ class CustomWebhookSender:
             payload: Any = json.loads(rendered)
         except json.JSONDecodeError as exc:
             logger.error(
-                "CUSTOM_WEBHOOK_BODY_TEMPLATE 不是有效 JSON，已回退为默认 Webhook payload: %s",
+                "CUSTOM_WEBHOOK_BODY_TEMPLATE 不是有效 JSON，已回退为預設 Webhook payload: %s",
                 exc,
             )
             return None
         if not isinstance(payload, dict):
             logger.error(
-                "CUSTOM_WEBHOOK_BODY_TEMPLATE 必须渲染为 JSON object，已回退为默认 Webhook payload"
+                "CUSTOM_WEBHOOK_BODY_TEMPLATE 必须渲染为 JSON object，已回退为預設 Webhook payload"
             )
             return None
         return payload
@@ -370,7 +370,7 @@ class CustomWebhookSender:
                 },
             }
 
-            # 如果仍超限（极端情况下），再按字节硬截断一次
+            # 如果仍超限（极端情况下），再按字节硬截斷一次
             body_bytes = len(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
             if body_bytes > max_bytes:
                 hard_budget = max(200, budget - (body_bytes - max_bytes) - 200)

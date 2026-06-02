@@ -183,7 +183,7 @@ def try_acquire_market_review_lock(
                     if not _is_stale_lock(lock_path):
                         return None
 
-                    logger.warning("检测到过期的 market_review.lock，尝试清理后重试。")
+                    logger.warning("检测到过期的 market_review.lock，嘗試清理后重試。")
                     try:
                         lock_path.unlink()
                     except OSError as exc:

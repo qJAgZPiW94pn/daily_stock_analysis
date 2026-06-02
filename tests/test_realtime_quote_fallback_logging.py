@@ -123,7 +123,7 @@ def test_pipeline_warns_once_when_all_realtime_sources_fail(caplog):
         for record in caplog.records
         if "历史收盤价繼續分析" in record.message
     ]
-    assert downgrade_logs == ["贵州茅台(600519) 所有实时行情數據源均不可用，已降级为历史收盤价繼續分析"]
+    assert downgrade_logs == ["贵州茅台(600519) 所有实时行情數據源均不可用，已降級为历史收盤价繼續分析"]
 
 
 @patch("src.config.get_config")

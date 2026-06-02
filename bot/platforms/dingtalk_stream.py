@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-钉钉 Stream 模式适配器
+钉钉 Stream 模式適配器
 ===================================
 
 使用钉钉官方 Stream SDK 接入机器人，無需公网 IP 和 Webhook 配置。
@@ -10,7 +10,7 @@
 - 不需要公网 IP 或域名
 - 不需要配置 Webhook URL
 - 通过 WebSocket 长連線接收訊息
-- 更简单的接入方式
+- 更簡單的接入方式
 
 依賴：
 pip install dingtalk-stream
@@ -27,7 +27,7 @@ from typing import Optional, Callable, Any
 
 logger = logging.getLogger(__name__)
 
-# 尝试匯入钉钉 Stream SDK
+# 嘗試匯入钉钉 Stream SDK
 try:
     import dingtalk_stream
     from dingtalk_stream import AckMessage
@@ -45,8 +45,8 @@ class DingtalkStreamHandler:
     """
     钉钉 Stream 模式訊息處理器
 
-    将 Stream SDK 的回调转换为统一的 BotMessage 格式，
-    并调用命令分发器處理。
+    将 Stream SDK 的回调轉換为统一的 BotMessage 格式，
+    并呼叫命令分发器處理。
     """
 
     def __init__(self, on_message: Callable[[BotMessage], Any]):
@@ -91,19 +91,19 @@ class DingtalkStreamHandler:
                     # 解析訊息
                     incoming = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
 
-                    # 转换为统一格式
+                    # 轉換为统一格式
                     bot_message = self._parent._parse_stream_message(incoming, callback.data)
 
                     if bot_message:
                         self._parent._log_incoming_message(bot_message)
-                        # 调用訊息處理回调
+                        # 呼叫訊息處理回调
                         response = self._parent._on_message(bot_message)
                         if inspect.isawaitable(response):
                             response = await response
 
                         # 发送回复
                         if response and response.text:
-                            # 构建 @使用者 前缀（群聊场景下需要在文本中包含 @使用者名）
+                            # 构建 @使用者 前綴（群聊場景下需要在文本中包含 @使用者名）
                             if response.at_user and incoming.sender_nick:
                                 if response.markdown:
                                     self.reply_markdown(
@@ -136,13 +136,13 @@ class DingtalkStreamHandler:
         try:
             raw_data = dict(raw_data or {})
 
-            # 获取訊息内容
+            # 獲取訊息内容
             raw_content = incoming.text.content if incoming.text else ''
 
             # 提取命令（去除 @机器人）
             content = self._extract_command(raw_content)
 
-            # 会话类型
+            # 會話类型
             conversation_type = getattr(incoming, 'conversation_type', None)
             if conversation_type == '1':
                 chat_type = ChatType.PRIVATE
@@ -193,7 +193,7 @@ class DingtalkStreamClient:
     """
     钉钉 Stream 模式客户端
 
-    封装 dingtalk-stream SDK，提供简单的啟動接口。
+    封装 dingtalk-stream SDK，提供簡單的啟動介面。
 
     使用方式：
         client = DingtalkStreamClient()
@@ -210,8 +210,8 @@ class DingtalkStreamClient:
     ):
         """
         Args:
-            client_id: 应用 AppKey（不传则从配置读取）
-            client_secret: 应用 AppSecret（不传则从配置读取）
+            client_id: 应用 AppKey（不传则从配置讀取）
+            client_secret: 应用 AppSecret（不传则从配置讀取）
         """
         if not DINGTALK_STREAM_AVAILABLE:
             raise ImportError(
@@ -278,7 +278,7 @@ class DingtalkStreamClient:
         """
         在后台執行緒啟動 Stream 客户端（非阻塞）
 
-        适用于与其他服務（如 WebUI）同时執行的场景。
+        适用于与其他服務（如 WebUI）同时執行的場景。
         """
         if self._background_thread and self._background_thread.is_alive():
             logger.warning("[DingTalk Stream] 客户端已在執行")
@@ -294,14 +294,14 @@ class DingtalkStreamClient:
         logger.info("[DingTalk Stream] 后台客户端已啟動")
 
     def _run_in_background(self) -> None:
-        """后台執行（處理异常和重连）"""
+        """后台執行（處理例外和重连）"""
         import time
 
         while self._running:
             try:
                 self.start()
             except Exception as e:
-                logger.error(f"[DingTalk Stream] 執行异常: {e}")
+                logger.error(f"[DingTalk Stream] 執行例外: {e}")
                 if self._running:
                     logger.info("[DingTalk Stream] 5 秒后重连...")
                     time.sleep(5)
@@ -322,14 +322,14 @@ _stream_client: Optional[DingtalkStreamClient] = None
 
 
 def get_dingtalk_stream_client() -> Optional[DingtalkStreamClient]:
-    """获取全局 Stream 客户端实例"""
+    """獲取全局 Stream 客户端实例"""
     global _stream_client
 
     if _stream_client is None and DINGTALK_STREAM_AVAILABLE:
         try:
             _stream_client = DingtalkStreamClient()
         except (ImportError, ValueError) as e:
-            logger.warning(f"[DingTalk Stream] 无法建立客户端: {e}")
+            logger.warning(f"[DingTalk Stream] 無法建立客户端: {e}")
             return None
 
     return _stream_client

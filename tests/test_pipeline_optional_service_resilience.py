@@ -51,12 +51,12 @@ def test_search_service_init_failure_logs_traceback_and_failure_state(caplog):
     assert pipeline.search_service is None
 
     init_failure_records = [
-        record for record in caplog.records if "搜索服務初始化失败，将以无搜索模式執行" in record.message
+        record for record in caplog.records if "搜尋服務初始化失败，将以无搜尋模式執行" in record.message
     ]
     assert len(init_failure_records) == 1
     assert init_failure_records[0].exc_info is not None
-    assert "搜索服務未启用（初始化失败或依賴缺失）" in caplog.text
-    assert "搜索服務未启用（未配置搜索能力）" not in caplog.text
+    assert "搜尋服務未启用（初始化失败或依賴缺失）" in caplog.text
+    assert "搜尋服務未启用（未配置搜尋能力）" not in caplog.text
 
 
 def test_social_sentiment_init_failure_logs_traceback(caplog):

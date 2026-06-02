@@ -36,14 +36,14 @@ class AstrbotSender:
         self._webhook_verify_ssl = getattr(config, 'webhook_verify_ssl', True)
         
     def _is_astrbot_configured(self) -> bool:
-        """检查 AstrBot 配置是否完整（支援 Bot 或 Webhook）"""
+        """檢查 AstrBot 配置是否完整（支援 Bot 或 Webhook）"""
         # 只要配置了 URL，即视为可用
         url_ok = bool(self._astrbot_config['astrbot_url'])
         return url_ok
 
     def send_to_astrbot(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
         """
-        推送訊息到 AstrBot（通过适配器支援）
+        推送訊息到 AstrBot（通过適配器支援）
 
         Args:
             content: Markdown 格式的訊息内容
@@ -79,7 +79,7 @@ class AstrbotSender:
             signature =  ""
             timestamp = str(int(time.time()))
             if self._astrbot_config['astrbot_token']:
-                """计算請求签名"""
+                """计算請求簽名"""
                 payload_json = json.dumps(payload, sort_keys=True)
                 sign_data = f"{timestamp}.{payload_json}".encode('utf-8')
                 key = self._astrbot_config['astrbot_token']
@@ -106,5 +106,5 @@ class AstrbotSender:
                 logger.error(f"AstrBot 发送失败: {response.status_code} {response.text}")
                 return False
         except Exception as e:
-            logger.error(f"AstrBot 发送异常: {e}")
+            logger.error(f"AstrBot 发送例外: {e}")
             return False

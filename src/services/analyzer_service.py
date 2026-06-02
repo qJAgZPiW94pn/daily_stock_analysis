@@ -5,8 +5,8 @@ A股自选股智能分析系統 - 分析服務层
 ===================================
 
 职责：
-1. 封装核心分析逻辑，支援多调用方（CLI、WebUI、Bot）
-2. 提供清晰的API接口，不依賴于命令行參數
+1. 封装核心分析邏輯，支援多呼叫方（CLI、WebUI、Bot）
+2. 提供清晰的API介面，不依賴于命令行參數
 3. 支援依賴注入，便于測試和扩展
 4. 统一管理分析流程和配置
 """
@@ -33,7 +33,7 @@ def analyze_stock(
 
     Args:
         stock_code: 股票代碼
-        config: 配置对象（可選，默认使用单例）
+        config: 配置对象（可選，預設使用单例）
         full_report: 是否生成完整报告
         notifier: 通知服務（可選）
 
@@ -79,7 +79,7 @@ def analyze_stocks(
 
     Args:
         stock_codes: 股票代碼列表
-        config: 配置对象（可選，默认使用单例）
+        config: 配置对象（可選，預設使用单例）
         full_report: 是否生成完整报告
         notifier: 通知服務（可選）
 
@@ -103,10 +103,10 @@ def perform_market_review(
     notifier: Optional[NotificationService] = None,
 ) -> Optional[str]:
     """
-    执行大盤复盘
+    執行大盤复盘
 
     Args:
-        config: 配置对象（可選，默认使用单例）
+        config: 配置对象（可選，預設使用单例）
         notifier: 通知服務（可選）
 
     Returns:
@@ -115,7 +115,7 @@ def perform_market_review(
     if config is None:
         config = get_config()
 
-    # 建立分析流水线以获取analyzer和search_service
+    # 建立分析流水线以獲取analyzer和search_service
     pipeline = StockAnalysisPipeline(
         config=config,
         query_id=uuid.uuid4().hex,
@@ -125,7 +125,7 @@ def perform_market_review(
     # 使用提供的通知服務或建立新的
     review_notifier = notifier or pipeline.notifier
 
-    # 调用大盤复盘函數
+    # 呼叫大盤复盘函數
     return run_market_review(
         notifier=review_notifier,
         analyzer=pipeline.analyzer,

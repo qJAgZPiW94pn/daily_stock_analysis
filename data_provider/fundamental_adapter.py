@@ -40,7 +40,7 @@ _DIVIDEND_KEYWORD_MAP: Dict[str, List[str]] = {
     "ex_dividend_date": ["除权除息日", "除息日", "除权日", "除权除息", "除息日期"],
     "record_date": ["股权登记日", "登记日"],
     "announce_date": ["公告日期", "公告日", "实施公告日", "预案公告日"],
-    "report_date": ["报告期", "报告日期", "截止日期", "统计截止日期"],
+    "report_date": ["报告期", "报告日期", "截止日期", "統計截止日期"],
 }
 
 

@@ -30,7 +30,7 @@ class RootResponse(BaseModel):
 
 
 class HealthResponse(BaseModel):
-    """健康检查回應"""
+    """健康檢查回應"""
     
     status: str = Field(..., description="服務狀態", example="ok")
     timestamp: Optional[str] = Field(None, description="时间戳")

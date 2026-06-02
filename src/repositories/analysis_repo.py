@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-分析历史數據访问层
+分析历史數據訪問层
 ===================================
 
 职责：
 1. 封装分析历史數據的資料庫操作
-2. 提供 CRUD 接口
+2. 提供 CRUD 介面
 """
 
 import logging
@@ -20,23 +20,23 @@ logger = logging.getLogger(__name__)
 
 class AnalysisRepository:
     """
-    分析历史數據访问层
+    分析历史數據訪問层
     
     封装 AnalysisHistory 表的資料庫操作
     """
     
     def __init__(self, db_manager: Optional[DatabaseManager] = None):
         """
-        初始化數據访问层
+        初始化數據訪問层
         
         Args:
-            db_manager: 資料庫管理器（可選，默认使用单例）
+            db_manager: 資料庫管理器（可選，預設使用单例）
         """
         self.db = db_manager or DatabaseManager.get_instance()
     
     def get_by_query_id(self, query_id: str) -> Optional[AnalysisHistory]:
         """
-        根据 query_id 获取分析记录
+        根据 query_id 獲取分析记录
         
         Args:
             query_id: 查詢 ID
@@ -58,11 +58,11 @@ class AnalysisRepository:
         limit: int = 50
     ) -> List[AnalysisHistory]:
         """
-        获取分析记录列表
+        獲取分析记录列表
         
         Args:
-            code: 股票代碼筛选
-            days: 时间范围（天）
+            code: 股票代碼篩選
+            days: 时间範圍（天）
             limit: 傳回数量限制
             
         Returns:
@@ -75,7 +75,7 @@ class AnalysisRepository:
                 limit=limit
             )
         except Exception as e:
-            logger.error(f"获取分析列表失败: {e}")
+            logger.error(f"獲取分析列表失败: {e}")
             return []
     
     def save(
@@ -113,11 +113,11 @@ class AnalysisRepository:
     
     def count_by_code(self, code: str, days: int = 30) -> int:
         """
-        统计指定股票的分析记录数
+        統計指定股票的分析记录数
         
         Args:
             code: 股票代碼
-            days: 时间范围（天）
+            days: 时间範圍（天）
             
         Returns:
             记录数量
@@ -126,5 +126,5 @@ class AnalysisRepository:
             records = self.db.get_analysis_history(code=code, days=days, limit=1000)
             return len(records)
         except Exception as e:
-            logger.error(f"统计分析记录失败: {e}")
+            logger.error(f"統計分析记录失败: {e}")
             return 0

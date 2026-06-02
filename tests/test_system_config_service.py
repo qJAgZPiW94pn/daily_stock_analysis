@@ -2163,7 +2163,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
             if "SCHEDULE_TIME=09:30 已写入 .env" in warning
         )
 
-        self.assertIn("已经以 schedule 模式執行", schedule_time_warning)
+        self.assertIn("已經以 schedule 模式執行", schedule_time_warning)
         self.assertIn("自动重建 daily job", schedule_time_warning)
         self.assertIn("不会啟動 scheduler", schedule_time_warning)
         self.assertNotIn("重啟当前程式", schedule_time_warning)
@@ -2200,7 +2200,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         )
 
         self.assertIn("啟動期监听配置", bind_warning)
-        self.assertIn("不会因为本次保存重新绑定监听地址或端口", bind_warning)
+        self.assertIn("不会因为本次保存重新綁定监听地址或端口", bind_warning)
         self.assertIn("重啟当前程式、Docker 容器或服務管理器后生效", bind_warning)
 
     def test_update_warns_when_runtime_model_references_are_cleared(self) -> None:
@@ -2235,7 +2235,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
             for warning in response["warnings"]
             if "已同步清理失效的執行时模型引用" in warning
         )
-        self.assertIn("主模型 / Agent 主模型 / Vision 模型 / 备选模型中的失效项", warning)
+        self.assertIn("主模型 / Agent 主模型 / Vision 模型 / 備選模型中的失效项", warning)
         self.assertIn("桌面端匯出備份", warning)
 
     def test_import_desktop_env_restores_runtime_models_after_cleanup(self) -> None:

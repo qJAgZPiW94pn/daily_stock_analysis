@@ -1017,7 +1017,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
                 )
 
         self.assertEqual(ctx.exception.status_code, 400)
-        self.assertEqual(ctx.exception.detail["message"], "请输入有效的股票代碼或股票名称")
+        self.assertEqual(ctx.exception.detail["message"], "请輸入有效的股票代碼或股票名称")
         resolve_mock.assert_not_called()
 
     def test_trigger_analysis_rejects_unresolvable_alpha_garbage(self) -> None:
@@ -1039,7 +1039,7 @@ class AnalysisApiContractTestCase(unittest.TestCase):
                 )
 
         self.assertEqual(ctx.exception.status_code, 400)
-        self.assertEqual(ctx.exception.detail["message"], "请输入有效的股票代碼或股票名称")
+        self.assertEqual(ctx.exception.detail["message"], "请輸入有效的股票代碼或股票名称")
         queue_mock.assert_not_called()
 
     def test_trigger_analysis_accepts_us_suffix_code(self) -> None:

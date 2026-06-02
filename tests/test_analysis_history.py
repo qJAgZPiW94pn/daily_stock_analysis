@@ -5,8 +5,8 @@ A股自选股智能分析系統 - 分析历史存储单元測試
 ===================================
 
 职责：
-1. 验证分析历史保存逻辑
-2. 验证上下文快照保存开关
+1. 驗證分析历史保存邏輯
+2. 驗證上下文快照保存开关
 """
 
 import json
@@ -779,7 +779,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertNotIn("🚨Safe", markdown)
 
     def test_delete_analysis_history_records_also_cleans_backtests(self) -> None:
-        """刪除历史记录时应一并清理关联回测结果。"""
+        """刪除历史记录时应一并清理關聯回测结果。"""
         record_id = self._save_history("query_delete_001")
 
         with self.db.session_scope() as session:

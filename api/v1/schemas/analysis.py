@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-分析相关模型
+分析相關模型
 ===================================
 
 职责：
 1. 定义分析請求和回應模型
 2. 定义工作狀態模型
-3. 定义非同步工作隊列相关模型
+3. 定义非同步工作隊列相關模型
 """
 
 from typing import Optional, List, Any
@@ -45,7 +45,7 @@ class AnalyzeRequest(BaseModel):
     )
     force_refresh: bool = Field(
         False,
-        description="是否强制刷新（忽略快取）"
+        description="是否強制刷新（忽略快取）"
     )
     async_mode: bool = Field(
         False,
@@ -58,12 +58,12 @@ class AnalyzeRequest(BaseModel):
     )
     original_query: Optional[str] = Field(
         None,
-        description="使用者原始输入（如茅台、gzmt、600519）",
+        description="使用者原始輸入（如茅台、gzmt、600519）",
         example="茅台"
     )
     selection_source: Optional[str] = Field(
         None,
-        description="股票选择来源：manual(手动输入) | autocomplete(自动补全) | import(匯入) | image(图片识别)",
+        description="股票选择来源：manual(手动輸入) | autocomplete(自动补全) | import(匯入) | image(图片识别)",
         pattern=SELECTION_SOURCE_PATTERN,
         example="autocomplete"
     )
@@ -74,7 +74,7 @@ class AnalyzeRequest(BaseModel):
     skills: Optional[List[str]] = Field(
         None,
         validation_alias=AliasChoices("skills", "strategies"),
-        description="本次分析使用的策略 skill ID 列表；兼容 legacy strategies 欄位",
+        description="本次分析使用的策略 skill ID 列表；相容 legacy strategies 欄位",
         example=["bull_trend", "growth_quality"]
     )
 
@@ -111,7 +111,7 @@ class MarketReviewAccepted(BaseModel):
     send_notification: bool = Field(..., description="是否发送通知")
     task_id: Optional[str] = Field(
         None,
-        description="工作 ID（仅当工作实际提交时傳回）",
+        description="工作 ID（仅当工作實際提交时傳回）",
     )
 
 
@@ -260,7 +260,7 @@ class TaskStatus(BaseModel):
         description="錯誤資訊（仅在 failed 时存在）"
     )
     stock_name: Optional[str] = Field(None, description="股票名称")
-    original_query: Optional[str] = Field(None, description="使用者原始输入")
+    original_query: Optional[str] = Field(None, description="使用者原始輸入")
     selection_source: Optional[str] = Field(
         None,
         description="选择来源",
@@ -300,10 +300,10 @@ class TaskInfo(BaseModel):
     message: Optional[str] = Field(None, description="狀態訊息")
     report_type: str = Field("detailed", description="报告类型")
     created_at: str = Field(..., description="建立时间")
-    started_at: Optional[str] = Field(None, description="开始执行时间")
+    started_at: Optional[str] = Field(None, description="开始執行时间")
     completed_at: Optional[str] = Field(None, description="完成时间")
     error: Optional[str] = Field(None, description="錯誤資訊（仅在 failed 时存在）")
-    original_query: Optional[str] = Field(None, description="使用者原始输入")
+    original_query: Optional[str] = Field(None, description="使用者原始輸入")
     selection_source: Optional[str] = Field(
         None,
         description="选择来源",

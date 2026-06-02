@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-FastAPI 应用工厂模块
+FastAPI 应用工厂模組
 ===================================
 
 职责：
 1. 建立和配置 FastAPI 应用实例
 2. 配置 CORS 中间件
-3. 注册路由和异常處理器
+3. 注册路由和例外處理器
 4. 托管前端静态文件（生产模式）
 
 使用方式：
@@ -143,12 +143,12 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
     建立并配置 FastAPI 应用实例
     
     Args:
-        static_dir: 静态文件目錄路徑（可選，默认为项目根目錄下的 static）
+        static_dir: 静态文件目錄路徑（可選，預設为项目根目錄下的 static）
         
     Returns:
         配置完成的 FastAPI 应用实例
     """
-    # 默认静态文件目錄
+    # 預設静态文件目錄
     if static_dir is None:
         static_dir = Path(__file__).parent.parent / "static"
     
@@ -157,10 +157,10 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
         title="Daily Stock Analysis API",
         description=(
             "A股/港股/美股自选股智能分析系統 API\n\n"
-            "## 功能模块\n"
+            "## 功能模組\n"
             "- 股票分析：触发 AI 智能分析\n"
             "- 历史记录：查詢历史分析报告\n"
-            "- 股票數據：获取行情數據\n\n"
+            "- 股票數據：獲取行情數據\n\n"
             "## 認證方式\n"
             "支援可選的執行时認證（通过 WebUI 设置页面启用/關閉）"
         ),
@@ -179,12 +179,12 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
         "http://127.0.0.1:3000",
     ]
     
-    # 从环境變數添加额外的允许来源
+    # 从環境變數添加额外的允許来源
     extra_origins = os.environ.get("CORS_ORIGINS", "")
     if extra_origins:
         allowed_origins.extend([o.strip() for o in extra_origins.split(",") if o.strip()])
     
-    # 允许所有来源（开发/演示用）
+    # 允許所有来源（开发/演示用）
     allow_all_origins = os.environ.get("CORS_ALLOW_ALL", "").lower() == "true"
     allow_credentials = not allow_all_origins
     if allow_all_origins:
@@ -208,7 +208,7 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
     add_error_handlers(app)
     
     # ============================================================
-    # 根路由和健康检查
+    # 根路由和健康檢查
     # ============================================================
     
     has_frontend = static_dir.exists() and (static_dir / "index.html").exists()
@@ -260,11 +260,11 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
         "/api/health",
         response_model=HealthResponse,
         tags=["Health"],
-        summary="健康检查",
-        description="用于负载均衡器或監控系統检查服務狀態"
+        summary="健康檢查",
+        description="用于负载均衡器或監控系統檢查服務狀態"
     )
     async def health_check() -> HealthResponse:
-        """健康检查接口"""
+        """健康檢查介面"""
         return HealthResponse(
             status="ok",
             timestamp=datetime.now().isoformat()
@@ -336,5 +336,5 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
     return app
 
 
-# 默认应用实例（供 uvicorn 直接使用）
+# 預設应用实例（供 uvicorn 直接使用）
 app = create_app()

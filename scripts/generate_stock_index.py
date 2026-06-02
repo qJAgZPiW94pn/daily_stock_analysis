@@ -142,7 +142,7 @@ def market_to_suffix(market: str) -> str:
         Market suffix
     """
     suffix_map = {
-        'CN': 'SH',  # 简化處理，默认上海
+        'CN': 'SH',  # 简化處理，預設上海
         'HK': 'HK',
         'US': 'US',
         'INDEX': 'SH',
@@ -262,20 +262,20 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  python3 scripts/generate_stock_index.py              # 默认：生成索引文件
-  python3 scripts/generate_stock_index.py --test       # 測試模式：只读取不写入
-  python3 scripts/generate_stock_index.py --test -v    # 測試模式 + 显示详细數據
+  python3 scripts/generate_stock_index.py              # 預設：生成索引文件
+  python3 scripts/generate_stock_index.py --test       # 測試模式：只讀取不写入
+  python3 scripts/generate_stock_index.py --test -v    # 測試模式 + 顯示詳細數據
         """
     )
     parser.add_argument(
         '--test', '-t',
         action='store_true',
-        help='測試模式：只读取和验证數據，不写入文件'
+        help='測試模式：只讀取和驗證數據，不写入文件'
     )
     parser.add_argument(
         '--verbose', '-v',
         action='store_true',
-        help='详细模式：显示前10条數據预览'
+        help='詳細模式：顯示前10条數據预览'
     )
     args = parser.parse_args()
 
@@ -285,14 +285,14 @@ def main():
     index = generate_stock_index_from_map()
     print(f"共生成 {len(index)} 条索引")
 
-    # 按市场统计
+    # 按市场統計
     market_stats = {}
     for item in index:
         market = item['market']
         market_stats[market] = market_stats.get(market, 0) + 1
     print(f"市场分布：{market_stats}")
 
-    # 压缩格式（减少文件大小）
+    # 壓縮格式（减少文件大小）
     compressed = compress_index(index)
 
     # 測試模式：不写入文件
@@ -308,7 +308,7 @@ def main():
         print("\n✓ 測試通过，數據格式正确")
         return 0
 
-    # 输出路徑
+    # 輸出路徑
     output_path = Path(__file__).parent.parent / "apps" / "dsa-web" / "public" / "stocks.index.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -327,10 +327,10 @@ def main():
     print(f"索引已生成：{output_path}")
     print(f"文件大小：{file_size / 1024:.2f} KB")
 
-    # 验证文件可读
+    # 驗證文件可读
     with open(output_path, 'r', encoding='utf-8') as f:
         test_data = json.load(f)
-        print(f"验证通过：{len(test_data)} 条记录")
+        print(f"驗證通过：{len(test_data)} 条记录")
 
     return 0
 

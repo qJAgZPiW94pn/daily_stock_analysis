@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-历史记录接口
+历史记录介面
 ===================================
 
 职责：
-1. 提供 GET /api/v1/history 历史列表查詢接口
-2. 提供 GET /api/v1/history/{query_id} 历史详情查詢接口
+1. 提供 GET /api/v1/history 历史列表查詢介面
+2. 提供 GET /api/v1/history/{query_id} 历史详情查詢介面
 """
 
 import logging
@@ -57,11 +57,11 @@ router = APIRouter()
         200: {"description": "历史记录列表"},
         500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
-    summary="获取历史分析列表",
-    description="分页获取历史分析记录摘要，支援按股票代碼和日期范围筛选"
+    summary="獲取历史分析列表",
+    description="分页獲取历史分析记录摘要，支援按股票代碼和日期範圍篩選"
 )
 def get_history_list(
-    stock_code: Optional[str] = Query(None, description="股票代碼筛选"),
+    stock_code: Optional[str] = Query(None, description="股票代碼篩選"),
     start_date: Optional[str] = Query(None, description="开始日期 (YYYY-MM-DD)"),
     end_date: Optional[str] = Query(None, description="结束日期 (YYYY-MM-DD)"),
     page: int = Query(1, ge=1, description="页码（从 1 开始）"),
@@ -69,12 +69,12 @@ def get_history_list(
     db_manager: DatabaseManager = Depends(get_database_manager)
 ) -> HistoryListResponse:
     """
-    获取历史分析列表
+    獲取历史分析列表
     
-    分页获取历史分析记录摘要，支援按股票代碼和日期范围筛选
+    分页獲取历史分析记录摘要，支援按股票代碼和日期範圍篩選
     
     Args:
-        stock_code: 股票代碼筛选
+        stock_code: 股票代碼篩選
         start_date: 开始日期
         end_date: 结束日期
         page: 页码
@@ -87,7 +87,7 @@ def get_history_list(
     try:
         service = HistoryService(db_manager)
         
-        # 使用 def 而非 async def，FastAPI 自动在執行緒池中执行
+        # 使用 def 而非 async def，FastAPI 自动在執行緒池中執行
         result = service.get_history_list(
             stock_code=stock_code,
             start_date=start_date,
@@ -96,7 +96,7 @@ def get_history_list(
             limit=limit
         )
         
-        # 转换为回應模型
+        # 轉換为回應模型
         items = [
             HistoryItem(
                 id=item.get("id"),
@@ -182,18 +182,18 @@ def delete_history_records(
         404: {"description": "报告不存在", "model": ErrorResponse},
         500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
-    summary="获取历史报告详情",
-    description="根据分析历史记录 ID 或 query_id 获取完整的历史分析报告"
+    summary="獲取历史报告详情",
+    description="根据分析历史记录 ID 或 query_id 獲取完整的历史分析报告"
 )
 def get_history_detail(
     record_id: str,
     db_manager: DatabaseManager = Depends(get_database_manager)
 ) -> AnalysisReport:
     """
-    获取历史报告详情
+    獲取历史报告详情
     
-    根据分析历史记录主键 ID 或 query_id 获取完整的历史分析报告。
-    优先尝试按主键 ID（整数）查詢，若參數不是合法整数则按 query_id 查詢。
+    根据分析历史记录主键 ID 或 query_id 獲取完整的历史分析报告。
+    優先嘗試按主键 ID（整数）查詢，若參數不是合法整数则按 query_id 查詢。
     
     Args:
         record_id: 分析历史记录主键 ID（整数）或 query_id（字符串）
@@ -227,7 +227,7 @@ def get_history_detail(
         change_pct = None
         context_snapshot = result.get("context_snapshot")
         if context_snapshot and isinstance(context_snapshot, dict):
-            # 优先从 enhanced_context.realtime 获取
+            # 優先从 enhanced_context.realtime 獲取
             enhanced_context = context_snapshot.get("enhanced_context") or {}
             realtime = enhanced_context.get("realtime") or {}
             current_price = realtime.get("price")
@@ -351,8 +351,8 @@ def get_history_detail(
         200: {"description": "新闻情报列表"},
         500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
-    summary="获取历史报告关联新闻",
-    description="根据分析历史记录 ID 获取关联的新闻情报列表（为空也傳回 200）"
+    summary="獲取历史报告關聯新闻",
+    description="根据分析历史记录 ID 獲取關聯的新闻情报列表（为空也傳回 200）"
 )
 def get_history_news(
     record_id: str,
@@ -360,9 +360,9 @@ def get_history_news(
     db_manager: DatabaseManager = Depends(get_database_manager)
 ) -> NewsIntelResponse:
     """
-    获取历史报告关联新闻
+    獲取历史报告關聯新闻
 
-    根据分析历史记录 ID 或 query_id 获取关联的新闻情报列表。
+    根据分析历史记录 ID 或 query_id 獲取關聯的新闻情报列表。
     在内部完成 record_id → query_id 的解析。
 
     Args:
@@ -410,15 +410,15 @@ def get_history_news(
         404: {"description": "报告不存在", "model": ErrorResponse},
         500: {"description": "服務器錯誤", "model": ErrorResponse},
     },
-    summary="获取历史报告 Markdown 格式",
-    description="根据分析历史记录 ID 获取 Markdown 格式的完整分析报告"
+    summary="獲取历史报告 Markdown 格式",
+    description="根据分析历史记录 ID 獲取 Markdown 格式的完整分析报告"
 )
 def get_history_markdown(
     record_id: str,
     db_manager: DatabaseManager = Depends(get_database_manager)
 ) -> MarkdownReportResponse:
     """
-    获取历史报告的 Markdown 格式内容
+    獲取历史报告的 Markdown 格式内容
 
     根据分析历史记录 ID 或 query_id 生成与推送通知格式一致的 Markdown 报告。
 
@@ -447,12 +447,12 @@ def get_history_markdown(
             }
         )
     except Exception as e:
-        logger.error(f"获取 Markdown 报告失败: {e}", exc_info=True)
+        logger.error(f"獲取 Markdown 报告失败: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
             detail={
                 "error": "internal_error",
-                "message": f"获取 Markdown 报告失败: {str(e)}"
+                "message": f"獲取 Markdown 报告失败: {str(e)}"
             }
         )
 

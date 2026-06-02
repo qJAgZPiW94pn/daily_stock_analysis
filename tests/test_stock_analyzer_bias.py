@@ -119,7 +119,7 @@ class StockAnalyzerBiasTestCase(unittest.TestCase):
 
     @patch("src.stock_analyzer.get_config")
     def test_strong_trend_relaxed_threshold(self, mock_get_config: MagicMock) -> None:
-        """STRONG_BULL + trend_strength=75 + bias=6% -> '可轻仓追踪' (effective=7.5%)."""
+        """STRONG_BULL + trend_strength=75 + bias=6% -> '可轻仓追蹤' (effective=7.5%)."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.STRONG_BULL,
@@ -127,7 +127,7 @@ class StockAnalyzerBiasTestCase(unittest.TestCase):
             bias_ma5=6.0,
         )
         self.analyzer._generate_signal(result)
-        self._assert_contains(result.signal_reasons, "可轻仓追踪")
+        self._assert_contains(result.signal_reasons, "可轻仓追蹤")
         self._assert_not_contains(result.risk_factors, "严禁追高")
 
     @patch("src.stock_analyzer.get_config")

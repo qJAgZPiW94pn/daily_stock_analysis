@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-A股自选股智能分析系統 - 配置管理模块
+A股自选股智能分析系統 - 配置管理模組
 ===================================
 
 职责：
 1. 使用单例模式管理全局配置
 2. 从 .env 文件加载敏感配置
-3. 提供类型安全的配置访问接口
+3. 提供类型安全的配置訪問介面
 """
 
 import json
@@ -514,10 +514,10 @@ class Config:
     """
     系統配置类 - 单例模式
     
-    设计说明：
+    設計说明：
     - 使用 dataclass 简化配置属性定义
-    - 所有配置项从环境變數读取，支援默认值
-    - 类方法 get_instance() 实现单例访问
+    - 所有配置项从環境變數讀取，支援預設值
+    - 类方法 get_instance() 實現单例訪問
     """
     
     # === 自选股配置 ===
@@ -564,26 +564,26 @@ class Config:
     # Legacy single-key fields (kept for backward compatibility; gemini_api_keys[0] when set)
     gemini_api_key: Optional[str] = None
     gemini_model: str = "gemini-3.1-pro-preview"  # 主模型
-    gemini_model_fallback: str = "gemini-3-flash-preview"  # 备选模型
-    gemini_temperature: float = 0.7  # 温度參數（0.0-2.0，控制输出随机性，默认0.7）
+    gemini_model_fallback: str = "gemini-3-flash-preview"  # 備選模型
+    gemini_temperature: float = 0.7  # 温度參數（0.0-2.0，控制輸出隨機性，預設0.7）
 
     # Gemini API 請求配置（防止 429 限流）
     gemini_request_delay: float = 2.0  # 請求间隔（秒）
-    gemini_max_retries: int = 5  # 最大重试次数
-    gemini_retry_delay: float = 5.0  # 重试基础延时（秒）
+    gemini_max_retries: int = 5  # 最大重試次数
+    gemini_retry_delay: float = 5.0  # 重試基礎延时（秒）
 
-    # Anthropic Claude API（备选，当 Gemini 不可用时使用）
+    # Anthropic Claude API（備選，当 Gemini 不可用时使用）
     anthropic_api_key: Optional[str] = None
     anthropic_model: str = "claude-sonnet-4-6"  # Claude model name
     anthropic_temperature: float = 0.7  # Anthropic temperature (0.0-1.0, default 0.7)
     anthropic_max_tokens: int = 8192  # Max tokens for Anthropic responses
 
-    # OpenAI 兼容 API（备选，当 Gemini/Anthropic 不可用时使用）
+    # OpenAI 相容 API（備選，当 Gemini/Anthropic 不可用时使用）
     openai_api_key: Optional[str] = None
     openai_base_url: Optional[str] = None  # 如: https://api.openai.com/v1
-    openai_model: str = "gpt-5.5"  # OpenAI 兼容模型名称
+    openai_model: str = "gpt-5.5"  # OpenAI 相容模型名称
     openai_vision_model: Optional[str] = None  # Deprecated: use VISION_MODEL instead
-    openai_temperature: float = 0.7  # OpenAI 温度參數（0.0-2.0，默认0.7）
+    openai_temperature: float = 0.7  # OpenAI 温度參數（0.0-2.0，預設0.7）
 
     # === Vision 配置 ===
     # VISION_MODEL: litellm model string used for image understanding calls.
@@ -592,7 +592,7 @@ class Config:
     # VISION_PROVIDER_PRIORITY: comma-separated provider order for Vision fallback.
     vision_provider_priority: str = "gemini,anthropic,openai"
 
-    # === 搜索引擎配置（支援多 Key 负载均衡）===
+    # === 搜尋引擎配置（支援多 Key 负载均衡）===
     anspire_api_keys: List[str] = field(default_factory=list)  # Anspire Search API Keys
     bocha_api_keys: List[str] = field(default_factory=list)  # Bocha API Keys
     minimax_api_keys: List[str] = field(default_factory=list)  # MiniMax API Keys
@@ -606,10 +606,10 @@ class Config:
     social_sentiment_api_key: Optional[str] = None
     social_sentiment_api_url: str = "https://api.adanos.org"
 
-    # === 新闻与分析筛选配置 ===
+    # === 新闻与分析篩選配置 ===
     news_max_age_days: int = 3   # 新闻最大时效（天）
     news_strategy_profile: str = "short"  # 新闻窗口策略档位：ultra_short/short/medium/long
-    bias_threshold: float = 5.0  # 乖离率阈值（%），超过此值提示不追高
+    bias_threshold: float = 5.0  # 乖离率閾值（%），超过此值提示不追高
 
     # === Agent 模式配置 ===
     agent_litellm_model: str = ""  # Optional Agent-only primary model; empty inherits LITELLM_MODEL
@@ -639,17 +639,17 @@ class Config:
     
     # 飞书 Webhook
     feishu_webhook_url: Optional[str] = None
-    feishu_webhook_secret: Optional[str] = None  # 自定义机器人签名密钥（可選）
-    feishu_webhook_keyword: Optional[str] = None  # 自定义机器人关键词（可選）
+    feishu_webhook_secret: Optional[str] = None  # 自定义机器人簽名密钥（可選）
+    feishu_webhook_keyword: Optional[str] = None  # 自定义机器人關鍵词（可選）
     
     # Telegram 配置（需要同时配置 Bot Token 和 Chat ID）
-    telegram_bot_token: Optional[str] = None  # Bot Token（@BotFather 获取）
+    telegram_bot_token: Optional[str] = None  # Bot Token（@BotFather 獲取）
     telegram_chat_id: Optional[str] = None  # Chat ID
     telegram_message_thread_id: Optional[str] = None  # Topic ID (Message Thread ID) for groups
     
     # 電郵配置（只需邮箱和授權码，SMTP 自动识别）
     email_sender: Optional[str] = None  # 发件人邮箱
-    email_sender_name: str = "daily_stock_analysis股票分析助手"  # 发件人显示名称
+    email_sender_name: str = "daily_stock_analysis股票分析助手"  # 发件人顯示名称
     email_password: Optional[str] = None  # 邮箱密碼/授權码
     email_receivers: List[str] = field(default_factory=list)  # 收件人列表（留空则发给自己）
 
@@ -658,7 +658,7 @@ class Config:
     stock_email_groups: List[Tuple[List[str], List[str]]] = field(default_factory=list)
 
     # Pushover 配置（手机/桌面推送通知）
-    pushover_user_key: Optional[str] = None  # 使用者 Key（https://pushover.net 获取）
+    pushover_user_key: Optional[str] = None  # 使用者 Key（https://pushover.net 獲取）
     pushover_api_token: Optional[str] = None  # 应用 API Token
 
     # ntfy 配置（完整 topic endpoint，例如 https://ntfy.sh/my-topic）
@@ -674,7 +674,7 @@ class Config:
     custom_webhook_urls: List[str] = field(default_factory=list)
     custom_webhook_bearer_token: Optional[str] = None  # Bearer Token（用于需要認證的 Webhook）
     custom_webhook_body_template: Optional[str] = None  # 自定义 Webhook JSON body 模板
-    webhook_verify_ssl: bool = True  # Webhook HTTPS 证书校验，false 可支援自签名（有 MITM 風險）
+    webhook_verify_ssl: bool = True  # Webhook HTTPS 证书校验，false 可支援自簽名（有 MITM 風險）
 
     # Discord 通知配置
     discord_bot_token: Optional[str] = None  # Discord Bot Token
@@ -696,7 +696,7 @@ class Config:
     notification_alert_channels: List[str] = field(default_factory=list)
     notification_system_error_channels: List[str] = field(default_factory=list)
 
-    # 通知降噪机制（Issue #1200 P4）：默认全部關閉，仅对静态通知渠道生效
+    # 通知降噪機制（Issue #1200 P4）：預設全部關閉，仅对静态通知渠道生效
     notification_dedup_ttl_seconds: int = 0
     notification_cooldown_seconds: int = 0
     notification_quiet_hours: str = ""
@@ -724,7 +724,7 @@ class Config:
 
     # PushPlus 推送配置
     pushplus_token: Optional[str] = None  # PushPlus Token
-    pushplus_topic: Optional[str] = None  # PushPlus 群組编码（一对多推送）
+    pushplus_topic: Optional[str] = None  # PushPlus 群組編碼（一对多推送）
 
     # Server酱3 推送配置
     serverchan3_sendkey: Optional[str] = None  # Server酱3 SendKey
@@ -736,14 +736,14 @@ class Config:
     merge_email_notification: bool = False
 
     # 訊息长度限制（字节）- 超长自动分批发送
-    feishu_max_bytes: int = 20000  # 飞书限制约 20KB，默认 20000 字节
-    wechat_max_bytes: int = 4000   # 企业微信限制 4096 字节，默认 4000 字节
-    discord_max_words: int = 2000  # Discord 限制 2000 字，默认 2000 字
-    wechat_msg_type: str = "markdown"  # 企业微信訊息类型，默认 markdown 类型
+    feishu_max_bytes: int = 20000  # 飞书限制约 20KB，預設 20000 字节
+    wechat_max_bytes: int = 4000   # 企业微信限制 4096 字节，預設 4000 字节
+    discord_max_words: int = 2000  # Discord 限制 2000 字，預設 2000 字
+    wechat_msg_type: str = "markdown"  # 企业微信訊息类型，預設 markdown 类型
 
     # Markdown 转图片（Issue #289）：对不支援 Markdown 的渠道以图片发送
     markdown_to_image_channels: List[str] = field(default_factory=list)  # 逗号分隔：telegram,wechat,custom,email
-    markdown_to_image_max_chars: int = 15000  # 超过此长度不转换，避免超大图片
+    markdown_to_image_max_chars: int = 15000  # 超过此长度不轉換，避免超大图片
     md2img_engine: str = "wkhtmltoimage"  # wkhtmltoimage | markdown-to-file (Issue #455, better emoji support)
 
     # 实时行情预取（Issue #455）：设为 false 可禁用，避免 efinance/akshare_em 全市场拉取
@@ -768,7 +768,7 @@ class Config:
     
     # === 日誌配置 ===
     log_dir: str = "./logs"  # 日誌文件目錄
-    log_level: str = "INFO"  # 日誌级别
+    log_level: str = "INFO"  # 日誌級別
     
     # === 系統配置 ===
     max_workers: int = 3  # 低並行防封禁
@@ -779,44 +779,44 @@ class Config:
     # === 定时工作配置 ===
     schedule_enabled: bool = False            # 是否启用定时工作
     schedule_time: str = "18:00"              # 每日推送时间（HH:MM 格式）
-    schedule_run_immediately: bool = True     # 啟動时是否立即执行一次
-    run_immediately: bool = True              # 啟動时是否立即执行一次（非定时模式）
+    schedule_run_immediately: bool = True     # 啟動时是否立即執行一次
+    run_immediately: bool = True              # 啟動时是否立即執行一次（非定时模式）
     market_review_enabled: bool = True        # 是否启用大盤复盘
     # 大盤复盘市场区域：cn(A股)、hk(港股)、us(美股)、both(三市场)，us 适合仅关注美股的使用者
     market_review_region: str = "cn"
     market_review_color_scheme: str = "green_up"
-    # 交易日检查：默认启用，非交易日略過执行；设为 false 或 --force-run 可强制执行（Issue #373）
+    # 交易日檢查：預設启用，非交易日略過執行；设为 false 或 --force-run 可強制執行（Issue #373）
     trading_day_check_enabled: bool = True
 
     # === 实时行情增强數據配置 ===
-    # 实时行情开关（關閉后使用历史收盤价进行分析）
+    # 实时行情开关（關閉后使用历史收盤价進行分析）
     enable_realtime_quote: bool = True
     # 盘中实时技术面：启用时用实时价计算 MA/多头排列（Issue #234）；關閉则用昨日收盤
     enable_realtime_technical_indicators: bool = True
-    # 筹码分布开关（该接口不稳定，云端部署建议關閉）
+    # 筹码分布开关（该介面不稳定，云端部署建议關閉）
     enable_chip_distribution: bool = True
-    # 东财接口补丁开关
+    # 东财介面补丁开关
     enable_eastmoney_patch: bool = False
-    # 实时行情數據源优先级（逗号分隔）
+    # 实时行情數據源優先级（逗号分隔）
     # 推荐顺序：tencent > akshare_sina > efinance > akshare_em > tushare
     # - tencent: 腾讯财经，有量比/换手率/市盈率等，单股查詢稳定（推荐）
     # - akshare_sina: 新浪财经，基本行情稳定，但无量比
-    # - efinance/akshare_em: 东财全量接口，數據最全但容易被封
-    # - tushare: Tushare Pro，需要2000积分，數據全面（付费使用者可优先使用）
+    # - efinance/akshare_em: 东财全量介面，數據最全但容易被封
+    # - tushare: Tushare Pro，需要2000积分，數據全面（付费使用者可優先使用）
     realtime_source_priority: str = "tencent,akshare_sina,efinance,akshare_em"
     # 实时行情快取时间（秒）
     realtime_cache_ttl: int = 600
-    # 熔断器冷却时间（秒）
+    # 熔斷器冷却时间（秒）
     circuit_breaker_cooldown: int = 300
 
-    # === 基本面聚合开关与降级保护 ===
+    # === 基本面聚合开关与降級保护 ===
     # 全局总开关；關閉时傳回 not_supported 并保持主流程无变化
     enable_fundamental_pipeline: bool = True
     # 基本面阶段总预算（秒）
     fundamental_stage_timeout_seconds: float = FUNDAMENTAL_STAGE_TIMEOUT_SECONDS_DEFAULT
-    # 单能力源调用逾時（秒）
+    # 单能力源呼叫逾時（秒）
     fundamental_fetch_timeout_seconds: float = 3.0
-    # 单能力失败重试次数（已包含首次）
+    # 单能力失败重試次数（已包含首次）
     fundamental_retry_max: int = 1
     # 基本面上下文短 TTL（秒）
     fundamental_cache_ttl_seconds: int = 120
@@ -834,15 +834,15 @@ class Config:
     # Discord 机器人狀態
     discord_bot_status: str = "A股智能分析 | /help"
 
-    # === 流控配置（防封禁关键參數）===
-    # Akshare 請求间隔范围（秒）
+    # === 流控配置（防封禁關鍵參數）===
+    # Akshare 請求间隔範圍（秒）
     akshare_sleep_min: float = 2.0
     akshare_sleep_max: float = 5.0
     
-    # Tushare 每分钟最大請求数（免费配额）
+    # Tushare 每分钟最大請求数（免费配額）
     tushare_rate_limit_per_minute: int = 80
     
-    # 重试配置
+    # 重試配置
     max_retries: int = 3
     retry_base_delay: float = 1.0
     retry_max_delay: float = 30.0
@@ -854,13 +854,13 @@ class Config:
     
     # === 机器人配置 ===
     bot_enabled: bool = True              # 是否启用机器人功能
-    bot_command_prefix: str = "/"         # 命令前缀
+    bot_command_prefix: str = "/"         # 命令前綴
     bot_rate_limit_requests: int = 10     # 频率限制：窗口内最大請求数
     bot_rate_limit_window: int = 60       # 频率限制：窗口时间（秒）
     bot_admin_users: List[str] = field(default_factory=list)  # 管理员使用者 ID 列表
     
     # 飞书机器人（事件订阅）- 已有 feishu_app_id, feishu_app_secret
-    feishu_verification_token: Optional[str] = None  # 事件订阅验证 Token
+    feishu_verification_token: Optional[str] = None  # 事件订阅驗證 Token
     feishu_encrypt_key: Optional[str] = None         # 訊息加密密钥（可選）
     feishu_stream_enabled: bool = False              # 是否启用 Stream 长連線模式（無需公网IP）
     
@@ -933,12 +933,12 @@ class Config:
     @classmethod
     def get_instance(cls) -> 'Config':
         """
-        获取配置单例实例
+        獲取配置单例实例
         
-        单例模式确保：
+        单例模式確保：
         1. 全局只有一个配置实例
-        2. 配置只从环境變數加载一次
-        3. 所有模块共享相同配置
+        2. 配置只从環境變數加载一次
+        3. 所有模組共享相同配置
         """
         if cls._instance is None:
             cls._instance = cls._load_from_env()
@@ -949,19 +949,19 @@ class Config:
         """
         从 .env 文件加载配置
         
-        加载优先级：
-        1. 大多数配置保持系統环境變數优先
-        2. WebUI 可写的執行期关键键优先复用持久化 `.env`，但保留啟動时显式程式环境變數的 override
-        3. 代碼中的默认值
+        加载優先级：
+        1. 大多数配置保持系統環境變數優先
+        2. WebUI 可写的執行期關鍵键優先复用持久化 `.env`，但保留啟動时显式程式環境變數的 override
+        3. 代碼中的預設值
         """
         cls._capture_bootstrap_runtime_env_overrides()
         preexisting_report_language = os.environ.get("REPORT_LANGUAGE")
 
-        # 确保环境變數已加载
+        # 確保環境變數已加载
         setup_env()
 
-        # === 智能代理配置 (关键修复) ===
-        # 如果配置了代理，自动设置 NO_PROXY 以排除国内數據源，避免行情获取失败
+        # === 智能代理配置 (關鍵修复) ===
+        # 如果配置了代理，自动设置 NO_PROXY 以排除国内數據源，避免行情獲取失败
         http_proxy = os.getenv('HTTP_PROXY') or os.getenv('http_proxy')
         if http_proxy:
             # 国内金融數據源域名列表
@@ -979,7 +979,7 @@ class Config:
                 '127.0.0.1'
             ]
 
-            # 获取现有的 no_proxy
+            # 獲取现有的 no_proxy
             current_no_proxy = os.getenv('NO_PROXY') or os.getenv('no_proxy') or ''
             existing_domains = current_no_proxy.split(',') if current_no_proxy else []
 
@@ -987,11 +987,11 @@ class Config:
             final_domains = list(set(existing_domains + domestic_domains))
             final_no_proxy = ','.join(filter(None, final_domains))
 
-            # 设置环境變數 (requests/urllib3/aiohttp 都会遵守此设置)
+            # 设置環境變數 (requests/urllib3/aiohttp 都会遵守此设置)
             os.environ['NO_PROXY'] = final_no_proxy
             os.environ['no_proxy'] = final_no_proxy
 
-            # 确保 HTTP_PROXY 也被正确设置（以防仅在 .env 中定义但未匯出）
+            # 確保 HTTP_PROXY 也被正确设置（以防仅在 .env 中定义但未匯出）
             os.environ['HTTP_PROXY'] = http_proxy
             os.environ['http_proxy'] = http_proxy
 
@@ -1014,7 +1014,7 @@ class Config:
             if (c or "").strip()
         ]
         
-        # 如果没有配置，使用默认的示例股票
+        # 如果没有配置，使用預設的示例股票
         if not stock_list:
             stock_list = ['600519', '000001', '300750']
         
@@ -1188,7 +1188,7 @@ class Config:
             configured_models=set(get_configured_llm_models(llm_model_list)),
         )
 
-        # 解析搜索引擎 API Keys（支援多个 key，逗号分隔）
+        # 解析搜尋引擎 API Keys（支援多个 key，逗号分隔）
         bocha_keys_str = os.getenv('BOCHA_API_KEYS', '')
         bocha_api_keys = [k.strip() for k in bocha_keys_str.split(',') if k.strip()]
 
@@ -1223,7 +1223,7 @@ class Config:
             default=True,
         )
 
-        # 企微訊息类型与最大字节数逻辑
+        # 企微訊息类型与最大字节数邏輯
         wechat_msg_type = os.getenv('WECHAT_MSG_TYPE', 'markdown')
         wechat_msg_type_lower = wechat_msg_type.lower()
         wechat_max_bytes_env = os.getenv('WECHAT_MAX_BYTES')
@@ -1235,7 +1235,7 @@ class Config:
                 minimum=1,
             )
         else:
-            # 未显式配置时，根据訊息类型选择默认字节数
+            # 未显式配置时，根据訊息类型选择預設字节数
             wechat_max_bytes = 2048 if wechat_msg_type_lower == 'text' else 4000
 
         # Preserve historical semantics for startup flags: only an explicit
@@ -1581,12 +1581,12 @@ class Config:
                 'ENABLE_REALTIME_TECHNICAL_INDICATORS', 'true'
             ).lower() == 'true',
             enable_chip_distribution=os.getenv('ENABLE_CHIP_DISTRIBUTION', 'true').lower() == 'true',
-            # 东财接口补丁开关
+            # 东财介面补丁开关
             enable_eastmoney_patch=os.getenv('ENABLE_EASTMONEY_PATCH', 'false').lower() == 'true',
-            # 实时行情數據源优先级：
+            # 实时行情數據源優先级：
             # - tencent: 腾讯财经，有量比/换手率/PE/PB等，单股查詢稳定（推荐）
             # - akshare_sina: 新浪财经，基本行情稳定，但无量比
-            # - efinance/akshare_em: 东财全量接口，數據最全但容易被封
+            # - efinance/akshare_em: 东财全量介面，數據最全但容易被封
             # - tushare: Tushare Pro，需要2000积分，數據全面
             realtime_source_priority=cls._resolve_realtime_source_priority(),
             realtime_cache_ttl=parse_env_int(os.getenv('REALTIME_CACHE_TTL'), 600, field_name='REALTIME_CACHE_TTL', minimum=0),
@@ -2092,7 +2092,7 @@ class Config:
         if v in ('cn', 'us', 'hk', 'both'):
             return v
         logging.getLogger(__name__).warning(
-            f"MARKET_REVIEW_REGION 配置值 '{value}' 无效，已回退为默认值 'cn'（合法值：cn / hk / us / both）"
+            f"MARKET_REVIEW_REGION 配置值 '{value}' 无效，已回退为預設值 'cn'（合法值：cn / hk / us / both）"
         )
         return 'cn'
 
@@ -2104,7 +2104,7 @@ class Config:
         if v in ('green_up', 'red_up'):
             return v
         logging.getLogger(__name__).warning(
-            "MARKET_REVIEW_COLOR_SCHEME 配置值 '%s' 无效，已回退为默认值 'green_up'（合法值：green_up / red_up）",
+            "MARKET_REVIEW_COLOR_SCHEME 配置值 '%s' 无效，已回退为預設值 'green_up'（合法值：green_up / red_up）",
             value,
         )
         return 'green_up'
@@ -2204,23 +2204,23 @@ class Config:
 
     def refresh_stock_list(self) -> None:
         """
-        热读取 STOCK_LIST 环境變數并更新配置中的自选股列表
+        热讀取 STOCK_LIST 環境變數并更新配置中的自选股列表
         
         支援两种配置方式：
-        1. .env 文件（本機开发、定时工作模式） - 修改后下次执行自动生效
-        2. 系統环境變數（GitHub Actions、Docker） - 啟動时固定，執行中不变
+        1. .env 文件（本機开发、定时工作模式） - 修改后下次執行自动生效
+        2. 系統環境變數（GitHub Actions、Docker） - 啟動时固定，執行中不变
         """
-        # 优先从 .env 文件读取最新配置，这样即使在容器环境中修改了 .env 文件，
-        # 也能获取到最新的股票列表配置
+        # 優先从 .env 文件讀取最新配置，这样即使在容器環境中修改了 .env 文件，
+        # 也能獲取到最新的股票列表配置
         env_file = os.getenv("ENV_FILE")
         env_path = Path(env_file) if env_file else (Path(__file__).parent.parent / '.env')
         stock_list_str = ''
         if env_path.exists():
-            # 直接从 .env 文件读取最新的配置
+            # 直接从 .env 文件讀取最新的配置
             env_values = dotenv_values(env_path)
             stock_list_str = (env_values.get('STOCK_LIST') or '').strip()
 
-        # 如果 .env 文件不存在或未配置，才尝试从系統环境變數读取
+        # 如果 .env 文件不存在或未配置，才嘗試从系統環境變數讀取
         if not stock_list_str:
             stock_list_str = os.getenv('STOCK_LIST', '')
 
@@ -2283,7 +2283,7 @@ class Config:
                     message=(
                         "检测到 STOCK_GROUP_N 中存在未包含在 STOCK_LIST 内的股票："
                         f"{', '.join(missing_group_stocks[:6])}。"
-                        "STOCK_GROUP_N 仅用于電郵路由，不会扩大分析范围；"
+                        "STOCK_GROUP_N 仅用于電郵路由，不会扩大分析範圍；"
                         "请先将这些股票加入 STOCK_LIST。"
                     ),
                     field="STOCK_GROUP_N",
@@ -2306,7 +2306,7 @@ class Config:
             issues.append(ConfigIssue(
                 severity="error",
                 message=(
-                    "未配置任何可用的 AI 模型接入（高级模型路由配置 / 渠道 / API Key），"
+                    "未配置任何可用的 AI 模型接入（進階模型路由配置 / 渠道 / API Key），"
                     "AI 分析功能将不可用"
                 ),
                 field="LITELLM_CONFIG",
@@ -2315,7 +2315,7 @@ class Config:
             issues.append(ConfigIssue(
                 severity="info",
                 message=(
-                    "尚未明确指定主模型，系統将自动从可用 API Key 推断。"
+                    "尚未明確指定主模型，系統将自动从可用 API Key 推断。"
                     "建议尽早配置主模型（格式如 gemini/gemini-3.1-pro-preview）"
                 ),
                 field="LITELLM_MODEL",
@@ -2350,7 +2350,7 @@ class Config:
                 issues.append(ConfigIssue(
                     severity="error",
                     message=(
-                        "已配置的主模型未出现在当前渠道或高级模型路由配置中。"
+                        "已配置的主模型未出现在当前渠道或進階模型路由配置中。"
                         f" 当前可用模型：{', '.join(available_router_models[:6])}"
                     ),
                     field="LITELLM_MODEL",
@@ -2365,7 +2365,7 @@ class Config:
                 issues.append(ConfigIssue(
                     severity="error",
                     message=(
-                        "已配置的 Agent 主模型未出现在当前渠道或高级模型路由配置中。"
+                        "已配置的 Agent 主模型未出现在当前渠道或進階模型路由配置中。"
                         f" 当前可用模型：{', '.join(available_router_models[:6])}"
                     ),
                     field="AGENT_LITELLM_MODEL",
@@ -2380,7 +2380,7 @@ class Config:
                 issues.append(ConfigIssue(
                     severity="warning",
                     message=(
-                        "备选模型中包含未在当前渠道或高级模型路由配置中声明的模型："
+                        "備選模型中包含未在当前渠道或進階模型路由配置中声明的模型："
                         f"{', '.join(invalid_fallbacks[:3])}"
                     ),
                     field="LITELLM_FALLBACK_MODELS",
@@ -2417,7 +2417,7 @@ class Config:
         if not self.has_search_capability_enabled():
             issues.append(ConfigIssue(
                 severity="info",
-                message="未配置搜索引擎能力 (Bocha/MiniMax/Tavily/Brave/SerpAPI/SearXNG)，新闻搜索功能将不可用",
+                message="未配置搜尋引擎能力 (Bocha/MiniMax/Tavily/Brave/SerpAPI/SearXNG)，新闻搜尋功能将不可用",
                 field="BOCHA_API_KEYS",
             ))
 
@@ -2500,7 +2500,7 @@ class Config:
             issues.append(ConfigIssue(
                 severity="error",
                 message=(
-                    "通知最低级别配置无效，允许值："
+                    "通知最低級別配置无效，允許值："
                     f"{', '.join(NOTIFICATION_SEVERITIES)}"
                 ),
                 field="NOTIFICATION_MIN_SEVERITY",
@@ -2593,7 +2593,7 @@ class Config:
                     severity="warning",
                     message=(
                         "VISION_MODEL 已配置，但未找到可用的 Vision API Key "
-                        f"（已检查：{', '.join(_checked)}）。"
+                        f"（已檢查：{', '.join(_checked)}）。"
                         "图片股票代碼提取功能将不可用，请配置对应的 API Key。"
                     ),
                     field="VISION_MODEL",
@@ -2614,7 +2614,7 @@ class Config:
     
     def get_db_url(self) -> str:
         """
-        获取 SQLAlchemy 資料庫連線 URL
+        獲取 SQLAlchemy 資料庫連線 URL
         
         自动建立資料庫目錄（如果不存在）
         """
@@ -2623,9 +2623,9 @@ class Config:
         return f"sqlite:///{db_path.absolute()}"
 
 
-# === 便捷的配置访问函數 ===
+# === 便捷的配置訪問函數 ===
 def get_config() -> Config:
-    """获取全局配置实例的快捷方式"""
+    """獲取全局配置实例的快捷方式"""
     return Config.get_instance()
 
 
@@ -2680,9 +2680,9 @@ if __name__ == "__main__":
     print(f"最大並行数: {config.max_workers}")
     print(f"调试模式: {config.debug}")
     
-    # 验证配置
+    # 驗證配置
     warnings = config.validate()
     if warnings:
-        print("\n配置验证结果:")
+        print("\n配置驗證结果:")
         for w in warnings:
             print(f"  - {w}")

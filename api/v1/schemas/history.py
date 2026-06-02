@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-历史记录相关模型
+历史记录相關模型
 ===================================
 
 职责：
@@ -18,13 +18,13 @@ class HistoryItem(BaseModel):
     """历史记录摘要（列表展示用）"""
 
     id: Optional[int] = Field(None, description="分析历史记录主键 ID")
-    query_id: str = Field(..., description="分析记录关联 query_id（批量分析时重复）")
+    query_id: str = Field(..., description="分析记录關聯 query_id（批量分析时重复）")
     stock_code: str = Field(..., description="股票代碼")
     stock_name: Optional[str] = Field(None, description="股票名称")
     report_type: Optional[str] = Field(None, description="报告类型")
     sentiment_score: Optional[int] = Field(
         None,
-        description="情绪評分（历史數據可能超出 0-100 范围，读取时不做约束）",
+        description="情绪評分（历史數據可能超出 0-100 範圍，讀取时不做約束）",
     )
     operation_advice: Optional[str] = Field(None, description="操作建议")
     created_at: Optional[str] = Field(None, description="建立时间")
@@ -72,7 +72,7 @@ class DeleteHistoryRequest(BaseModel):
 class DeleteHistoryResponse(BaseModel):
     """刪除历史记录回應"""
 
-    deleted: int = Field(..., description="实际刪除的历史记录数量")
+    deleted: int = Field(..., description="實際刪除的历史记录数量")
 
 
 class NewsIntelItem(BaseModel):
@@ -86,7 +86,7 @@ class NewsIntelItem(BaseModel):
         json_schema_extra = {
             "example": {
                 "title": "公司發佈业绩快报，营收同比增长 20%",
-                "snippet": "公司公告显示，季度营收同比增长 20%...",
+                "snippet": "公司公告顯示，季度营收同比增长 20%...",
                 "url": "https://example.com/news/123"
             }
         }
@@ -113,11 +113,11 @@ class ReportMeta(BaseModel):
     model_config = ConfigDict(protected_namespaces=("model_validate", "model_dump"))
 
     id: Optional[int] = Field(None, description="分析历史记录主键 ID（仅历史报告有此欄位）")
-    query_id: str = Field(..., description="分析记录关联 query_id（批量分析时重复）")
+    query_id: str = Field(..., description="分析记录關聯 query_id（批量分析时重复）")
     stock_code: str = Field(..., description="股票代碼")
     stock_name: Optional[str] = Field(None, description="股票名称")
     report_type: Optional[str] = Field(None, description="报告类型")
-    report_language: Optional[str] = Field(None, description="报告输出语言（zh/en）")
+    report_language: Optional[str] = Field(None, description="报告輸出语言（zh/en）")
     created_at: Optional[str] = Field(None, description="建立时间")
     current_price: Optional[float] = Field(None, description="分析时股價")
     change_pct: Optional[float] = Field(None, description="分析时漲跌幅(%)")
@@ -127,12 +127,12 @@ class ReportMeta(BaseModel):
 class ReportSummary(BaseModel):
     """报告概览区"""
     
-    analysis_summary: Optional[str] = Field(None, description="关键结论")
+    analysis_summary: Optional[str] = Field(None, description="關鍵结论")
     operation_advice: Optional[str] = Field(None, description="操作建议")
     trend_prediction: Optional[str] = Field(None, description="趨勢預測")
     sentiment_score: Optional[int] = Field(
         None,
-        description="情绪評分（历史數據可能超出 0-100 范围，读取时不做约束）",
+        description="情绪評分（历史數據可能超出 0-100 範圍，讀取时不做約束）",
     )
     sentiment_label: Optional[str] = Field(None, description="情绪標籤")
 
@@ -153,8 +153,8 @@ class ReportDetails(BaseModel):
     raw_result: Optional[Any] = Field(None, description="原始分析结果（JSON）")
     context_snapshot: Optional[Any] = Field(None, description="分析时上下文快照（JSON）")
     financial_report: Optional[Any] = Field(None, description="结构化财报摘要（来自 fundamental_context）")
-    dividend_metrics: Optional[Any] = Field(None, description="结构化分红指标（含 TTM 口径）")
-    belong_boards: Optional[Any] = Field(None, description="关联板塊列表")
+    dividend_metrics: Optional[Any] = Field(None, description="结构化分红指標（含 TTM 口径）")
+    belong_boards: Optional[Any] = Field(None, description="關聯板塊列表")
     sector_rankings: Optional[Any] = Field(None, description="板塊漲跌榜（结构 {top, bottom}）")
 
 

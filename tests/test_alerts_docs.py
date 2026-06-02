@@ -64,7 +64,7 @@ def test_alerts_doc_covers_storage_evaluation_and_rollback() -> None:
     assert (PROJECT_ROOT / "src" / "storage.py").is_file()
 
     for token in (
-        "## 存储方案评估",
+        "## 存储方案評估",
         "src/storage.py",
         "src/repositories/",
         "src/services/",
@@ -82,7 +82,7 @@ def test_alerts_doc_keeps_p0_non_goals_explicit() -> None:
         "P0 阶段不新增 `api/v1/schemas/alerts.py`",
         "P0 阶段不新增 Web 警報中心页面",
         "P0 阶段不新增資料庫表",
-        "P0 阶段不实现触发历史",
+        "P0 阶段不實現触发历史",
         "P0 阶段不自动迁移、刪除或覆盖 `AGENT_EVENT_ALERT_RULES_JSON`",
         "P0 阶段不重写 `NotificationService`",
     ):
@@ -111,7 +111,7 @@ def test_alerts_doc_defines_p1_api_mvp_scope() -> None:
         "unsupported",
         "脱敏",
         "保留欄位",
-        "不执行冷却或自定义通知语义",
+        "不執行冷却或自定义通知语义",
     ):
         assert token in doc
 
@@ -122,9 +122,9 @@ def test_alerts_doc_keeps_p1_non_goals_explicit() -> None:
     for token in (
         "不新增 Web 警報中心页面",
         "不让 schedule worker 加载持久化 active rules",
-        "不实现真实 `alert_trigger` / `alert_notification` 写入",
-        "不实现 `alert_cooldown` 执行语义",
-        "不实现 MACD、KDJ、CCI、RSI",
+        "不實現真实 `alert_trigger` / `alert_notification` 写入",
+        "不實現 `alert_cooldown` 執行语义",
+        "不實現 MACD、KDJ、CCI、RSI",
         "不自动迁移、刪除、覆盖或改写 legacy 配置",
     ):
         assert token in doc
@@ -134,14 +134,14 @@ def test_alerts_doc_defines_p2_worker_scope() -> None:
     doc = _read_doc()
 
     for token in (
-        "## P2 警報评估 Worker",
+        "## P2 警報評估 Worker",
         "src/services/alert_worker.py",
         "agent_event_monitor",
         "持久化 active rules",
         "legacy JSON",
         "`triggered`、`skipped`、`degraded`、`failed`",
         "不写 `alert_notifications`",
-        "不执行 `cooldown_policy`",
+        "不執行 `cooldown_policy`",
     ):
         assert token in doc
 
@@ -154,7 +154,7 @@ def test_alerts_doc_describes_p1_rollback_for_created_tables() -> None:
         "`alert_rules` / `alert_triggers` / `alert_notifications` SQLite 表",
         "Base.metadata.create_all()",
         "SQLite 表与數據不会自动刪除",
-        "手动刪除相关表",
+        "手动刪除相關表",
     ):
         assert token in doc
 
@@ -170,9 +170,9 @@ def test_alerts_doc_defines_p4_notification_and_cooldown_scope() -> None:
         "`__cooldown_read_failed__`",
         "`__noise_suppressed__`",
         "notification_noise.py",
-        "DB 持久化规则正常路徑使用 `alert_cooldowns`",
-        "读取持久化冷却狀態失败",
-        "legacy `AGENT_EVENT_ALERT_RULES_JSON` 规则繼續使用 worker 程式内 fingerprint",
+        "DB 持久化規則正常路徑使用 `alert_cooldowns`",
+        "讀取持久化冷却狀態失败",
+        "legacy `AGENT_EVENT_ALERT_RULES_JSON` 規則繼續使用 worker 程式内 fingerprint",
         "不会写入或延长 `alert_cooldowns`",
         "最小回滚方式是 revert P4 PR",
     ):
@@ -183,7 +183,7 @@ def test_alerts_doc_defines_p5_indicator_scope() -> None:
     doc = _read_doc()
 
     for token in (
-        "## P5 技术指标规则",
+        "## P5 技术指標規則",
         "ma_price_cross",
         "rsi_threshold",
         "macd_cross",
@@ -205,7 +205,7 @@ def test_alerts_doc_defines_p5_indicator_scope() -> None:
         "HTTP 400 + `validation_error`",
         "HTTP 400 + `unsupported_alert_type`",
         "不支援 MACD 柱体放大/收缩",
-        "不支援 KDJ 超买/超卖区规则",
+        "不支援 KDJ 超买/超卖区規則",
         "不支援 MA 与 MA 双均线交叉",
         "不支援分钟线",
         "revert P5 PR",

@@ -35,8 +35,8 @@ def test_prepare_webui_frontend_assets_reuses_prebuilt_static_without_source(tmp
         assert webui_frontend.prepare_webui_frontend_assets() is True
 
     assert "检测到可直接复用的前端静态产物" in caplog.text
-    assert "未找到前端项目，无法自动构建" not in caplog.text
-    assert "未检测到 npm，无法自动构建前端" not in caplog.text
+    assert "未找到前端项目，無法自动构建" not in caplog.text
+    assert "未检测到 npm，無法自动构建前端" not in caplog.text
     assert "assets/ 目錄不存在或无 CSS/JS 文件" not in caplog.text
 
 
@@ -49,11 +49,11 @@ def test_prepare_webui_frontend_assets_fails_without_static_or_source(tmp_path, 
     with caplog.at_level(logging.WARNING):
         assert webui_frontend.prepare_webui_frontend_assets() is False
 
-    assert "未找到前端项目，无法自动构建" in caplog.text
+    assert "未找到前端项目，無法自动构建" in caplog.text
 
 
 def test_prepare_webui_frontend_assets_warns_when_assets_missing(tmp_path, monkeypatch, caplog):
-    """index.html 存在但 static/assets/ 缺失时应发出 WebUI 显示异常警告（Issue #944）。"""
+    """index.html 存在但 static/assets/ 缺失时应发出 WebUI 顯示例外警告（Issue #944）。"""
     repo_root = _prepare_fake_repo(tmp_path, monkeypatch)
     static_index = repo_root / "static" / "index.html"
     static_index.parent.mkdir(parents=True)
@@ -69,7 +69,7 @@ def test_prepare_webui_frontend_assets_warns_when_assets_missing(tmp_path, monke
 
     assert result is True  # function still returns True (index.html present)
     assert "目錄不存在或无 CSS/JS 文件" in caplog.text
-    assert "WebUI 将因缺少样式与脚本而显示异常" in caplog.text
+    assert "WebUI 将因缺少样式与脚本而顯示例外" in caplog.text
 
 
 def test_prepare_webui_frontend_assets_auto_build_disabled_warns_when_assets_missing(tmp_path, monkeypatch, caplog):

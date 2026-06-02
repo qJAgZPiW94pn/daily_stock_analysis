@@ -18,7 +18,7 @@ class BotCommand(ABC):
     """
     命令處理器抽象基类
 
-    所有命令都必须继承此类并实现抽象方法。
+    所有命令都必须继承此类并實現抽象方法。
 
     使用示例：
         class MyCommand(BotCommand):
@@ -39,16 +39,16 @@ class BotCommand(ABC):
                 return "/mycommand [參數]"
 
             def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-                return BotResponse.text_response("命令执行成功")
+                return BotResponse.text_response("命令執行成功")
     """
 
     @property
     @abstractmethod
     def name(self) -> str:
         """
-        命令名称（不含前缀）
+        命令名称（不含前綴）
 
-        例如 "analyze"，使用者输入 "/analyze" 触发
+        例如 "analyze"，使用者輸入 "/analyze" 触发
         """
         pass
 
@@ -58,7 +58,7 @@ class BotCommand(ABC):
         """
         命令别名列表
 
-        例如 ["a", "分析"]，使用者输入 "/a" 或 "分析" 也能触发
+        例如 ["a", "分析"]，使用者輸入 "/a" 或 "分析" 也能触发
         """
         pass
 
@@ -81,9 +81,9 @@ class BotCommand(ABC):
     @property
     def hidden(self) -> bool:
         """
-        是否在帮助列表中隐藏
+        是否在帮助列表中隱藏
 
-        默认 False，设为 True 则不显示在 /help 列表中
+        預設 False，设为 True 则不顯示在 /help 列表中
         """
         return False
 
@@ -92,14 +92,14 @@ class BotCommand(ABC):
         """
         是否仅管理员可用
 
-        默认 False，设为 True 则需要管理员權限
+        預設 False，设为 True 则需要管理员權限
         """
         return False
 
     @abstractmethod
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
         """
-        执行命令
+        執行命令
 
         Args:
             message: 原始訊息对象
@@ -111,17 +111,17 @@ class BotCommand(ABC):
         pass
 
     async def execute_async(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """非同步执行命令。
+        """非同步執行命令。
 
-        默认将同步 `execute()` 下沉到執行緒池，避免在非同步分发链路中阻塞事件循环。
+        預設将同步 `execute()` 下沉到執行緒池，避免在非同步分发鏈路中阻塞事件循环。
         """
         return await asyncio.to_thread(self.execute, message, args)
 
     def validate_args(self, args: List[str]) -> Optional[str]:
         """
-        验证參數
+        驗證參數
 
-        子类可重写此方法进行參數校验。
+        子类可重写此方法進行參數校验。
 
         Args:
             args: 命令參數列表
@@ -132,5 +132,5 @@ class BotCommand(ABC):
         return None
 
     def get_help_text(self) -> str:
-        """获取帮助文本"""
+        """獲取帮助文本"""
         return f"**{self.name}** - {self.description}\n用法: `{self.usage}`"

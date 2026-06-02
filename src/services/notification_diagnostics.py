@@ -179,14 +179,14 @@ CHANNEL_SPECS: Tuple[NotificationChannelSpec, ...] = (
     ),
     NotificationChannelSpec(
         channel="dingtalk_context",
-        display_name="钉钉会话",
+        display_name="钉钉會話",
         kind="context",
         minimal_keys=(),
         note="Runtime-only reply channel extracted from source message context.",
     ),
     NotificationChannelSpec(
         channel="feishu_context",
-        display_name="飞书会话",
+        display_name="飞书會話",
         kind="context",
         minimal_keys=(),
         note="Runtime-only reply channel extracted from source message context.",
@@ -311,12 +311,12 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
         _issue(
             "info",
             "context_channels_runtime_only",
-            "钉钉会话和飞书会话属于執行时訊息上下文渠道，无法仅靠静态 .env 完整判断。",
+            "钉钉會話和飞书會話属于執行时訊息上下文渠道，無法仅靠静态 .env 完整判斷。",
         ),
         _issue(
             "info",
             "phase_scope",
-            "通知诊断会检查渠道基线、只读诊断、Web 測試、P3 路由配置、P4 降噪配置和 P6 ntfy/Gotify 渠道。",
+            "通知診斷会檢查渠道基线、只读診斷、Web 測試、P3 路由配置、P4 降噪配置和 P6 ntfy/Gotify 渠道。",
         ),
     ]
 
@@ -417,7 +417,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "warning",
                 "advanced_without_minimal",
-                "已配置飞书 Webhook 高级安全项，但缺少 FEISHU_WEBHOOK_URL，飞书 Webhook 渠道不会启用。",
+                "已配置飞书 Webhook 進階安全项，但缺少 FEISHU_WEBHOOK_URL，飞书 Webhook 渠道不会启用。",
                 key="FEISHU_WEBHOOK_URL",
             )
         )
@@ -447,7 +447,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "warning",
                 "advanced_without_minimal",
-                "已配置自定义 Webhook 高级项，但缺少 CUSTOM_WEBHOOK_URLS，自定义 Webhook 渠道不会启用。",
+                "已配置自定义 Webhook 進階项，但缺少 CUSTOM_WEBHOOK_URLS，自定义 Webhook 渠道不会启用。",
                 key="CUSTOM_WEBHOOK_URLS",
             )
         )
@@ -475,7 +475,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                     "invalid_route_channel",
                     (
                         f"{route_config['env_key']} 包含未知通知渠道: {', '.join(invalid_channels)}；"
-                        f"允许值: {', '.join(ROUTABLE_NOTIFICATION_CHANNELS)}。"
+                        f"允許值: {', '.join(ROUTABLE_NOTIFICATION_CHANNELS)}。"
                     ),
                     key=route_config["env_key"],
                 )
@@ -529,7 +529,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                 "invalid_notification_min_severity",
                 (
                     "NOTIFICATION_MIN_SEVERITY 配置无效；"
-                    f"允许值: {', '.join(NOTIFICATION_SEVERITIES)}。"
+                    f"允許值: {', '.join(NOTIFICATION_SEVERITIES)}。"
                 ),
                 key="NOTIFICATION_MIN_SEVERITY",
             )
@@ -570,7 +570,7 @@ def format_notification_diagnostics(result: NotificationDiagnosticResult) -> str
     """Format diagnostics for CLI output without exposing secret values."""
 
     lines = [
-        "通知配置诊断",
+        "通知配置診斷",
         f"已配置渠道: {len(result.configured_channels)} 个",
     ]
     if result.configured_channels:

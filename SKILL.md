@@ -1,15 +1,15 @@
 ---
 name: "stock_analyzer"
-description: "分析股票和市场。当使用者想要分析单个或多個股票，或进行市场复盘时调用。"
+description: "分析股票和市场。当使用者想要分析单个或多個股票，或進行市场复盘时呼叫。"
 ---
 
 # 股票分析器
 
-本技能基于 `src/services/analyzer_service.py` 的逻辑，提供分析股票和整体市场的功能。
+本技能基于 `src/services/analyzer_service.py` 的邏輯，提供分析股票和整体市场的功能。
 
-## 输出结构 (`AnalysisResult`)
+## 輸出结构 (`AnalysisResult`)
 
-分析函數傳回一个 `AnalysisResult` 对象（或其列表），该对象具有丰富的结构。以下是其关键组件的简要概述，并附有真实的输出示例：
+分析函數傳回一个 `AnalysisResult` 对象（或其列表），该对象具有丰富的结构。以下是其關鍵組件的简要概述，并附有真实的輸出示例：
 
 `dashboard` 属性包含核心分析，分为四个主要部分：
 1.  **`core_conclusion`**: 一句话总结、信号类型和仓位建议。
@@ -23,7 +23,7 @@ description: "分析股票和市场。当使用者想要分析单个或多個股
 
 如果未提供 `config` 对象，函數将自动使用从 `.env` 文件加载的全局单例实例。
 
-**参考:** [`Config`](src/config.py)
+**參考:** [`Config`](src/config.py)
 
 ## 函數
 
@@ -33,13 +33,13 @@ description: "分析股票和市场。当使用者想要分析单个或多個股
 
 **何时使用:** 当使用者要求分析特定股票时。
 
-**输入:**
+**輸入:**
 - `stock_code` (str): 要分析的股票代碼。
-- `config` (Config, 可選): 配置对象。默认为 `None`。
-- `full_report` (bool, 可選): 是否生成完整报告。默认为 `False`。
-- `notifier` (NotificationService, 可選): 通知服務对象。默认为 `None`。
+- `config` (Config, 可選): 配置对象。預設为 `None`。
+- `full_report` (bool, 可選): 是否生成完整报告。預設为 `False`。
+- `notifier` (NotificationService, 可選): 通知服務对象。預設为 `None`。
 
-**输出:** `Optional[AnalysisResult]`
+**輸出:** `Optional[AnalysisResult]`
 一个包含分析结果的 `AnalysisResult` 对象，如果分析失败则为 `None`。
 
 **示例:**
@@ -55,7 +55,7 @@ if result:
     print(f"操作建议: {result.operation_advice}")
 ```
 
-**参考:** [`analyze_stock`](src/services/analyzer_service.py)
+**參考:** [`analyze_stock`](src/services/analyzer_service.py)
 
 ### 2. 分析多只股票
 
@@ -63,13 +63,13 @@ if result:
 
 **何时使用:** 当使用者想要一次分析多只股票时。
 
-**输入:**
+**輸入:**
 - `stock_codes` (List[str]): 要分析的股票代碼列表。
-- `config` (Config, 可選): 配置对象。默认为 `None`。
-- `full_report` (bool, 可選): 是否为每只股票生成完整报告。默认为 `False`。
-- `notifier` (NotificationService, 可選): 通知服務对象。默认为 `None`。
+- `config` (Config, 可選): 配置对象。預設为 `None`。
+- `full_report` (bool, 可選): 是否为每只股票生成完整报告。預設为 `False`。
+- `notifier` (NotificationService, 可選): 通知服務对象。預設为 `None`。
 
-**输出:** `List[AnalysisResult]`
+**輸出:** `List[AnalysisResult]`
 一个 `AnalysisResult` 对象列表。
 
 **示例:**
@@ -83,20 +83,20 @@ for result in results:
     print(f"股票: {result.name}, 操作建议: {result.operation_advice}")
 ```
 
-**参考:** [`analyze_stocks`](src/services/analyzer_service.py)
+**參考:** [`analyze_stocks`](src/services/analyzer_service.py)
 
 
-### 3. 执行大盤复盘
+### 3. 執行大盤复盘
 
-**描述:** 对整体市场进行复盘并傳回一份报告。
+**描述:** 对整体市场進行复盘并傳回一份报告。
 
 **何时使用:** 当使用者要求市场概览、摘要或复盘时。
 
-**输入:**
-- `config` (Config, 可選): 配置对象。默认为 `None`。
-- `notifier` (NotificationService, 可選): 通知服務对象。默认为 `None`。
+**輸入:**
+- `config` (Config, 可選): 配置对象。預設为 `None`。
+- `notifier` (NotificationService, 可選): 通知服務对象。預設为 `None`。
 
-**输出:** `Optional[str]`
+**輸出:** `Optional[str]`
 一个包含市场复盘报告的字符串，如果失败则为 `None`。
 
 **示例:**
@@ -104,10 +104,10 @@ for result in results:
 ```python
 from src.services.analyzer_service import perform_market_review
 
-# 执行大盤复盘
+# 執行大盤复盘
 report = perform_market_review()
 if report:
     print(report)
 ```
 
-**参考:** [`perform_market_review`](src/services/analyzer_service.py)
+**參考:** [`perform_market_review`](src/services/analyzer_service.py)

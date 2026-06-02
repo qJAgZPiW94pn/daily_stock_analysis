@@ -16,23 +16,23 @@ English users: fill in the English fields below.
 简明扼要地描述你希望增加的功能。  
 Briefly describe the feature you would like added.
 
-## 使用场景 / Use Case
+## 使用場景 / Use Case
 
 描述在什么情况下需要这个功能。  
 Describe the situation where this feature would be useful.
 
-## 期望实现 / Proposed Solution
+## 期望實現 / Proposed Solution
 
 描述你期望这个功能如何工作。  
 Describe how you would expect this feature to work.
 
-## 备选方案 / Alternatives Considered
+## 備選方案 / Alternatives Considered
 
 描述你考虑过的其他替代方案。  
 Describe any alternative solutions you have considered.
 
-## 相关資訊 / Additional Context
+## 相關資訊 / Additional Context
 
-- 是否愿意贡献代碼实现 / Willing to implement: [Yes / No]
-- 参考链接 / Reference links:
+- 是否愿意贡献代碼實現 / Willing to implement: [Yes / No]
+- 參考链接 / Reference links:
 - 其他说明 / Other notes:

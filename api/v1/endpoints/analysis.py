@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票分析接口
+股票分析介面
 ===================================
 
 职责：
-1. 提供 POST /api/v1/analysis/analyze 触发分析接口
-2. 提供 GET /api/v1/analysis/status/{task_id} 查詢工作狀態接口
-3. 提供 GET /api/v1/analysis/tasks 获取工作列表接口
-4. 提供 GET /api/v1/analysis/tasks/stream SSE 实时推送接口
+1. 提供 POST /api/v1/analysis/analyze 触发分析介面
+2. 提供 GET /api/v1/analysis/status/{task_id} 查詢工作狀態介面
+3. 提供 GET /api/v1/analysis/tasks 獲取工作列表介面
+4. 提供 GET /api/v1/analysis/tasks/stream SSE 实时推送介面
 
 特性：
-- 非同步工作隊列：分析工作非同步执行，不阻塞請求
+- 非同步工作隊列：分析工作非同步執行，不阻塞請求
 - 防重复提交：相同股票代碼正在分析时傳回 409
 - SSE 实时推送：工作狀態变化实时通知前端
 """
@@ -104,7 +104,7 @@ def _compute_market_review_override_region(config: Config) -> Optional[str]:
             open_markets,
         )
     except Exception as exc:
-        logger.warning("大盤复盘交易日过滤失败，按配置繼續执行: %s", exc)
+        logger.warning("大盤复盘交易日过滤失败，按配置繼續執行: %s", exc)
         return None
 
 
@@ -147,7 +147,7 @@ def _invalid_analysis_input_error() -> HTTPException:
         status_code=400,
         detail={
             "error": "validation_error",
-            "message": "请输入有效的股票代碼或股票名称",
+            "message": "请輸入有效的股票代碼或股票名称",
         },
     )
 
@@ -204,11 +204,11 @@ def _resolve_and_normalize_input(raw_value: str) -> str:
             "model": Union[TaskAccepted, BatchTaskAcceptedResponse],
         },
         400: {"description": "請求參數錯誤", "model": ErrorResponse},
-        409: {"description": "股票正在分析中，拒绝重复提交", "model": DuplicateTaskErrorResponse},
+        409: {"description": "股票正在分析中，拒絕重复提交", "model": DuplicateTaskErrorResponse},
         500: {"description": "分析失败", "model": ErrorResponse},
     },
     summary="触发股票分析",
-    description="啟動 AI 智能分析工作，支援同步和非同步模式。非同步模式下相同股票代碼不允许重复提交。"
+    description="啟動 AI 智能分析工作，支援同步和非同步模式。非同步模式下相同股票代碼不允許重复提交。"
 )
 def trigger_analysis(
         request: AnalyzeRequest,
@@ -221,8 +221,8 @@ def trigger_analysis(
     
     流程：
     1. 校验請求參數
-    2. 非同步模式：检查重复 -> 提交工作隊列 -> 傳回 202
-    3. 同步模式：直接执行分析 -> 傳回 200
+    2. 非同步模式：檢查重复 -> 提交工作隊列 -> 傳回 202
+    3. 同步模式：直接執行分析 -> 傳回 200
     
     Args:
         request: 分析請求參數
@@ -296,7 +296,7 @@ def trigger_analysis(
                 status_code=400,
                 detail={
                     "error": "validation_error",
-                    "message": "同步模式仅支援单只股票分析，请使用 async_mode=true 进行批量分析"
+                    "message": "同步模式仅支援单只股票分析，请使用 async_mode=true 進行批量分析"
                 }
             )
         return _handle_sync_analysis(stock_codes[0], request)
@@ -358,7 +358,7 @@ def _handle_async_analysis_batch(
         for dup in duplicate_errors
     ]
     
-    # 单只股票且被拒绝：保持 409 兼容性
+    # 单只股票且被拒絕：保持 409 相容性
     if len(stock_codes) == 1 and duplicates:
         dup = duplicates[0]
         error_response = DuplicateTaskErrorResponse(
@@ -372,7 +372,7 @@ def _handle_async_analysis_batch(
             content=error_response.model_dump()
         )
     
-    # 单只股票成功：保持原有回應格式兼容性
+    # 单只股票成功：保持原有回應格式相容性
     if len(stock_codes) == 1 and accepted:
         task_accepted = TaskAccepted(
             task_id=accepted[0].task_id,
@@ -403,7 +403,7 @@ def _handle_sync_analysis(
     """
     處理同步分析請求
     
-    直接执行分析，等待完成后傳回结果
+    直接執行分析，等待完成后傳回结果
     """
     import uuid
     from src.services.analysis_service import AnalysisService
@@ -477,11 +477,11 @@ def _handle_sync_analysis(
     status_code=202,
     responses={
         202: {"description": "大盤复盘工作已接受", "model": MarketReviewAccepted},
-        409: {"description": "大盤复盘正在执行", "model": ErrorResponse},
+        409: {"description": "大盤复盘正在執行", "model": ErrorResponse},
         500: {"description": "提交失败", "model": ErrorResponse},
     },
     summary="触发大盤复盘",
-    description="提交一个后台大盤复盘工作，复用 CLI 的大盤复盘链路并保存报告。接口内部仅提供程式内/单机防重，如多实例（多 Worker/多容器）部署，需结合外部幂等机制避免重复触发。",
+    description="提交一个后台大盤复盘工作，复用 CLI 的大盤复盘鏈路并保存报告。介面内部仅提供程式内/单机防重，如多实例（多 Worker/多容器）部署，需结合外部幂等機制避免重复触发。",
 )
 def trigger_market_review(
     request: Optional[MarketReviewRequest] = Body(None),
@@ -494,7 +494,7 @@ def trigger_market_review(
     if override_region == "":
         return MarketReviewAccepted(
             status="accepted",
-            message="今日大盤复盘相关市场均为非交易日，已略過大盤复盘",
+            message="今日大盤复盘相關市场均为非交易日，已略過大盤复盘",
             send_notification=request.send_notification,
         )
 
@@ -504,7 +504,7 @@ def trigger_market_review(
             status_code=409,
             detail={
                 "error": "duplicate_market_review",
-                "message": "大盤复盘正在执行中，请稍后再试",
+                "message": "大盤复盘正在執行中，请稍后再试",
             },
         )
 
@@ -536,7 +536,7 @@ def trigger_market_review(
 
 
 # ============================================================
-# GET /tasks - 获取工作列表
+# GET /tasks - 獲取工作列表
 # ============================================================
 
 @router.get(
@@ -545,21 +545,21 @@ def trigger_market_review(
     responses={
         200: {"description": "工作列表"},
     },
-    summary="获取分析工作列表",
-    description="获取当前所有分析工作，可按狀態筛选"
+    summary="獲取分析工作列表",
+    description="獲取当前所有分析工作，可按狀態篩選"
 )
 def get_task_list(
     status: Optional[str] = Query(
         None,
-        description="筛选狀態：pending, processing, completed, failed（支援逗号分隔多个）"
+        description="篩選狀態：pending, processing, completed, failed（支援逗号分隔多个）"
     ),
     limit: int = Query(20, description="傳回数量限制", ge=1, le=100),
 ) -> TaskListResponse:
     """
-    获取分析工作列表
+    獲取分析工作列表
     
     Args:
-        status: 狀態筛选（可選）
+        status: 狀態篩選（可選）
         limit: 傳回数量限制
         
     Returns:
@@ -567,18 +567,18 @@ def get_task_list(
     """
     task_queue = get_task_queue()
     
-    # 获取所有工作
+    # 獲取所有工作
     all_tasks = task_queue.list_all_tasks(limit=limit)
     
-    # 狀態筛选
+    # 狀態篩選
     if status:
         status_list = [s.strip().lower() for s in status.split(",")]
         all_tasks = [t for t in all_tasks if t.status.value in status_list]
     
-    # 统计資訊
+    # 統計資訊
     stats = task_queue.get_task_stats()
     
-    # 转换为 Schema
+    # 轉換为 Schema
     task_infos = [
         TaskInfo(
             task_id=t.task_id,
@@ -625,7 +625,7 @@ async def task_stream():
     事件类型：
     - connected: 連線成功
     - task_created: 新工作建立
-    - task_started: 工作开始执行
+    - task_started: 工作开始執行
     - task_progress: 工作阶段进度更新
     - task_completed: 工作完成
     - task_failed: 工作失败
@@ -641,7 +641,7 @@ async def task_stream():
         # 发送連線成功事件
         yield _format_sse_event("connected", {"message": "Connected to task stream"})
         
-        # 发送当前进行中的工作
+        # 发送当前進行中的工作
         pending_tasks = task_queue.list_pending_tasks()
         for task in pending_tasks:
             yield _format_sse_event("task_created", task.to_dict())
@@ -709,7 +709,7 @@ def get_analysis_status(task_id: str) -> TaskStatus:
     """
     查詢分析工作狀態
     
-    优先从工作隊列查詢，如果不存在则从資料庫查詢历史记录
+    優先从工作隊列查詢，如果不存在则从資料庫查詢历史记录
     
     Args:
         task_id: 工作 ID
@@ -926,7 +926,7 @@ def _build_analysis_report(
         fallback_fundamental_payload: Optional[Dict[str, Any]] = None,
 ) -> AnalysisReport:
     """
-    构建符合 API 规范的分析报告
+    构建符合 API 規範的分析报告
     
     Args:
         report_data: 原始报告數據

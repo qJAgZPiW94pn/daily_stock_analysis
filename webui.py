@@ -27,7 +27,7 @@ def main() -> int:
     """
     啟動 Web 服務
     """
-    # 兼容旧版环境變數名
+    # 相容旧版環境變數名
     host = os.getenv("WEBUI_HOST", os.getenv("API_HOST", "127.0.0.1"))
     port = int(os.getenv("WEBUI_PORT", os.getenv("API_PORT", "8000")))
 

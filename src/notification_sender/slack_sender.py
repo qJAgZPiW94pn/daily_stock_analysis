@@ -4,7 +4,7 @@ Slack 发送提醒服務
 
 职责：
 1. 通过 Slack Bot API 或 Incoming Webhook 发送 Slack 訊息
-   （同时配置时优先使用 Bot API，确保文本与图片发送到同一频道）
+   （同时配置时優先使用 Bot API，確保文本与图片发送到同一频道）
 """
 import logging
 import json
@@ -39,18 +39,18 @@ class SlackSender:
 
     @property
     def _use_bot(self) -> bool:
-        """Bot 配置完整时优先走 Bot API，保证文本和图片使用同一传输通道。"""
+        """Bot 配置完整时優先走 Bot API，保证文本和图片使用同一傳輸通道。"""
         return bool(self._slack_bot_token and self._slack_channel_id)
 
     def _is_slack_configured(self) -> bool:
-        """检查 Slack 配置是否完整（支援 Webhook 或 Bot API）"""
+        """檢查 Slack 配置是否完整（支援 Webhook 或 Bot API）"""
         return self._use_bot or bool(self._slack_webhook_url)
 
     def send_to_slack(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
         """
         推送訊息到 Slack（支援 Webhook 和 Bot API）
 
-        传输优先级与 _send_slack_image() 保持一致：Bot > Webhook，
+        傳輸優先级与 _send_slack_image() 保持一致：Bot > Webhook，
         避免文本走 Webhook、图片走 Bot 导致訊息落入不同频道。
 
         Args:
@@ -63,10 +63,10 @@ class SlackSender:
         try:
             chunks = chunk_content_by_max_bytes(content, _TEXT_LIMIT, add_page_marker=True)
         except Exception as e:
-            logger.error(f"分割 Slack 訊息失败: {e}, 尝试整段发送。")
+            logger.error(f"分割 Slack 訊息失败: {e}, 嘗試整段发送。")
             chunks = [content]
 
-        # 优先使用 Bot API（与 _send_slack_image 保持一致）
+        # 優先使用 Bot API（与 _send_slack_image 保持一致）
         if self._use_bot:
             return all(self._send_slack_bot(chunk, timeout_seconds=timeout_seconds) for chunk in chunks)
 
@@ -126,7 +126,7 @@ class SlackSender:
             logger.error(f"Slack Webhook 发送失败: HTTP {response.status_code} {response.text[:200]}")
             return False
         except Exception as e:
-            logger.error(f"Slack Webhook 发送异常: {e}")
+            logger.error(f"Slack Webhook 发送例外: {e}")
             return False
 
     def _send_slack_bot(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
@@ -162,7 +162,7 @@ class SlackSender:
             logger.error(f"Slack Bot 发送失败: {result.get('error', 'unknown')}")
             return False
         except Exception as e:
-            logger.error(f"Slack Bot 发送异常: {e}")
+            logger.error(f"Slack Bot 发送例外: {e}")
             return False
 
     def _send_slack_image(self, image_bytes: bytes, fallback_content: str = "") -> bool:
@@ -183,7 +183,7 @@ class SlackSender:
         if self._use_bot:
             headers = {'Authorization': f'Bearer {self._slack_bot_token}'}
             try:
-                # Step 1: 获取上傳 URL
+                # Step 1: 獲取上傳 URL
                 resp1 = requests.post(
                     'https://slack.com/api/files.getUploadURLExternal',
                     headers=headers,
@@ -195,7 +195,7 @@ class SlackSender:
                 )
                 result1 = resp1.json()
                 if not result1.get("ok"):
-                    logger.error("Slack 获取上傳 URL 失败: %s", result1.get('error', 'unknown'))
+                    logger.error("Slack 獲取上傳 URL 失败: %s", result1.get('error', 'unknown'))
                     raise RuntimeError(result1.get('error', 'unknown'))
 
                 upload_url = result1['upload_url']
@@ -228,7 +228,7 @@ class SlackSender:
                     return True
                 logger.error("Slack 完成上傳失败: %s", result3.get('error', 'unknown'))
             except Exception as e:
-                logger.error("Slack Bot 图片发送异常: %s", e)
+                logger.error("Slack Bot 图片发送例外: %s", e)
 
         # Webhook 模式或 Bot 上傳失败：回退为文本
         if fallback_content:

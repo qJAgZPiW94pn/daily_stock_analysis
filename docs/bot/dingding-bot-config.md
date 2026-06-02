@@ -18,7 +18,7 @@ https://open.dingtalk.com/document/dingstart/configure-the-robot-application
 
 ![configbot.png](configbot.png)
 
-### 获取应用凭证
+### 獲取应用凭证
 ![img.png](appkey.png)
 
 ### 配置钉钉凭证

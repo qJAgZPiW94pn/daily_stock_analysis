@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-定时调度模块
+定时调度模組
 ===================================
 
 职责：
-1. 支援每日定时执行股票分析
-2. 支援定时执行大盤复盘
-3. 优雅處理信号，确保可靠退出
+1. 支援每日定时執行股票分析
+2. 支援定时執行大盤复盘
+3. 优雅處理信号，確保可靠退出
 
 依賴：
 - schedule: 轻量级定时工作库
@@ -28,7 +28,7 @@ class GracefulShutdown:
     """
     优雅退出處理器
 
-    捕获 SIGTERM/SIGINT 信号，确保工作完成后再退出
+    捕獲 SIGTERM/SIGINT 信号，確保工作完成后再退出
     """
 
     def __init__(self):
@@ -48,7 +48,7 @@ class GracefulShutdown:
 
     @property
     def should_shutdown(self) -> bool:
-        """检查是否应该退出"""
+        """檢查是否应该退出"""
         with self._lock:
             return self.shutdown_requested
 
@@ -57,9 +57,9 @@ class Scheduler:
     """
     定时工作调度器
 
-    基于 schedule 库实现，支援：
-    - 每日定时执行
-    - 啟動时立即执行
+    基于 schedule 库實現，支援：
+    - 每日定时執行
+    - 啟動时立即執行
     - 优雅退出
     """
 
@@ -72,13 +72,13 @@ class Scheduler:
         初始化调度器
 
         Args:
-            schedule_time: 每日执行时间，格式 "HH:MM"
+            schedule_time: 每日執行时间，格式 "HH:MM"
         """
         try:
             import schedule
             self.schedule = schedule
         except ImportError:
-            logger.error("schedule 库未安裝，请执行: pip install schedule")
+            logger.error("schedule 库未安裝，请執行: pip install schedule")
             raise ImportError("请安裝 schedule 库: pip install schedule")
 
         self.schedule_time = schedule_time
@@ -94,15 +94,15 @@ class Scheduler:
         设置每日定时工作
 
         Args:
-            task: 要执行的工作函數（无參數）
-            run_immediately: 是否在设置后立即执行一次
+            task: 要執行的工作函數（无參數）
+            run_immediately: 是否在设置后立即執行一次
         """
         self._task_callback = task
         if not self._configure_daily_task(self.schedule_time):
-            raise ValueError(f"无效的定时执行时间: {self.schedule_time!r}")
+            raise ValueError(f"无效的定时執行时间: {self.schedule_time!r}")
 
         if run_immediately:
-            logger.info("立即执行一次工作...")
+            logger.info("立即執行一次工作...")
             self._safe_run_task()
 
     @staticmethod
@@ -132,7 +132,7 @@ class Scheduler:
         candidate = (schedule_time or "").strip()
         if not self._is_valid_schedule_time(candidate):
             logger.warning(
-                "检测到无效的定时执行时间 %r，繼續沿用当前时间 %s",
+                "检测到无效的定时執行时间 %r，繼續沿用当前时间 %s",
                 schedule_time,
                 self.schedule_time,
             )
@@ -144,7 +144,7 @@ class Scheduler:
         self.schedule_time = candidate
 
         if previous_time == candidate:
-            logger.info("已设置每日定时工作，执行时间: %s", self.schedule_time)
+            logger.info("已设置每日定时工作，執行时间: %s", self.schedule_time)
         else:
             logger.info(
                 "检测到 SCHEDULE_TIME 变更，已将每日定时工作从 %s 更新为 %s",
@@ -161,31 +161,31 @@ class Scheduler:
         try:
             latest_schedule_time = (self._schedule_time_provider() or "").strip()
         except Exception as exc:  # pragma: no cover - defensive branch
-            logger.warning("读取最新 SCHEDULE_TIME 失败，繼續沿用 %s: %s", self.schedule_time, exc)
+            logger.warning("讀取最新 SCHEDULE_TIME 失败，繼續沿用 %s: %s", self.schedule_time, exc)
             return
 
         if not latest_schedule_time or latest_schedule_time == self.schedule_time:
             return
 
         if self._configure_daily_task(latest_schedule_time):
-            logger.info("更新后的下次执行时间: %s", self._get_next_run_time())
+            logger.info("更新后的下次執行时间: %s", self._get_next_run_time())
 
     def _safe_run_task(self):
-        """安全执行工作（带异常捕获）"""
+        """安全執行工作（带例外捕獲）"""
         if self._task_callback is None:
             return
 
         try:
             logger.info("=" * 50)
-            logger.info(f"定时工作开始执行 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            logger.info(f"定时工作开始執行 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             logger.info("=" * 50)
 
             self._task_callback()
 
-            logger.info(f"定时工作执行完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            logger.info(f"定时工作執行完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
         except Exception as e:
-            logger.exception(f"定时工作执行失败: {e}")
+            logger.exception(f"定时工作執行失败: {e}")
 
     def add_background_task(
         self,
@@ -202,7 +202,7 @@ class Scheduler:
         clamped_interval = max(30, int(interval_seconds))
         if int(interval_seconds) < 30:
             logger.warning(
-                "后台工作 %s 請求间隔 %ds，但调度循环每 30s 轮询一次，已自动调整为 30s",
+                "后台工作 %s 請求间隔 %ds，但调度循环每 30s 轮询一次，已自动調整为 30s",
                 name or getattr(task, "__name__", "background_task"),
                 interval_seconds,
             )
@@ -218,7 +218,7 @@ class Scheduler:
             entry["last_run"] = time.time()
         self._background_tasks.append(entry)
         logger.info(
-            "已注册后台工作: %s（间隔 %s 秒，立即执行=%s）",
+            "已注册后台工作: %s（间隔 %s 秒，立即執行=%s）",
             entry["name"],
             entry["interval_seconds"],
             run_immediately,
@@ -234,10 +234,10 @@ class Scheduler:
 
         def _runner() -> None:
             try:
-                logger.info("后台工作开始执行: %s", entry["name"])
+                logger.info("后台工作开始執行: %s", entry["name"])
                 entry["task"]()
             except Exception as exc:
-                logger.exception("后台工作执行失败 [%s]: %s", entry["name"], exc)
+                logger.exception("后台工作執行失败 [%s]: %s", entry["name"], exc)
             finally:
                 entry["running"] = False
                 entry["thread"] = None
@@ -278,22 +278,22 @@ class Scheduler:
         """
         self._running = True
         logger.info("调度器开始執行...")
-        logger.info(f"下次执行时间: {self._get_next_run_time()}")
+        logger.info(f"下次執行时间: {self._get_next_run_time()}")
 
         while self._running and not self.shutdown_handler.should_shutdown:
             self._refresh_daily_schedule_if_needed()
             self.schedule.run_pending()
             self._run_background_tasks()
-            time.sleep(30)  # 每30秒检查一次
+            time.sleep(30)  # 每30秒檢查一次
 
             # 每小时打印一次心跳
             if datetime.now().minute == 0 and datetime.now().second < 30:
-                logger.info(f"调度器執行中... 下次执行: {self._get_next_run_time()}")
+                logger.info(f"调度器執行中... 下次執行: {self._get_next_run_time()}")
 
         logger.info("调度器已停止")
 
     def _get_next_run_time(self) -> str:
-        """获取下次执行时间"""
+        """獲取下次執行时间"""
         jobs = self.schedule.get_jobs()
         if jobs:
             next_run = min(job.next_run for job in jobs)
@@ -316,13 +316,13 @@ def run_with_schedule(
     便捷函數：使用定时调度執行工作
 
     Args:
-        task: 要执行的工作函數
-        schedule_time: 每日执行时间
-        run_immediately: 是否立即执行一次
+        task: 要執行的工作函數
+        schedule_time: 每日執行时间
+        run_immediately: 是否立即執行一次
         background_tasks: 可選的后台工作定义列表。每项为一个字典，
             需包含 `task` 与 `interval_seconds`，可選包含 `name`
             和 `run_immediately`。`interval_seconds` 单位为秒。
-        schedule_time_provider: 可選的时间提供器；调度器每轮检查前会读取，
+        schedule_time_provider: 可選的时间提供器；调度器每轮檢查前会讀取，
             当傳回值变化时自动重建 daily job。
     """
     scheduler = Scheduler(
@@ -348,7 +348,7 @@ if __name__ == "__main__":
     )
 
     def test_task():
-        print(f"工作执行中... {datetime.now()}")
+        print(f"工作執行中... {datetime.now()}")
         time.sleep(2)
         print("工作完成!")
 

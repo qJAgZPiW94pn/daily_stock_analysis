@@ -270,7 +270,7 @@ class SystemConfigApiTestCase(unittest.TestCase):
             if "SCHEDULE_TIME=09:30 已写入 .env" in warning
         )
 
-        self.assertIn("已经以 schedule 模式執行", schedule_time_warning)
+        self.assertIn("已經以 schedule 模式執行", schedule_time_warning)
         self.assertIn("自动重建 daily job", schedule_time_warning)
         self.assertIn("不会啟動 scheduler", schedule_time_warning)
         self.assertNotIn("重啟当前程式", schedule_time_warning)

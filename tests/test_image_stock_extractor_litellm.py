@@ -332,5 +332,5 @@ class TestExtractStockCodesFromImage:
         with patch("src.services.image_stock_extractor.get_config", return_value=cfg), \
              patch("src.services.image_stock_extractor.litellm.completion",
                    side_effect=RuntimeError("network down")):
-            with pytest.raises(ValueError, match="Vision API 调用失败"):
+            with pytest.raises(ValueError, match="Vision API 呼叫失败"):
                 extract_stock_codes_from_image(jpeg, "image/jpeg")

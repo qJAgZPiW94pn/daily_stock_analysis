@@ -411,7 +411,7 @@ class HistoryService:
             if item.fetched_at and start_time <= item.fetched_at <= end_time
         ]
 
-        # 历史兜底链路也做發佈时间硬过滤，避免旧库脏數據重新冒出。
+        # 历史兜底鏈路也做發佈时间硬过滤，避免旧库脏數據重新冒出。
         cfg = get_config()
         window_days = resolve_news_window_days(
             news_max_age_days=getattr(cfg, "news_max_age_days", 3),
@@ -647,7 +647,7 @@ class HistoryService:
             # 业绩预期
             if intel.get('earnings_outlook'):
                 report_lines.append(f"**📊 {labels['earnings_outlook_label']}**: {intel['earnings_outlook']}")
-            # 風險警报（醒目显示）
+            # 風險警报（醒目顯示）
             risk_alerts = intel.get('risk_alerts', [])
             if risk_alerts:
                 report_lines.append("")
@@ -683,7 +683,7 @@ class HistoryService:
             f"⏰ **{labels['time_sensitivity_label']}**: {time_sense}",
             "",
         ])
-        # 持倉分类建议
+        # 持倉分類建议
         if pos_advice:
             report_lines.extend([
                 f"| {labels['position_status_label']} | {labels['action_advice_label']} |",
@@ -793,7 +793,7 @@ class HistoryService:
                     f"- {labels['risk_control_label']}: {position.get('risk_control', 'N/A')}",
                     "",
                 ])
-            # 检查清单
+            # 檢查清单
             checklist = battle.get('action_checklist', []) if battle else []
             if checklist:
                 report_lines.extend([
@@ -804,7 +804,7 @@ class HistoryService:
                     report_lines.append(f"- {item}")
                 report_lines.append("")
 
-        # ========== 如果没有 dashboard，显示传统格式 ==========
+        # ========== 如果没有 dashboard，顯示传统格式 ==========
         if not dashboard:
             # 操作理由
             if result.buy_reason:

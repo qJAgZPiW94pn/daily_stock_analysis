@@ -42,7 +42,7 @@ class WechatSender:
         推送訊息到企业微信机器人
         
         企业微信 Webhook 訊息格式：
-        支援 markdown 类型以及 text 类型, markdown 类型在微信中无法展示，可以使用 text 类型,
+        支援 markdown 类型以及 text 类型, markdown 类型在微信中無法展示，可以使用 text 类型,
         markdown 类型会解析 markdown 格式,text 类型会直接发送纯文本。
 
         markdown 类型示例：
@@ -62,7 +62,7 @@ class WechatSender:
         }
 
         注意：企业微信 Markdown 限制 4096 字节（非字符）, Text 类型限制 2048 字节，超长内容会自动分批发送
-        可通过环境變數 WECHAT_MAX_BYTES 调整限制值
+        可通过環境變數 WECHAT_MAX_BYTES 調整限制值
         
         Args:
             content: Markdown 格式的訊息内容
@@ -78,9 +78,9 @@ class WechatSender:
         if self._wechat_msg_type == 'text':
             max_bytes = min(self._wechat_max_bytes, 2000)  # 预留一定字节给系統/分页标记
         else:
-            max_bytes = self._wechat_max_bytes  # markdown 默认 4000 字节
+            max_bytes = self._wechat_max_bytes  # markdown 預設 4000 字节
         
-        # 检查字节长度，超长则分批发送
+        # 檢查字节长度，超长则分批发送
         content_bytes = len(content.encode('utf-8'))
         if content_bytes > max_bytes:
             logger.info(f"訊息内容超长({content_bytes}字节/{len(content)}字符)，将分批发送")
@@ -98,7 +98,7 @@ class WechatSender:
             return False
         if len(image_bytes) > WECHAT_IMAGE_MAX_BYTES:
             logger.warning(
-                "企业微信图片超限 (%d > %d bytes)，拒绝发送，调用方应 fallback 为文本",
+                "企业微信图片超限 (%d > %d bytes)，拒絕发送，呼叫方应 fallback 为文本",
                 len(image_bytes), WECHAT_IMAGE_MAX_BYTES,
             )
             return False
@@ -122,7 +122,7 @@ class WechatSender:
                 logger.error("企业微信請求失败: HTTP %s", response.status_code)
             return False
         except Exception as e:
-            logger.error("企业微信图片发送异常: %s", e)
+            logger.error("企业微信图片发送例外: %s", e)
             return False
     
     def _send_wechat_message(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
@@ -152,7 +152,7 @@ class WechatSender:
         """
         分批发送长訊息到企业微信
         
-        按股票分析块（以 --- 或 ### 分隔）智能分割，确保每批不超过限制
+        按股票分析块（以 --- 或 ### 分隔）智能分割，確保每批不超过限制
         
         Args:
             content: 完整訊息内容
